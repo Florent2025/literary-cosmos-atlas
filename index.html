@@ -11,17 +11,22 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@500;600;700;900&family=Noto+Sans+SC:wght@400;500;700;900&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="./styles.css">
   </head>
-  <body>
-    <div class="preloader" id="preloader" aria-label="进入文学理论宇宙">
-      <div class="preloader__aperture"></div>
-      <div class="preloader__mark">
-        <span>文学理论宇宙</span>
-        <small>open a book, enter a world</small>
+  <body class="entry-locked">
+    <section class="library-gate" id="libraryGate" aria-label="欧洲古典图书馆入口">
+      <canvas id="libraryCanvas" aria-label="可滚动开启的古典图书馆大门"></canvas>
+      <div class="gate-vignette" aria-hidden="true"></div>
+      <div class="gate-copy">
+        <span class="gate-copy__crest">文</span>
+        <h1>文学理论宇宙</h1>
+        <p>滑动鼠标，推开古典图书馆的宏伟大门。</p>
+      </div>
+      <div class="gate-progress" aria-hidden="true">
+        <span></span>
       </div>
       <button class="start-button magnetic" id="startButton" type="button">
-        开启书门
+        推开大门
       </button>
-    </div>
+    </section>
 
     <canvas class="star-canvas" id="starCanvas" aria-hidden="true"></canvas>
 
@@ -47,10 +52,10 @@
       <section class="hero" id="hero">
         <div class="hero__copy">
           <p class="overline">GLOBAL LITERARY THEORY ATLAS</p>
-          <h1>每一种流派，都是一本会打开的宇宙之书。</h1>
+          <h1>每一本流派，都是一扇世界之门。</h1>
           <p class="hero__lead">
-            从古典诗学到生态批评，从形式主义到后殖民理论：滚动书架，选择一本理论之书，
-            进入它的概念星域、文本案例、思想家肖像与代表作品。
+            你已进入一座会呼吸的文学图书馆。真实地球缓慢旋转，十六本理论之书沿轨道漂移：
+            近处的书脊放大成入口，远处的书影退入星尘。
           </p>
           <div class="hero__actions">
             <a class="primary-link magnetic" href="#library">进入书架轨道</a>
@@ -60,19 +65,28 @@
 
         <div class="hero__stage" id="heroStage">
           <canvas id="cosmosCanvas" aria-label="旋转的文学星仪"></canvas>
+          <div class="timepiece" id="timepiece" aria-label="实时时间机械表">
+            <div class="timepiece__dial">
+              <span class="timepiece__tick timepiece__tick--12">XII</span>
+              <span class="timepiece__tick timepiece__tick--3">III</span>
+              <span class="timepiece__tick timepiece__tick--6">VI</span>
+              <span class="timepiece__tick timepiece__tick--9">IX</span>
+              <span class="timepiece__gear timepiece__gear--one"></span>
+              <span class="timepiece__gear timepiece__gear--two"></span>
+              <span class="timepiece__hand timepiece__hand--hour" id="clockHour"></span>
+              <span class="timepiece__hand timepiece__hand--minute" id="clockMinute"></span>
+              <span class="timepiece__hand timepiece__hand--second" id="clockSecond"></span>
+              <span class="timepiece__pin"></span>
+            </div>
+            <div class="timepiece__readout">
+              <strong id="clockTime">00:00:00</strong>
+              <span id="clockDate">同步本地时间</span>
+            </div>
+          </div>
           <div class="compass" id="compass" aria-hidden="true">
             <span class="compass__ring"></span>
             <span class="compass__needle"></span>
             <span class="compass__axis"></span>
-          </div>
-          <div class="hero-book hero-book--one">
-            <span>结构主义</span>
-          </div>
-          <div class="hero-book hero-book--two">
-            <span>后殖民</span>
-          </div>
-          <div class="hero-book hero-book--three">
-            <span>女性主义</span>
           </div>
         </div>
 
