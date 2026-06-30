@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>文学理论宇宙 | The Literary Cosmos</title>
+    <meta name="description" content="以书本、星图和滚动叙事构成的全球文学理论交互档案。">
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='32' fill='%2307111f'/%3E%3Cpath d='M32 10l5 16 17 6-17 6-5 16-5-16-17-6 17-6z' fill='%2375f5ff'/%3E%3C/svg%3E">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@500;600;700;900&family=Noto+Sans+SC:wght@400;500;700;900&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./styles.css">
+  </head>
+  <body>
+    <div class="preloader" id="preloader" aria-label="进入文学理论宇宙">
+      <div class="preloader__aperture"></div>
+      <div class="preloader__mark">
+        <span>文学理论宇宙</span>
+        <small>open a book, enter a world</small>
+      </div>
+      <button class="start-button magnetic" id="startButton" type="button">
+        开启书门
+      </button>
+    </div>
+
+    <canvas class="star-canvas" id="starCanvas" aria-hidden="true"></canvas>
+
+    <header class="site-header" id="siteHeader">
+      <a class="brand" href="#hero" aria-label="回到开场">
+        <span class="brand__seal">文</span>
+        <span>
+          <strong>文学理论宇宙</strong>
+          <em>The Literary Cosmos</em>
+        </span>
+      </a>
+      <nav class="nav-links" aria-label="页面导航">
+        <a href="#library">书架轨道</a>
+        <a href="#atlas">星图索引</a>
+        <a href="#archive">思想档案</a>
+      </nav>
+      <button class="icon-button" id="soundToggle" type="button" aria-label="切换界面声效">
+        <span></span>
+      </button>
+    </header>
+
+    <main>
+      <section class="hero" id="hero">
+        <div class="hero__copy">
+          <p class="overline">GLOBAL LITERARY THEORY ATLAS</p>
+          <h1>每一种流派，都是一本会打开的宇宙之书。</h1>
+          <p class="hero__lead">
+            从古典诗学到生态批评，从形式主义到后殖民理论：滚动书架，选择一本理论之书，
+            进入它的概念星域、文本案例、思想家肖像与代表作品。
+          </p>
+          <div class="hero__actions">
+            <a class="primary-link magnetic" href="#library">进入书架轨道</a>
+            <button class="secondary-link magnetic" id="openFeatured" type="button">打开今日之书</button>
+          </div>
+        </div>
+
+        <div class="hero__stage" id="heroStage">
+          <canvas id="cosmosCanvas" aria-label="旋转的文学星仪"></canvas>
+          <div class="compass" id="compass" aria-hidden="true">
+            <span class="compass__ring"></span>
+            <span class="compass__needle"></span>
+            <span class="compass__axis"></span>
+          </div>
+          <div class="hero-book hero-book--one">
+            <span>结构主义</span>
+          </div>
+          <div class="hero-book hero-book--two">
+            <span>后殖民</span>
+          </div>
+          <div class="hero-book hero-book--three">
+            <span>女性主义</span>
+          </div>
+        </div>
+
+        <div class="scroll-cue" aria-hidden="true">
+          <span></span>
+          <span></span>
+        </div>
+      </section>
+
+      <section class="library" id="library" aria-labelledby="libraryTitle">
+        <div class="library__pin">
+          <div class="section-title">
+            <p>SCROLLING BOOKSHELF</p>
+            <h2 id="libraryTitle">滚动书架：每本书都是一个理论世界</h2>
+          </div>
+          <div class="stage-status">
+            <span id="activeIndex">01</span>
+            <strong id="activeTitle">古典诗学</strong>
+            <em id="activeMeta">mimesis · catharsis · genre</em>
+          </div>
+          <div class="book-rail" id="bookRail">
+            <div class="book-track" id="bookTrack"></div>
+          </div>
+          <div class="rail-instruction">
+            <span>滚动让书架移动</span>
+            <span>点击任意书脊，打开新的知识世界</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="atlas" id="atlas" aria-labelledby="atlasTitle">
+        <div class="atlas__map">
+          <div class="section-title section-title--center">
+            <p>CONSTELLATION INDEX</p>
+            <h2 id="atlasTitle">星图索引：理论如何彼此牵引</h2>
+          </div>
+          <div class="orbit-map" id="orbitMap"></div>
+        </div>
+      </section>
+
+      <section class="archive" id="archive" aria-labelledby="archiveTitle">
+        <div class="archive__inner">
+          <div class="section-title">
+            <p>KNOWLEDGE ARCHIVE</p>
+            <h2 id="archiveTitle">思想档案：主要命题、读法与文本案例</h2>
+          </div>
+          <div class="archive-grid" id="archiveGrid"></div>
+        </div>
+      </section>
+    </main>
+
+    <aside class="world" id="world" aria-hidden="true" aria-label="理论世界详情">
+      <div class="world__scrim" data-close-world></div>
+      <div class="world__gate world__gate--left"></div>
+      <div class="world__gate world__gate--right"></div>
+      <article class="world__panel" role="dialog" aria-modal="true" aria-labelledby="worldTitle">
+        <button class="world__close magnetic" type="button" data-close-world aria-label="关闭理论世界">关闭</button>
+        <div id="worldContent"></div>
+      </article>
+    </aside>
+
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.2/lib/anime.min.js"></script>
+    <script src="https://unpkg.com/three@0.149.0/build/three.min.js"></script>
+    <script src="./app.js"></script>
+  </body>
+</html>
