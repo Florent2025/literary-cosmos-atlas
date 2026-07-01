@@ -67,12 +67,21 @@
           <canvas id="cosmosCanvas" aria-label="旋转的文学星仪"></canvas>
           <div class="timepiece" id="timepiece" aria-label="实时时间机械表">
             <div class="timepiece__dial">
+              <span class="timepiece__bezel" aria-hidden="true"></span>
+              <span class="timepiece__bridge timepiece__bridge--top" aria-hidden="true"></span>
+              <span class="timepiece__bridge timepiece__bridge--bottom" aria-hidden="true"></span>
               <span class="timepiece__tick timepiece__tick--12">XII</span>
               <span class="timepiece__tick timepiece__tick--3">III</span>
               <span class="timepiece__tick timepiece__tick--6">VI</span>
               <span class="timepiece__tick timepiece__tick--9">IX</span>
               <span class="timepiece__gear timepiece__gear--one"></span>
               <span class="timepiece__gear timepiece__gear--two"></span>
+              <span class="timepiece__gear timepiece__gear--three"></span>
+              <span class="timepiece__gear timepiece__gear--four"></span>
+              <span class="timepiece__jewel timepiece__jewel--one"></span>
+              <span class="timepiece__jewel timepiece__jewel--two"></span>
+              <span class="timepiece__jewel timepiece__jewel--three"></span>
+              <span class="timepiece__subdial" aria-hidden="true"></span>
               <span class="timepiece__hand timepiece__hand--hour" id="clockHour"></span>
               <span class="timepiece__hand timepiece__hand--minute" id="clockMinute"></span>
               <span class="timepiece__hand timepiece__hand--second" id="clockSecond"></span>
@@ -80,13 +89,8 @@
             </div>
             <div class="timepiece__readout">
               <strong id="clockTime">00:00:00</strong>
-              <span id="clockDate">同步本地时间</span>
+              <span id="clockDate">--</span>
             </div>
-          </div>
-          <div class="compass" id="compass" aria-hidden="true">
-            <span class="compass__ring"></span>
-            <span class="compass__needle"></span>
-            <span class="compass__axis"></span>
           </div>
         </div>
 

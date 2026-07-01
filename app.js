@@ -660,8 +660,148 @@ const MOVEMENTS = [
 const state = {
   activeIndex: 0,
   worldOpen: false,
-  sound: false
+  sound: true,
+  audioContext: null
 };
+
+const FIGURE_IMAGES = {
+  "贺拉斯": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/77/%28contorniate_M%C3%A9daillon_Horace_Rome_%28...%29Horace_%280065-0008_btv1b11343890r_1_%28cropped%29.jpg/330px-%28contorniate_M%C3%A9daillon_Horace_Rome_%28...%29Horace_%280065-0008_btv1b11343890r_1_%28cropped%29.jpg",
+  "索福克勒斯": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/19/Sophocles_pushkin.jpg/330px-Sophocles_pushkin.jpg",
+  "王国维": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/%E7%8E%8B%E5%9C%8B%E7%B6%AD.jpg/330px-%E7%8E%8B%E5%9C%8B%E7%B6%AD.jpg",
+  "华兹华斯": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Wordsworth_on_Helvellyn_by_Benjamin_Robert_Haydon.jpg/330px-Wordsworth_on_Helvellyn_by_Benjamin_Robert_Haydon.jpg",
+  "柯尔律治": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/17/Samuel_Taylor_Coleridge_at_age_42.jpg/330px-Samuel_Taylor_Coleridge_at_age_42.jpg",
+  "玛丽·雪莱": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b4/Mary_Wollstonecraft_Shelley_Rothwell.tif/lossy-page1-330px-Mary_Wollstonecraft_Shelley_Rothwell.tif.jpg",
+  "巴尔扎克": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/%E5%A5%A5%C2%B7%E5%B7%B4%E5%B0%94%E6%89%8E%E5%85%8B.png/330px-%E5%A5%A5%C2%B7%E5%B7%B4%E5%B0%94%E6%89%8E%E5%85%8B.png",
+  "左拉": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/Nadar_%28atelier_de%29_-_Emile_Zola%2C_13-556535.jpg/330px-Nadar_%28atelier_de%29_-_Emile_Zola%2C_13-556535.jpg",
+  "托尔斯泰": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/be/Leo_Tolstoy_1908_Portrait_%283x4_cropped%29.jpg/330px-Leo_Tolstoy_1908_Portrait_%283x4_cropped%29.jpg",
+  "罗曼·雅各布森": "https://commons.wikimedia.org/wiki/Special:FilePath/Roman_Jakobson.jpg?width=500",
+  "雅克·拉康": "https://commons.wikimedia.org/wiki/Special:FilePath/Jacques_Lacan.jpg?width=500",
+  "朱莉娅·克里斯蒂娃": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/43/Julia_Kristeva_%C3%A0_Paris_en_2008.jpg/330px-Julia_Kristeva_%C3%A0_Paris_en_2008.jpg",
+  "格奥尔格·卢卡奇": "https://commons.wikimedia.org/wiki/Special:FilePath/Luk%C3%A1cs_Gy%C3%B6rgy.jpg?width=500",
+  "弗雷德里克·詹明信": "https://commons.wikimedia.org/wiki/Special:FilePath/Fredric_Jameson_2012.jpg?width=500",
+  "热拉尔·热奈特": "https://commons.wikimedia.org/wiki/Special:FilePath/G%C3%A9rard_Genette.jpg?width=500",
+  "汉斯·罗伯特·姚斯": "https://commons.wikimedia.org/wiki/Special:FilePath/Hans_Robert_Jauss.jpg?width=500",
+  "沃尔夫冈·伊瑟": "",
+  "斯坦利·费什": "https://commons.wikimedia.org/wiki/Special:FilePath/Stanley_Fish.jpg?width=500",
+  "斯蒂芬·格林布拉特": "https://commons.wikimedia.org/wiki/Special:FilePath/Stephen_Greenblatt_2004.jpg?width=500",
+  "雷蒙德·威廉斯": "https://commons.wikimedia.org/wiki/Special:FilePath/Raymond_Williams.jpg?width=500",
+  "让-弗朗索瓦·利奥塔": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Jean-Francois_Lyotard_cropped.jpg/330px-Jean-Francois_Lyotard_cropped.jpg",
+  "让·鲍德里亚": "https://upload.wikimedia.org/wikipedia/commons/e/ef/WikipediaBaudrillard20040612-cropped.png",
+  "蕾切尔·卡森": "https://commons.wikimedia.org/wiki/Special:FilePath/Rachel-Carson.jpg?width=500",
+  "劳伦斯·布尔": "https://commons.wikimedia.org/wiki/Special:FilePath/Lawrence_Buell.jpg?width=500",
+  "蒂莫西·莫顿": "https://commons.wikimedia.org/wiki/Special:FilePath/Timothy_Morton.png?width=500",
+  "拜伦": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Byron_1813_by_Phillips.jpg/330px-Byron_1813_by_Phillips.jpg",
+  "狄更斯": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/Dickens_Gurney_head.jpg/330px-Dickens_Gurney_head.jpg",
+  "艾略特": "https://commons.wikimedia.org/wiki/Special:FilePath/T._S._Eliot%2C_1923.JPG?width=500",
+  "乔伊斯": "https://commons.wikimedia.org/wiki/Special:FilePath/James_Joyce_by_Alex_Ehrenzweig%2C_1915.jpg?width=500",
+  "本雅明": "https://commons.wikimedia.org/wiki/Special:FilePath/Walter_Benjamin_1928.jpg?width=500",
+  "列维-斯特劳斯": "https://commons.wikimedia.org/wiki/Special:FilePath/Levi-strauss_260.jpg?width=500",
+  "沃尔特·惠特曼": "https://commons.wikimedia.org/wiki/Special:FilePath/Walt_Whitman_edit_2.jpg?width=500",
+  "斯皮瓦克": "https://commons.wikimedia.org/wiki/Special:FilePath/Gayatri_Spivak_on_Subversive_Festival.jpg?width=500",
+  "琳达·哈琴": "https://commons.wikimedia.org/wiki/Special:FilePath/Linda_Hutcheon.jpg?width=500",
+  "梭罗": "https://commons.wikimedia.org/wiki/Special:FilePath/Henry_David_Thoreau.jpg?width=500"
+};
+
+const SUPPLEMENTAL_FIGURES = {
+  "classical-poetics": [
+    { name: "柏拉图", role: "诗与真理、理念论和城邦教育的古典问题", image: "https://commons.wikimedia.org/wiki/Special:FilePath/Plato_Silanion_Musei_Capitolini_MC1377.jpg?width=500" }
+  ],
+  "chinese-poetics": [
+    { name: "杜甫", role: "诗史、沉郁顿挫与家国经验的典型案例", image: "https://commons.wikimedia.org/wiki/Special:FilePath/Du_Fu.jpg?width=500" },
+    { name: "李清照", role: "词体、女性经验与日常物象的精密组织", image: "https://commons.wikimedia.org/wiki/Special:FilePath/Li_Qingzhao.jpg?width=500" }
+  ],
+  "romanticism": [
+    { name: "拜伦", role: "拜伦式英雄、流亡主体与讽刺长诗", image: FIGURE_IMAGES["拜伦"] }
+  ],
+  "realism-naturalism": [
+    { name: "狄更斯", role: "城市贫困、儿童经验与维多利亚社会批判", image: FIGURE_IMAGES["狄更斯"] }
+  ],
+  "modernism-symbolism": [
+    { name: "艾略特", role: "神话方法、引文拼贴与文明危机", image: FIGURE_IMAGES["艾略特"] },
+    { name: "乔伊斯", role: "意识流、都柏林日常与语言实验", image: FIGURE_IMAGES["乔伊斯"] }
+  ],
+  "russian-formalism": [
+    { name: "托尔斯泰", role: "陌生化细读中的叙事案例", image: FIGURE_IMAGES["托尔斯泰"] }
+  ],
+  "marxism": [
+    { name: "本雅明", role: "机械复制、灵韵与现代媒介经验", image: FIGURE_IMAGES["本雅明"] }
+  ],
+  "structuralism": [
+    { name: "列维-斯特劳斯", role: "神话结构、二元对立与人类学叙事", image: FIGURE_IMAGES["列维-斯特劳斯"] }
+  ],
+  "reader-response": [
+    { name: "沃尔特·惠特曼", role: "开放读者位置与民主诗歌声音的案例", image: FIGURE_IMAGES["沃尔特·惠特曼"] }
+  ],
+  "postcolonial": [
+    { name: "斯皮瓦克", role: "底层、代表与知识分子伦理", image: FIGURE_IMAGES["斯皮瓦克"] }
+  ],
+  "postmodernism": [
+    { name: "琳达·哈琴", role: "后现代戏仿、史学元小说与互文性", image: FIGURE_IMAGES["琳达·哈琴"] }
+  ],
+  "ecocriticism-world": [
+    { name: "梭罗", role: "自然书写、地方感与现代生态想象", image: FIGURE_IMAGES["梭罗"] }
+  ]
+};
+
+function hydrateMovementMedia() {
+  MOVEMENTS.forEach((movement) => {
+    movement.figures.forEach((figure) => {
+      if (!figure.image && FIGURE_IMAGES[figure.name]) {
+        figure.image = FIGURE_IMAGES[figure.name];
+      }
+    });
+    const existing = new Set(movement.figures.map((figure) => figure.name));
+    (SUPPLEMENTAL_FIGURES[movement.id] || []).forEach((figure) => {
+      if (!existing.has(figure.name)) movement.figures.push(figure);
+    });
+  });
+}
+
+hydrateMovementMedia();
+
+const GRAPH_GROUPS = [
+  { key: "poetics", label: "诗学源流", x: 18, y: 21, color: "#75f5ff" },
+  { key: "form", label: "形式与语言", x: 52, y: 20, color: "#8fd3ff" },
+  { key: "subject", label: "主体与欲望", x: 80, y: 25, color: "#b99cff" },
+  { key: "history", label: "历史与权力", x: 31, y: 67, color: "#89f2c1" },
+  { key: "world", label: "世界与生态", x: 70, y: 69, color: "#f2d88f" }
+];
+
+const GRAPH_POSITIONS = {
+  "classical-poetics": { x: 16, y: 33, group: "poetics" },
+  "chinese-poetics": { x: 28, y: 28, group: "poetics" },
+  "romanticism": { x: 21, y: 51, group: "poetics" },
+  "russian-formalism": { x: 45, y: 30, group: "form" },
+  "structuralism": { x: 58, y: 34, group: "form" },
+  "modernism-symbolism": { x: 48, y: 52, group: "form" },
+  "poststructuralism": { x: 69, y: 42, group: "subject" },
+  "psychoanalysis": { x: 83, y: 37, group: "subject" },
+  "feminism-queer": { x: 81, y: 55, group: "subject" },
+  "reader-response": { x: 57, y: 64, group: "form" },
+  "realism-naturalism": { x: 26, y: 71, group: "history" },
+  "marxism": { x: 39, y: 75, group: "history" },
+  "new-historicism": { x: 50, y: 82, group: "history" },
+  "postcolonial": { x: 67, y: 78, group: "world" },
+  "postmodernism": { x: 73, y: 63, group: "world" },
+  "ecocriticism-world": { x: 84, y: 76, group: "world" }
+};
+
+const GRAPH_EDGE_TYPES = {
+  poetics: { label: "诗学源流", color: "#75f5ff" },
+  form: { label: "形式语言", color: "#8fd3ff" },
+  subject: { label: "主体欲望", color: "#b99cff" },
+  history: { label: "历史权力", color: "#89f2c1" },
+  world: { label: "世界生态", color: "#f2d88f" }
+};
+
+function graphEdgeType(source, target) {
+  const ids = [source.id, target.id];
+  if (ids.some((id) => ["marxism", "new-historicism", "postcolonial"].includes(id))) return "history";
+  if (ids.some((id) => ["psychoanalysis", "feminism-queer", "poststructuralism"].includes(id))) return "subject";
+  if (ids.some((id) => ["structuralism", "russian-formalism", "reader-response"].includes(id))) return "form";
+  if (ids.some((id) => ["ecocriticism-world", "postmodernism"].includes(id))) return "world";
+  return "poetics";
+}
 
 const $ = (selector, root = document) => root.querySelector(selector);
 const $$ = (selector, root = document) => Array.from(root.querySelectorAll(selector));
@@ -699,31 +839,67 @@ function renderArchive() {
 
 function renderOrbitMap() {
   const map = $("#orbitMap");
-  const center = { x: 50, y: 55 };
-  const nodes = MOVEMENTS.map((movement, index) => {
-    const angle = -Math.PI / 2 + index * (Math.PI * 2 / MOVEMENTS.length);
-    const radiusX = index % 2 ? 33 : 39;
-    const radiusY = index % 2 ? 26 : 33;
-    return {
-      movement,
-      x: center.x + Math.cos(angle) * radiusX,
-      y: center.y + Math.sin(angle) * radiusY
-    };
+  const nodes = MOVEMENTS.map((movement) => ({
+    movement,
+    ...(GRAPH_POSITIONS[movement.id] || { x: 50, y: 50, group: "form" })
+  }));
+  const nodeById = Object.fromEntries(nodes.map((node) => [node.movement.id, node]));
+  const seen = new Set();
+  const edges = [];
+  MOVEMENTS.forEach((source) => {
+    source.relations.forEach((targetId) => {
+      const target = movementById(targetId);
+      if (!target || target.id === source.id) return;
+      const key = [source.id, target.id].sort().join("|");
+      if (seen.has(key)) return;
+      seen.add(key);
+      edges.push({
+        from: nodeById[source.id],
+        to: nodeById[target.id],
+        type: graphEdgeType(source, target)
+      });
+    });
   });
 
-  const lineMarkup = nodes.map((node) => {
-    const dx = node.x - center.x;
-    const dy = node.y - center.y;
-    const length = Math.sqrt(dx * dx + dy * dy);
-    const angle = Math.atan2(dy, dx) * 180 / Math.PI;
-    return `<span class="orbit-line" style="left:${center.x}%;top:${center.y}%;width:${length}%;transform:rotate(${angle}deg)"></span>`;
+  const edgeMarkup = edges.map((edge) => {
+    const meta = GRAPH_EDGE_TYPES[edge.type];
+    const midX = (edge.from.x + edge.to.x) / 2;
+    const midY = (edge.from.y + edge.to.y) / 2;
+    return `
+      <g class="graph-edge graph-edge--${edge.type}">
+        <line class="orbit-line" x1="${edge.from.x}" y1="${edge.from.y}" x2="${edge.to.x}" y2="${edge.to.y}" style="--edge-color:${meta.color}"></line>
+        <circle cx="${midX}" cy="${midY}" r="0.42" style="fill:${meta.color}"></circle>
+      </g>
+    `;
   }).join("");
 
-  const nodeMarkup = nodes.map(({ movement, x, y }) => `
-    <button class="orbit-node magnetic" type="button" data-open="${movement.id}" style="left:${x}%;top:${y}%;${cssVarsFor(movement)}">${movement.title}</button>
+  const groupMarkup = GRAPH_GROUPS.map((group) => `
+    <span class="graph-cluster graph-cluster--${group.key}" style="left:${group.x}%;top:${group.y}%;--cluster-color:${group.color}">
+      ${group.label}
+    </span>
   `).join("");
 
-  map.innerHTML = `${lineMarkup}${nodeMarkup}`;
+  const nodeMarkup = nodes.map(({ movement, x, y, group }) => `
+    <button class="orbit-node magnetic orbit-node--${group}" type="button" data-open="${movement.id}" style="left:${x}%;top:${y}%;${cssVarsFor(movement)}">
+      <span>${movement.title}</span>
+      <em>${movement.lens.split("·")[0].trim()}</em>
+    </button>
+  `).join("");
+
+  const legendMarkup = `
+    <div class="graph-legend" aria-label="理论关系图例">
+      ${Object.entries(GRAPH_EDGE_TYPES).map(([key, meta]) => `
+        <span style="--edge-color:${meta.color}"><i></i>${meta.label}</span>
+      `).join("")}
+    </div>
+  `;
+
+  map.innerHTML = `
+    <svg class="graph-lines" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">${edgeMarkup}</svg>
+    ${groupMarkup}
+    ${nodeMarkup}
+    ${legendMarkup}
+  `;
 }
 
 function setActiveBook(index) {
@@ -751,6 +927,235 @@ function figureMarkup(figure) {
       </div>
     </div>
   `;
+}
+
+const SOUND_PATTERNS = {
+  open: [
+    { freq: 196, delay: 0, duration: 0.12, volume: 0.12, type: "sine" },
+    { freq: 392, delay: 0.08, duration: 0.16, volume: 0.1, type: "triangle" },
+    { freq: 659, delay: 0.17, duration: 0.2, volume: 0.08, type: "sine" }
+  ],
+  book: [
+    { freq: 146, delay: 0, duration: 0.09, volume: 0.1, type: "triangle" },
+    { freq: 329, delay: 0.05, duration: 0.13, volume: 0.08, type: "sine" }
+  ],
+  hover: [
+    { freq: 880, delay: 0, duration: 0.06, volume: 0.035, type: "sine" }
+  ],
+  select: [
+    { freq: 523, delay: 0, duration: 0.08, volume: 0.06, type: "triangle" }
+  ],
+  success: [
+    { freq: 523, delay: 0, duration: 0.08, volume: 0.08, type: "sine" },
+    { freq: 659, delay: 0.08, duration: 0.09, volume: 0.07, type: "sine" },
+    { freq: 784, delay: 0.16, duration: 0.14, volume: 0.06, type: "triangle" }
+  ],
+  close: [
+    { freq: 392, delay: 0, duration: 0.08, volume: 0.06, type: "triangle" },
+    { freq: 220, delay: 0.06, duration: 0.12, volume: 0.05, type: "sine" }
+  ]
+};
+
+function getAudioContext() {
+  const AudioContextCtor = window.AudioContext || window.webkitAudioContext;
+  if (!AudioContextCtor) return null;
+  if (!state.audioContext) state.audioContext = new AudioContextCtor();
+  if (state.audioContext.state === "suspended") state.audioContext.resume();
+  return state.audioContext;
+}
+
+function playSound(type = "select") {
+  if (!state.sound) return;
+  const context = getAudioContext();
+  if (!context) return;
+  const pattern = SOUND_PATTERNS[type] || SOUND_PATTERNS.select;
+  const now = context.currentTime;
+  pattern.forEach((tone) => {
+    const oscillator = context.createOscillator();
+    const gain = context.createGain();
+    oscillator.type = tone.type;
+    oscillator.frequency.setValueAtTime(tone.freq, now + tone.delay);
+    gain.gain.setValueAtTime(0.0001, now + tone.delay);
+    gain.gain.exponentialRampToValueAtTime(tone.volume, now + tone.delay + 0.016);
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + tone.delay + tone.duration);
+    oscillator.connect(gain).connect(context.destination);
+    oscillator.start(now + tone.delay);
+    oscillator.stop(now + tone.delay + tone.duration + 0.04);
+  });
+}
+
+function escapeAttribute(value) {
+  return String(value)
+    .replace(/&/g, "&amp;")
+    .replace(/"/g, "&quot;")
+    .replace(/</g, "&lt;");
+}
+
+function researchMarkup(movement) {
+  const relations = movement.relations.map((id) => movementById(id).title).join("、");
+  return `
+    <section class="world-section world-section--deep">
+      <h3>研究纵深</h3>
+      <div class="insight-grid">
+        <article>
+          <span>谱系位置</span>
+          <p>${movement.title}位于“${movement.lens}”这条问题链中：它从${movement.era}的历史经验出发，把${movement.region}的文学实践转化为可迁移的阅读方法。</p>
+        </article>
+        <article>
+          <span>分析焦点</span>
+          <p>进入文本时，优先观察${movement.keywords.slice(0, 3).join("、")}如何改变叙事、语言、主体或历史关系，而不是只把理论当作概念标签。</p>
+        </article>
+        <article>
+          <span>案例推进</span>
+          <p>${movement.cases[0]} 这个案例适合当作入门样本，再与作品的文类、时代制度和读者接受互相参照。</p>
+        </article>
+        <article>
+          <span>关联路径</span>
+          <p>它与${relations}形成可连续阅读的理论通道：一条通道追问形式，一条通道追问权力，另一条通道追问主体经验如何被文本组织。</p>
+        </article>
+      </div>
+    </section>
+  `;
+}
+
+function buildQuiz(movement) {
+  const related = movementById(movement.relations[0]);
+  const unrelated = MOVEMENTS.find((item) => item.id !== movement.id && !movement.relations.includes(item.id)) || MOVEMENTS[0];
+  const raw = [
+    {
+      question: `${movement.title}最核心的理论入口是什么？`,
+      options: [
+        movement.coreIdeas[0],
+        "把作品意义完全还原为作者生平轶事。",
+        "只比较作品出版年代，暂时不看文本内部。",
+        "把文学作品当作没有历史和语言差异的透明故事。"
+      ],
+      answer: 0,
+      explain: movement.coreIdeas[0]
+    },
+    {
+      question: `使用${movement.title}读一部作品时，第一步更接近哪种做法？`,
+      options: [
+        movement.method[0],
+        "先为作品打分，再寻找支持分数的证据。",
+        "跳过语言细节，只提炼一个抽象主题。",
+        "只查作者国籍和书名，避免进入段落结构。"
+      ],
+      answer: 0,
+      explain: movement.method[0]
+    },
+    {
+      question: `下列哪一项最适合作为${movement.title}的文本案例？`,
+      options: [
+        movement.cases[0],
+        "把所有文学作品都简化为市场销量排行榜。",
+        "只讨论封面颜色，不进入叙事和语言。",
+        "完全删除时代语境，只保留人物姓名。"
+      ],
+      answer: 0,
+      explain: movement.cases[0]
+    },
+    {
+      question: `${movement.title}在星图中最直接牵引到哪一类相邻理论？`,
+      options: [
+        related.title,
+        unrelated.title,
+        "与任何理论都没有关系。",
+        "只与自然科学实验方法相连。"
+      ],
+      answer: 0,
+      explain: `${movement.title}与${related.title}相连，可以帮助比较概念迁移、方法差异和历史连续性。`
+    }
+  ];
+
+  return raw.map((item, index) => {
+    const offset = index % item.options.length;
+    const options = item.options.slice(offset).concat(item.options.slice(0, offset));
+    return {
+      ...item,
+      options,
+      answer: (item.answer - offset + item.options.length) % item.options.length
+    };
+  });
+}
+
+function quizMarkup(movement) {
+  const questions = buildQuiz(movement);
+  return `
+    <section class="world-section quiz-section" data-quiz>
+      <div class="quiz-section__head">
+        <div>
+          <h3>理论测试题库</h3>
+          <p>完成全部题目后会自动核对答案，适合快速检查是否真正进入这本书的阅读方法。</p>
+        </div>
+        <button class="quiz-check magnetic" type="button">提交核对</button>
+      </div>
+      <div class="quiz-list">
+        ${questions.map((item, questionIndex) => `
+          <fieldset class="quiz-question" data-answer="${item.answer}" data-explain="${escapeAttribute(item.explain)}">
+            <legend>${questionIndex + 1}. ${item.question}</legend>
+            <div class="quiz-options">
+              ${item.options.map((option, optionIndex) => `
+                <label class="quiz-option">
+                  <input type="radio" name="quiz-${movement.id}-${questionIndex}" value="${optionIndex}">
+                  <span>${option}</span>
+                </label>
+              `).join("")}
+            </div>
+            <p class="quiz-feedback" aria-live="polite"></p>
+          </fieldset>
+        `).join("")}
+      </div>
+      <div class="quiz-result" aria-live="polite">等待作答</div>
+    </section>
+  `;
+}
+
+function setupQuiz(root) {
+  const section = $("[data-quiz]", root);
+  if (!section) return;
+  const questions = $$(".quiz-question", section);
+  const result = $(".quiz-result", section);
+
+  const grade = () => {
+    let answered = 0;
+    let correct = 0;
+    questions.forEach((question) => {
+      const answer = Number(question.dataset.answer);
+      const selected = $("input:checked", question);
+      $$(".quiz-option", question).forEach((option) => option.classList.remove("is-correct", "is-wrong"));
+      if (!selected) {
+        $(".quiz-feedback", question).textContent = "这一题还没有作答。";
+        return;
+      }
+      answered += 1;
+      const selectedOption = selected.closest(".quiz-option");
+      const isCorrect = Number(selected.value) === answer;
+      if (isCorrect) correct += 1;
+      selectedOption.classList.add(isCorrect ? "is-correct" : "is-wrong");
+      const rightOption = $(`input[value="${answer}"]`, question)?.closest(".quiz-option");
+      if (rightOption) rightOption.classList.add("is-correct");
+      $(".quiz-feedback", question).textContent = `${isCorrect ? "答对了" : "需要再看一遍"}：${question.dataset.explain}`;
+    });
+
+    if (answered < questions.length) {
+      result.textContent = `已答 ${answered}/${questions.length}，还差 ${questions.length - answered} 题。`;
+      playSound("select");
+      return;
+    }
+
+    result.textContent = `核对完成：${correct}/${questions.length} 题正确。${correct === questions.length ? "你已经掌握这本书的主航道。" : "建议回到核心命题和文本案例再扫一遍。"}`;
+    playSound(correct === questions.length ? "success" : "book");
+  };
+
+  section.addEventListener("change", (event) => {
+    if (!event.target.matches("input[type='radio']")) return;
+    playSound("select");
+    const allAnswered = questions.every((question) => Boolean($("input:checked", question)));
+    if (allAnswered) window.setTimeout(grade, 120);
+  });
+
+  $(".quiz-check", section).addEventListener("click", grade);
 }
 
 function openWorld(id) {
@@ -788,6 +1193,7 @@ function openWorld(id) {
           <h3>文本案例</h3>
           <ul class="case-list">${movement.cases.map((item) => `<li>${item}</li>`).join("")}</ul>
         </section>
+        ${researchMarkup(movement)}
         <section class="world-section">
           <h3>思想家与作家肖像</h3>
           <div class="portrait-grid">${movement.figures.map(figureMarkup).join("")}</div>
@@ -804,6 +1210,7 @@ function openWorld(id) {
             `).join("")}
           </div>
         </section>
+        ${quizMarkup(movement)}
         <section class="world-section">
           <h3>关联流派</h3>
           <div class="relation-row">
@@ -821,19 +1228,13 @@ function openWorld(id) {
   world.setAttribute("aria-hidden", "false");
   document.body.style.overflow = "hidden";
   state.worldOpen = true;
+  playSound("book");
 
   if (window.gsap) {
     gsap.killTweensOf([".world__scrim", ".world__gate", ".world__panel"]);
-    const tl = gsap.timeline({ defaults: { ease: "power3.inOut" } });
-    tl.set(".world__scrim", { autoAlpha: 0 })
-      .set(".world__gate", { scaleX: 0, xPercent: 0 })
-      .set(".world__panel", { autoAlpha: 0, y: 34, scale: 0.96 })
-      .to(".world__scrim", { autoAlpha: 1, duration: 0.22 })
-      .to(".world__gate", { scaleX: 1, duration: 0.48, stagger: 0.04 }, "<")
-      .to(".world__gate--left", { xPercent: -100, duration: 0.62 }, "+=0.05")
-      .to(".world__gate--right", { xPercent: 100, duration: 0.62 }, "<")
-      .to(".world__panel", { autoAlpha: 1, y: 0, scale: 1, duration: 0.48 }, "-=0.34")
-      .from(".world-section", { y: 24, autoAlpha: 0, stagger: 0.07, duration: 0.42, ease: "power2.out" }, "-=0.2");
+    gsap.set(".world__scrim", { clearProps: "opacity,visibility" });
+    gsap.set(".world__panel", { clearProps: "opacity,visibility,transform" });
+    gsap.set(".world__gate", { clearProps: "transform,opacity,visibility" });
   } else {
     $(".world__scrim").style.opacity = "1";
     $(".world__panel").style.opacity = "1";
@@ -841,12 +1242,14 @@ function openWorld(id) {
 
   setupTilt();
   setupOpenButtons(content);
+  setupQuiz(content);
 }
 
 function closeWorld() {
   const world = $("#world");
   if (!state.worldOpen) return;
   state.worldOpen = false;
+  playSound("close");
   document.body.style.overflow = "";
   if (window.gsap) {
     gsap.to(".world__panel", { autoAlpha: 0, y: 28, scale: 0.98, duration: 0.22, ease: "power2.in" });
@@ -918,6 +1321,11 @@ function setupTilt(root = document) {
 function setupMagnetic() {
   $$(".magnetic").forEach((el) => {
     el.addEventListener("mouseenter", () => {
+      const now = performance.now();
+      if (!setupMagnetic.lastSound || now - setupMagnetic.lastSound > 260) {
+        setupMagnetic.lastSound = now;
+        playSound("hover");
+      }
       if (!window.anime) return;
       anime.remove(el);
       anime({ targets: el, scale: [1, 1.045, 1], duration: 620, easing: "easeOutElastic(1, .45)" });
@@ -982,6 +1390,7 @@ function initLibraryGate() {
   const revealSite = () => {
     if (gateState.entered) return;
     gateState.entered = true;
+    playSound("open");
     setTarget(1);
     gate.classList.add("is-opening");
     document.body.classList.add("has-entered");
@@ -999,7 +1408,7 @@ function initLibraryGate() {
       })
         .to(gate, { autoAlpha: 0, scale: 1.045, duration: 0.92, delay: 0.46 })
         .fromTo(".hero__copy > *", { y: 38, autoAlpha: 0 }, { y: 0, autoAlpha: 1, stagger: 0.08, duration: 0.72, ease: "power3.out" }, "-=0.55")
-        .fromTo([".timepiece", ".compass"], { y: 24, autoAlpha: 0 }, { y: 0, autoAlpha: 1, stagger: 0.08, duration: 0.46 }, "-=0.38");
+        .fromTo(".timepiece", { y: 24, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.46 }, "-=0.38");
     } else {
       gate.remove();
       document.body.classList.remove("entry-locked");
@@ -1229,6 +1638,7 @@ function initThreeCosmos() {
   const earthNight = loadTexture(`${assetBase}earth-night.jpg`);
   const earthClouds = loadTexture(`${assetBase}earth-clouds.png`);
   const earthSpecular = loadTexture(`${assetBase}earth-specular.jpg`);
+  const moonTexture = loadTexture(`${assetBase}moon.jpg`);
 
   const sphereGeometry = new THREE.SphereGeometry(1.58, 96, 96);
   const earthMaterial = new THREE.MeshPhongMaterial({
@@ -1303,6 +1713,29 @@ function initThreeCosmos() {
   ringTwo.rotation.y = Math.PI / 5;
   group.add(ringOne, ringTwo);
 
+  const moonOrbitMaterial = new THREE.MeshBasicMaterial({
+    color: 0xd8eeff,
+    transparent: true,
+    opacity: 0.18,
+    blending: THREE.AdditiveBlending
+  });
+  const moonOrbitPath = new THREE.Mesh(new THREE.TorusGeometry(3.36, 0.004, 10, 220), moonOrbitMaterial);
+  moonOrbitPath.scale.z = 0.42;
+  moonOrbitPath.rotation.x = Math.PI / 2.28;
+  moonOrbitPath.rotation.y = -0.42;
+  group.add(moonOrbitPath);
+
+  const moonMaterial = new THREE.MeshStandardMaterial({
+    map: moonTexture,
+    roughness: 0.88,
+    metalness: 0,
+    emissive: new THREE.Color(0x111927),
+    emissiveIntensity: 0.12
+  });
+  const moon = new THREE.Mesh(new THREE.SphereGeometry(0.24, 48, 48), moonMaterial);
+  moon.castShadow = false;
+  group.add(moon);
+
   const satellites = new THREE.Group();
   const bookGeometry = new THREE.BoxGeometry(0.46, 0.68, 0.1);
   for (let i = 0; i < MOVEMENTS.length; i += 1) {
@@ -1320,12 +1753,15 @@ function initThreeCosmos() {
     const book = new THREE.Mesh(bookGeometry, [side, side, page, page, face, side]);
     const angle = i / MOVEMENTS.length * Math.PI * 2;
     book.userData = {
+      movementId: movement.id,
+      title: movement.title,
       angle,
       speed: 0.16 + (i % 4) * 0.018,
       radiusX: 2.92 + (i % 3) * 0.16,
       radiusZ: 1.62 + (i % 4) * 0.12,
       baseY: (i % 5 - 2) * 0.08,
-      tilt: (i % 2 ? -1 : 1) * (0.08 + (i % 3) * 0.035)
+      tilt: (i % 2 ? -1 : 1) * (0.08 + (i % 3) * 0.035),
+      hovered: false
     };
     satellites.add(book);
   }
@@ -1344,6 +1780,34 @@ function initThreeCosmos() {
   scene.add(starPoints);
 
   let lit = false;
+  let hoveredBook = null;
+  let lastHoverSound = 0;
+  const pointer = new THREE.Vector2();
+  const raycaster = new THREE.Raycaster();
+
+  const updateBookHit = (event) => {
+    const rect = canvas.getBoundingClientRect();
+    pointer.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+    pointer.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+    raycaster.setFromCamera(pointer, camera);
+    const hits = raycaster.intersectObjects([globe, ...satellites.children], false);
+    const firstHit = hits[0]?.object;
+    const next = satellites.children.includes(firstHit) ? firstHit : null;
+    if (next === hoveredBook) return next;
+    if (hoveredBook) hoveredBook.userData.hovered = false;
+    hoveredBook = next;
+    if (hoveredBook) {
+      hoveredBook.userData.hovered = true;
+      const now = performance.now();
+      if (now - lastHoverSound > 240) {
+        lastHoverSound = now;
+        playSound("hover");
+      }
+    }
+    canvas.style.cursor = hoveredBook ? "pointer" : "default";
+    return hoveredBook;
+  };
+
   const resize = () => {
     const rect = canvas.getBoundingClientRect();
     renderer.setSize(rect.width, rect.height, false);
@@ -1360,19 +1824,34 @@ function initThreeCosmos() {
     nightLights.rotation.y = globe.rotation.y;
     clouds.rotation.y += lit ? 0.008 : 0.0038;
     atmosphere.rotation.y = globe.rotation.y;
+    const moonAngle = time * (lit ? 0.36 : 0.22);
+    moon.position.set(
+      Math.cos(moonAngle) * 3.38,
+      Math.sin(moonAngle * 0.72) * 0.46 + 0.12,
+      Math.sin(moonAngle) * 1.42
+    );
+    moon.scale.setScalar(0.86 + (Math.sin(moonAngle) + 1) * 0.16);
+    moon.rotation.y += lit ? 0.012 : 0.006;
+    moon.rotation.x = Math.sin(time * 0.45) * 0.12;
+    moonOrbitPath.rotation.z += lit ? 0.0014 : 0.0007;
     satellites.children.forEach((book) => {
       const data = book.userData;
       const angle = data.angle + time * data.speed * (lit ? 1.7 : 1);
       const depth = Math.sin(angle);
       const scale = 0.56 + (depth + 1) * 0.36;
+      const hoverLift = data.hovered ? 0.18 : 0;
       book.position.set(
         Math.cos(angle) * data.radiusX,
-        Math.sin(angle * 1.7) * 0.38 + data.baseY,
+        Math.sin(angle * 1.7) * 0.38 + data.baseY + hoverLift,
         depth * data.radiusZ
       );
-      book.scale.setScalar(scale);
+      book.scale.setScalar(scale * (data.hovered ? 1.2 : 1));
       book.lookAt(camera.position);
-      book.rotation.z += data.tilt;
+      book.rotateZ(data.tilt + (data.hovered ? Math.sin(time * 5 + data.angle) * 0.07 : 0));
+      const sideMaterial = book.material[0];
+      if (sideMaterial?.emissiveIntensity !== undefined) {
+        sideMaterial.emissiveIntensity += ((data.hovered ? 0.42 : 0.04) - sideMaterial.emissiveIntensity) * 0.12;
+      }
     });
     starPoints.rotation.y += 0.0009;
     rim.intensity += ((lit ? 3.35 : 1.25) - rim.intensity) * 0.06;
@@ -1413,14 +1892,24 @@ function initThreeCosmos() {
   });
   stage.addEventListener("pointerleave", () => {
     lit = false;
+    if (hoveredBook) hoveredBook.userData.hovered = false;
+    hoveredBook = null;
+    canvas.style.cursor = "default";
     stage.classList.remove("is-lit");
   });
   stage.addEventListener("pointermove", (event) => {
+    updateBookHit(event);
     const now = performance.now();
     if (now - lastSpark > 80) {
       lastSpark = now;
       sparkle(event);
     }
+  });
+  canvas.addEventListener("click", (event) => {
+    const book = updateBookHit(event);
+    if (!book?.userData?.movementId) return;
+    event.preventDefault();
+    openWorld(book.userData.movementId);
   });
 
   resize();
@@ -1481,7 +1970,8 @@ function initScrollAnimations() {
       start: "top 65%",
       onEnter: () => {
         gsap.from(".orbit-node", { scale: 0.2, autoAlpha: 0, stagger: { each: 0.035, from: "center" }, duration: 0.8, ease: "elastic.out(1, .6)" });
-        gsap.from(".orbit-line", { scaleX: 0, autoAlpha: 0, stagger: 0.012, duration: 0.65, transformOrigin: "left center" });
+        gsap.from(".graph-edge", { autoAlpha: 0, stagger: 0.018, duration: 0.72, ease: "power2.out" });
+        gsap.from(".graph-cluster, .graph-legend", { y: 12, autoAlpha: 0, stagger: 0.05, duration: 0.5 }, "-=0.42");
       },
       once: true
     });
@@ -1520,7 +2010,7 @@ function initClock() {
     minuteHand.style.transform = `translateX(-50%) rotate(${minutes * 6}deg)`;
     secondHand.style.transform = `translateX(-50%) rotate(${seconds * 6}deg)`;
     timeText.textContent = now.toLocaleTimeString("zh-CN", { hour12: false });
-    dateText.textContent = `${formatDate.format(now)} · 本地同步`;
+    dateText.textContent = formatDate.format(now);
   };
   update();
   window.setInterval(update, 1000);
@@ -1528,13 +2018,16 @@ function initClock() {
 
 function bindGlobalEvents() {
   $("#openFeatured").addEventListener("click", () => openWorld("modernism-symbolism"));
+  $$("a[href^='#']").forEach((link) => link.addEventListener("click", () => playSound("select")));
   $$("[data-close-world]").forEach((el) => el.addEventListener("click", closeWorld));
   document.addEventListener("keydown", (event) => {
     if (event.key === "Escape") closeWorld();
   });
+  $("#soundToggle").classList.toggle("is-on", state.sound);
   $("#soundToggle").addEventListener("click", () => {
     state.sound = !state.sound;
     $("#soundToggle").classList.toggle("is-on", state.sound);
+    if (state.sound) playSound("success");
     if (window.anime) {
       anime({ targets: "#soundToggle", rotate: [0, 8, -8, 0], duration: 420, easing: "easeOutElastic(1, .5)" });
     }
