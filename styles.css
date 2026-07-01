@@ -28,7 +28,14 @@
 
 html {
   scroll-behavior: smooth;
+  scrollbar-width: none;
   background: var(--ink);
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  width: 0;
+  height: 0;
 }
 
 body {
@@ -2720,6 +2727,194 @@ main {
 
   .timepiece__orbit--inner {
     width: 112px;
+  }
+}
+
+/* Art-directed opening scene: match the supplied cosmic-library reference. */
+body.has-entered .site-header:not(.is-compact) {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-120%);
+}
+
+.site-header.is-compact {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+.hero {
+  display: block;
+  min-height: 100svh;
+  padding: 0;
+  overflow: hidden;
+  background: #02050b;
+}
+
+.hero__copy {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.hero__stage {
+  position: absolute;
+  inset: 0;
+  min-height: 100svh;
+  overflow: hidden;
+  background: url("./assets/hero-cosmos-library-reference.png") center / cover no-repeat #02050b;
+}
+
+.hero__stage::before {
+  inset: 0;
+  z-index: 3;
+  border-radius: 0;
+  opacity: 0;
+  background: transparent;
+  mask-image: none;
+  transform: none;
+  animation: none;
+  mix-blend-mode: screen;
+}
+
+.hero__stage::after {
+  inset: 0;
+  z-index: 4;
+  width: auto;
+  aspect-ratio: auto;
+  border: 0;
+  border-radius: 0;
+  opacity: 0;
+  background: transparent;
+  box-shadow: none;
+  transform: none;
+}
+
+.hero__stage.is-lit::before {
+  opacity: 0.72;
+}
+
+#cosmosCanvas {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.hero .cosmos-tooltip {
+  display: none !important;
+}
+
+.hero .timepiece {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none;
+}
+
+.hero-hotspots {
+  position: absolute;
+  inset: 0;
+  z-index: 15;
+  pointer-events: none;
+}
+
+.hero-hotspot {
+  position: absolute;
+  display: block;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  cursor: pointer;
+  pointer-events: auto;
+  background: transparent;
+  transform-origin: center;
+  transition:
+    border-color 180ms ease,
+    background 180ms ease,
+    box-shadow 180ms ease,
+    filter 180ms ease;
+}
+
+.hero-hotspot:hover,
+.hero-hotspot:focus-visible {
+  outline: 0;
+  border-color: rgba(117, 245, 255, 0.56);
+  background: rgba(117, 245, 255, 0.06);
+  box-shadow:
+    0 0 0 1px rgba(244, 206, 122, 0.18),
+    0 0 26px rgba(117, 245, 255, 0.26),
+    inset 0 0 24px rgba(117, 245, 255, 0.08);
+  filter: saturate(1.2);
+}
+
+.hero-hotspot--classical {
+  left: 7%;
+  top: 40%;
+  width: 11%;
+  height: 18%;
+  transform: rotate(-20deg);
+}
+
+.hero-hotspot--realism {
+  left: 10%;
+  top: 50%;
+  width: 13%;
+  height: 25%;
+  transform: rotate(-4deg);
+}
+
+.hero-hotspot--romanticism {
+  left: 27%;
+  top: 54%;
+  width: 13%;
+  height: 25%;
+  transform: rotate(13deg);
+}
+
+.hero-hotspot--modernism {
+  left: 43%;
+  top: 56%;
+  width: 12%;
+  height: 27%;
+  transform: rotate(-8deg);
+}
+
+.hero-hotspot--poststructuralism {
+  left: 57%;
+  top: 51%;
+  width: 12%;
+  height: 23%;
+  transform: rotate(22deg);
+}
+
+.hero .scroll-cue {
+  display: none;
+}
+
+@media (max-width: 1080px) {
+  .hero__stage {
+    background-position: center;
+  }
+}
+
+@media (max-width: 720px) {
+  .hero {
+    min-height: 100svh;
+  }
+
+  .hero__stage {
+    min-height: 100svh;
+    background-size: cover;
+    background-position: 52% center;
+  }
+
+  .hero-hotspot--classical,
+  .hero-hotspot--realism,
+  .hero-hotspot--romanticism,
+  .hero-hotspot--modernism,
+  .hero-hotspot--poststructuralism {
+    display: none;
   }
 }
 
