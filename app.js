@@ -759,6 +759,25 @@ function hydrateMovementMedia() {
 
 hydrateMovementMedia();
 
+const MOVEMENT_LOCATIONS = {
+  "classical-poetics": { lat: 37.98, lon: 23.72, label: "雅典 / 地中海诗学源头" },
+  "chinese-poetics": { lat: 34.34, lon: 108.94, label: "长安 / 中国诗学传统" },
+  "romanticism": { lat: 54.46, lon: -3.09, label: "英格兰湖区 / 浪漫主义自然" },
+  "realism-naturalism": { lat: 48.86, lon: 2.35, label: "巴黎 / 现实主义城市" },
+  "modernism-symbolism": { lat: 51.51, lon: -0.13, label: "伦敦-巴黎 / 现代主义轴线" },
+  "russian-formalism": { lat: 59.93, lon: 30.33, label: "彼得格勒 / 形式主义社群" },
+  "psychoanalysis": { lat: 48.21, lon: 16.37, label: "维也纳 / 精神分析现场" },
+  "marxism": { lat: 51.51, lon: -0.13, label: "伦敦 / 历史唯物主义语境" },
+  "structuralism": { lat: 46.2, lon: 6.14, label: "日内瓦-巴黎 / 结构主义语言学" },
+  "poststructuralism": { lat: 48.86, lon: 2.35, label: "巴黎 / 后结构主义争辩" },
+  "reader-response": { lat: 47.66, lon: 9.18, label: "康斯坦茨 / 接受美学" },
+  "feminism-queer": { lat: 40.71, lon: -74.01, label: "纽约 / 性别理论公共场" },
+  "postcolonial": { lat: 22.57, lon: 88.36, label: "加尔各答 / 后殖民知识现场" },
+  "new-historicism": { lat: 37.87, lon: -122.27, label: "伯克利 / 新历史主义" },
+  "postmodernism": { lat: 40.71, lon: -74.01, label: "纽约-巴黎 / 后现代文化" },
+  "ecocriticism-world": { lat: 42.44, lon: -71.34, label: "瓦尔登湖 / 生态批评源流" }
+};
+
 const GRAPH_GROUPS = [
   { key: "poetics", label: "诗学源流", x: 18, y: 21, color: "#75f5ff" },
   { key: "form", label: "形式与语言", x: 52, y: 20, color: "#8fd3ff" },
@@ -965,23 +984,27 @@ function getAudioContext() {
 }
 
 function playSound(type = "select") {
-  if (!state.sound) return;
-  const context = getAudioContext();
-  if (!context) return;
-  const pattern = SOUND_PATTERNS[type] || SOUND_PATTERNS.select;
-  const now = context.currentTime;
-  pattern.forEach((tone) => {
-    const oscillator = context.createOscillator();
-    const gain = context.createGain();
-    oscillator.type = tone.type;
-    oscillator.frequency.setValueAtTime(tone.freq, now + tone.delay);
-    gain.gain.setValueAtTime(0.0001, now + tone.delay);
-    gain.gain.exponentialRampToValueAtTime(tone.volume, now + tone.delay + 0.016);
-    gain.gain.exponentialRampToValueAtTime(0.0001, now + tone.delay + tone.duration);
-    oscillator.connect(gain).connect(context.destination);
-    oscillator.start(now + tone.delay);
-    oscillator.stop(now + tone.delay + tone.duration + 0.04);
-  });
+  try {
+    if (!state.sound) return;
+    const context = getAudioContext();
+    if (!context) return;
+    const pattern = SOUND_PATTERNS[type] || SOUND_PATTERNS.select;
+    const now = context.currentTime;
+    pattern.forEach((tone) => {
+      const oscillator = context.createOscillator();
+      const gain = context.createGain();
+      oscillator.type = tone.type;
+      oscillator.frequency.setValueAtTime(tone.freq, now + tone.delay);
+      gain.gain.setValueAtTime(0.0001, now + tone.delay);
+      gain.gain.exponentialRampToValueAtTime(tone.volume, now + tone.delay + 0.016);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + tone.delay + tone.duration);
+      oscillator.connect(gain).connect(context.destination);
+      oscillator.start(now + tone.delay);
+      oscillator.stop(now + tone.delay + tone.duration + 0.04);
+    });
+  } catch (error) {
+    console.warn("Interface sound unavailable.", error);
+  }
 }
 
 function escapeAttribute(value) {
@@ -1394,25 +1417,27 @@ function initLibraryGate() {
     setTarget(1);
     gate.classList.add("is-opening");
     document.body.classList.add("has-entered");
+    document.body.classList.remove("entry-locked");
+    gate.style.pointerEvents = "none";
     window.scrollTo(0, 0);
+    const removeGate = () => {
+      if (gate.isConnected) gate.remove();
+      document.body.classList.remove("entry-locked");
+      window.scrollTo(0, 0);
+      if (window.ScrollTrigger) ScrollTrigger.refresh();
+    };
+    window.setTimeout(removeGate, 1700);
 
     if (window.gsap) {
       gsap.timeline({
         defaults: { ease: "power3.inOut" },
-        onComplete: () => {
-          gate.remove();
-          document.body.classList.remove("entry-locked");
-          window.scrollTo(0, 0);
-          if (window.ScrollTrigger) ScrollTrigger.refresh();
-        }
+        onComplete: removeGate
       })
         .to(gate, { autoAlpha: 0, scale: 1.045, duration: 0.92, delay: 0.46 })
         .fromTo(".hero__copy > *", { y: 38, autoAlpha: 0 }, { y: 0, autoAlpha: 1, stagger: 0.08, duration: 0.72, ease: "power3.out" }, "-=0.55")
         .fromTo(".timepiece", { y: 24, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.46 }, "-=0.38");
     } else {
-      gate.remove();
-      document.body.classList.remove("entry-locked");
-      window.scrollTo(0, 0);
+      removeGate();
     }
   };
 
@@ -1442,7 +1467,14 @@ function initLibraryGate() {
 
   if (!canvas || !window.THREE) return;
 
-  const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+  let renderer;
+  try {
+    renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+  } catch (error) {
+    console.warn("Library gate WebGL unavailable; using CSS entrance fallback.", error);
+    canvas.style.display = "none";
+    return;
+  }
   renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
   if (THREE.sRGBEncoding) renderer.outputEncoding = THREE.sRGBEncoding;
   if (THREE.ACESFilmicToneMapping) {
@@ -1559,41 +1591,256 @@ function initLibraryGate() {
   window.addEventListener("resize", resize);
 }
 
-function makeBookTexture(movement, index) {
-  const canvas = document.createElement("canvas");
-  canvas.width = 512;
-  canvas.height = 768;
-  const ctx = canvas.getContext("2d");
-  const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
-  gradient.addColorStop(0, movement.palette[0]);
-  gradient.addColorStop(0.58, movement.palette[1]);
-  gradient.addColorStop(1, movement.palette[2]);
-  ctx.fillStyle = gradient;
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-  ctx.fillStyle = "rgba(3, 7, 17, 0.16)";
-  ctx.fillRect(0, 0, 52, canvas.height);
-  ctx.strokeStyle = "rgba(3, 7, 17, 0.34)";
-  ctx.lineWidth = 4;
-  ctx.strokeRect(34, 34, canvas.width - 68, canvas.height - 68);
-  ctx.fillStyle = "rgba(255, 255, 255, 0.2)";
-  ctx.beginPath();
-  ctx.ellipse(canvas.width * 0.58, canvas.height * 0.64, 190, 96, -0.5, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.fillStyle = "#07101d";
-  ctx.font = "900 58px 'Noto Serif SC', serif";
-  ctx.textAlign = "center";
-  ctx.textBaseline = "middle";
-  const chars = movement.title.length > 5 ? [movement.title.slice(0, 4), movement.title.slice(4)] : [movement.title];
-  chars.forEach((line, lineIndex) => ctx.fillText(line, canvas.width / 2, canvas.height * 0.48 + lineIndex * 66));
-  ctx.font = "700 25px 'Space Grotesk', sans-serif";
-  ctx.letterSpacing = "2px";
-  ctx.fillText(String(index + 1).padStart(2, "0"), canvas.width / 2, 92);
-  ctx.font = "700 22px 'Noto Sans SC', sans-serif";
-  ctx.fillText(movement.era.slice(0, 14), canvas.width / 2, canvas.height - 94);
-  const texture = new THREE.CanvasTexture(canvas);
+function finishCanvasTexture(texture) {
+  if (THREE.SRGBColorSpace) texture.colorSpace = THREE.SRGBColorSpace;
   if (THREE.sRGBEncoding) texture.encoding = THREE.sRGBEncoding;
   texture.anisotropy = 4;
+  texture.needsUpdate = true;
   return texture;
+}
+
+function leatherColor(movement, amount = 0.48) {
+  return new THREE.Color(movement.palette[1]).lerp(new THREE.Color(0x3a2c1e), amount);
+}
+
+function paintBookGrain(ctx, width, height, density = 18) {
+  const points = Math.round((width * height) / density);
+  for (let i = 0; i < points; i += 1) {
+    const alpha = 0.025 + Math.random() * 0.055;
+    ctx.fillStyle = Math.random() > 0.5
+      ? `rgba(255, 255, 255, ${alpha})`
+      : `rgba(0, 0, 0, ${alpha})`;
+    ctx.fillRect(Math.random() * width, Math.random() * height, 1.2, 1.2);
+  }
+}
+
+function wrapCanvasText(ctx, text, x, y, maxWidth, lineHeight, maxLines = 3) {
+  const letters = Array.from(String(text));
+  const lines = [];
+  let current = "";
+  letters.forEach((letter) => {
+    const next = current + letter;
+    if (ctx.measureText(next).width > maxWidth && current) {
+      lines.push(current);
+      current = letter;
+    } else {
+      current = next;
+    }
+  });
+  if (current) lines.push(current);
+  const trimmed = lines.slice(0, maxLines);
+  const startY = y - ((trimmed.length - 1) * lineHeight) / 2;
+  trimmed.forEach((line, lineIndex) => ctx.fillText(line, x, startY + lineIndex * lineHeight));
+}
+
+function makeBookTexture(movement, index) {
+  const canvas = document.createElement("canvas");
+  canvas.width = 420;
+  canvas.height = 596;
+  const ctx = canvas.getContext("2d");
+  const { width, height } = canvas;
+  const base = leatherColor(movement, 0.48);
+  const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+  gradient.addColorStop(0, `#${base.clone().offsetHSL(0, -0.02, 0.06).getHexString()}`);
+  gradient.addColorStop(0.55, `#${base.getHexString()}`);
+  gradient.addColorStop(1, `#${base.clone().offsetHSL(0, 0.01, -0.1).getHexString()}`);
+  ctx.fillStyle = gradient;
+  ctx.fillRect(0, 0, width, height);
+  paintBookGrain(ctx, width, height, 22);
+
+  const sheen = ctx.createLinearGradient(0, 0, width, height * 0.55);
+  sheen.addColorStop(0, "rgba(255,255,255,0.08)");
+  sheen.addColorStop(0.45, "rgba(255,255,255,0.01)");
+  sheen.addColorStop(1, "rgba(255,255,255,0)");
+  ctx.fillStyle = sheen;
+  ctx.fillRect(0, 0, width, height);
+
+  const vignette = ctx.createRadialGradient(width / 2, height / 2, height * 0.12, width / 2, height / 2, height * 0.78);
+  vignette.addColorStop(0, "rgba(0,0,0,0)");
+  vignette.addColorStop(1, "rgba(0,0,0,0.45)");
+  ctx.fillStyle = vignette;
+  ctx.fillRect(0, 0, width, height);
+
+  const gutter = width * 0.13;
+  ctx.fillStyle = "rgba(0, 0, 0, 0.16)";
+  ctx.fillRect(0, 0, gutter, height);
+  ctx.fillStyle = "rgba(226, 183, 101, 0.16)";
+  ctx.fillRect(gutter + width * 0.01, 0, width * 0.008, height);
+
+  const margin = width * 0.06;
+  ctx.strokeStyle = "rgba(226,183,101,0.9)";
+  ctx.lineWidth = Math.max(1, width * 0.01);
+  ctx.strokeRect(margin, margin, width - margin * 2, height - margin * 2);
+  ctx.strokeStyle = "rgba(226,183,101,0.4)";
+  ctx.lineWidth = Math.max(0.5, width * 0.004);
+  ctx.strokeRect(margin + width * 0.02, margin + width * 0.02, width - (margin + width * 0.02) * 2, height - (margin + width * 0.02) * 2);
+
+  ctx.strokeStyle = "rgba(226,183,101,0.46)";
+  ctx.lineWidth = Math.max(1, width * 0.006);
+  ctx.beginPath();
+  ctx.moveTo(width * 0.22, height * 0.25);
+  ctx.lineTo(width * 0.78, height * 0.25);
+  ctx.moveTo(width * 0.22, height * 0.72);
+  ctx.lineTo(width * 0.78, height * 0.72);
+  ctx.stroke();
+
+  ctx.fillStyle = "rgba(255,255,255,0.08)";
+  ctx.beginPath();
+  ctx.ellipse(width * 0.58, height * 0.64, width * 0.31, height * 0.12, -0.5, 0, Math.PI * 2);
+  ctx.fill();
+
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.fillStyle = "#F2D79A";
+  ctx.font = `${Math.max(14, width * 0.042)}px Cinzel, 'Space Grotesk', serif`;
+  ctx.fillText(String(index + 1).padStart(2, "0"), width / 2, height * 0.17);
+
+  ctx.fillStyle = "#FBF3DD";
+  ctx.font = `900 ${Math.max(34, width * 0.12)}px 'Noto Serif SC', Cinzel, serif`;
+  wrapCanvasText(ctx, movement.title, width / 2, height * 0.47, width * 0.72, width * 0.13, 3);
+
+  ctx.fillStyle = "rgba(246, 234, 200, 0.86)";
+  ctx.font = `700 ${Math.max(13, width * 0.044)}px 'Noto Sans SC', sans-serif`;
+  wrapCanvasText(ctx, movement.era, width / 2, height * 0.79, width * 0.68, width * 0.054, 2);
+
+  ctx.strokeStyle = "#E2B765";
+  ctx.lineWidth = Math.max(1, width * 0.007);
+  ctx.beginPath();
+  ctx.arc(width / 2, height * 0.86, width * 0.075, 0, Math.PI * 2);
+  ctx.stroke();
+  ctx.fillStyle = "#E2B765";
+  ctx.font = `${Math.max(18, width * 0.06)}px Cinzel, serif`;
+  ctx.fillText("✦", width / 2, height * 0.862);
+
+  return finishCanvasTexture(new THREE.CanvasTexture(canvas));
+}
+
+function makeBookSpineTexture(movement) {
+  const canvas = document.createElement("canvas");
+  canvas.width = 84;
+  canvas.height = 430;
+  const ctx = canvas.getContext("2d");
+  const base = leatherColor(movement, 0.5);
+  const gradient = ctx.createLinearGradient(0, 0, canvas.width, 0);
+  gradient.addColorStop(0, `#${base.clone().offsetHSL(0, 0, -0.28).getHexString()}`);
+  gradient.addColorStop(0.5, `#${base.clone().offsetHSL(0, 0, -0.02).getHexString()}`);
+  gradient.addColorStop(1, `#${base.clone().offsetHSL(0, 0, -0.28).getHexString()}`);
+  ctx.fillStyle = gradient;
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  paintBookGrain(ctx, canvas.width, canvas.height, 20);
+  ctx.fillStyle = "rgba(226,183,101,0.8)";
+  ctx.fillRect(0, canvas.height * 0.08, canvas.width, canvas.height * 0.018);
+  ctx.fillRect(0, canvas.height * 0.9, canvas.width, canvas.height * 0.018);
+  ctx.strokeStyle = "rgba(226,183,101,0.32)";
+  ctx.lineWidth = 1;
+  ctx.strokeRect(8, 18, canvas.width - 16, canvas.height - 36);
+  ctx.save();
+  ctx.translate(canvas.width * 0.6, canvas.height * 0.78);
+  ctx.rotate(-Math.PI / 2);
+  ctx.fillStyle = "#F6EAC8";
+  ctx.font = "700 18px 'Noto Serif SC', Cinzel, serif";
+  ctx.textAlign = "left";
+  ctx.fillText(movement.title, 0, 0);
+  ctx.restore();
+  return finishCanvasTexture(new THREE.CanvasTexture(canvas));
+}
+
+function makeBookBackTexture(movement) {
+  const canvas = document.createElement("canvas");
+  canvas.width = 180;
+  canvas.height = 256;
+  const ctx = canvas.getContext("2d");
+  const base = leatherColor(movement, 0.55);
+  ctx.fillStyle = `#${base.clone().offsetHSL(0, 0, -0.22).getHexString()}`;
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  paintBookGrain(ctx, canvas.width, canvas.height, 24);
+  ctx.strokeStyle = "rgba(226,183,101,0.45)";
+  ctx.lineWidth = 3;
+  ctx.strokeRect(13, 13, canvas.width - 26, canvas.height - 26);
+  ctx.strokeStyle = "rgba(226,183,101,0.55)";
+  ctx.beginPath();
+  ctx.arc(canvas.width / 2, canvas.height / 2, 22, 0, Math.PI * 2);
+  ctx.stroke();
+  return finishCanvasTexture(new THREE.CanvasTexture(canvas));
+}
+
+function makePageTexture() {
+  const canvas = document.createElement("canvas");
+  canvas.width = 96;
+  canvas.height = 96;
+  const ctx = canvas.getContext("2d");
+  ctx.fillStyle = "#efe8d2";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.strokeStyle = "rgba(87, 68, 43, 0.26)";
+  ctx.lineWidth = 1;
+  for (let y = 5; y < canvas.height; y += 7) {
+    ctx.beginPath();
+    ctx.moveTo(0, y + Math.sin(y) * 0.8);
+    ctx.lineTo(canvas.width, y + Math.cos(y) * 0.8);
+    ctx.stroke();
+  }
+  const texture = finishCanvasTexture(new THREE.CanvasTexture(canvas));
+  texture.wrapS = THREE.RepeatWrapping;
+  texture.wrapT = THREE.RepeatWrapping;
+  return texture;
+}
+
+function makeBookGlowTexture(movement) {
+  const canvas = document.createElement("canvas");
+  canvas.width = 320;
+  canvas.height = 460;
+  const ctx = canvas.getContext("2d");
+  const glow = ctx.createRadialGradient(canvas.width / 2, canvas.height / 2, 0, canvas.width / 2, canvas.height / 2, canvas.height * 0.62);
+  glow.addColorStop(0, "#ffffff");
+  glow.addColorStop(0.25, movement.palette[2]);
+  glow.addColorStop(0.58, movement.palette[1]);
+  glow.addColorStop(1, "rgba(0,0,0,0)");
+  ctx.fillStyle = glow;
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  return finishCanvasTexture(new THREE.CanvasTexture(canvas));
+}
+
+function makeBookMaterials(movement, index) {
+  const coverTexture = makeBookTexture(movement, index);
+  const spineTexture = makeBookSpineTexture(movement);
+  const backTexture = makeBookBackTexture(movement);
+  const pageTexture = makePageTexture();
+  const sideColor = leatherColor(movement, 0.46);
+  const pageMaterial = new THREE.MeshStandardMaterial({ map: pageTexture, roughness: 0.92, metalness: 0.02, transparent: true });
+  const spineMaterial = new THREE.MeshStandardMaterial({ map: spineTexture, roughness: 0.84, metalness: 0.08, transparent: true });
+  const coverMaterial = new THREE.MeshStandardMaterial({
+    map: coverTexture,
+    roughness: 0.78,
+    metalness: 0.08,
+    emissive: new THREE.Color(movement.palette[2]),
+    emissiveIntensity: 0.035,
+    transparent: true
+  });
+  const backMaterial = new THREE.MeshStandardMaterial({ map: backTexture, roughness: 0.86, metalness: 0.04, transparent: true });
+  const edgeMaterial = new THREE.MeshStandardMaterial({
+    color: sideColor,
+    roughness: 0.84,
+    metalness: 0.05,
+    emissive: new THREE.Color(movement.palette[2]),
+    emissiveIntensity: 0.02,
+    transparent: true
+  });
+  return {
+    coverTexture,
+    glowTexture: makeBookGlowTexture(movement),
+    materials: [pageMaterial, spineMaterial, pageMaterial.clone(), pageMaterial.clone(), coverMaterial, backMaterial],
+    edgeMaterial
+  };
+}
+
+function latLonToVector3(lat, lon, radius) {
+  const phi = (90 - lat) * Math.PI / 180;
+  const theta = (lon + 180) * Math.PI / 180;
+  return new THREE.Vector3(
+    -radius * Math.sin(phi) * Math.cos(theta),
+    radius * Math.cos(phi),
+    radius * Math.sin(phi) * Math.sin(theta)
+  );
 }
 
 function initThreeCosmos() {
@@ -1601,7 +1848,14 @@ function initThreeCosmos() {
   const stage = $("#heroStage");
   if (!canvas || !window.THREE) return;
 
-  const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+  let renderer;
+  try {
+    renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+  } catch (error) {
+    console.warn("Cosmos WebGL unavailable; keeping content interface available.", error);
+    canvas.style.display = "none";
+    return;
+  }
   renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
   if (THREE.sRGBEncoding) renderer.outputEncoding = THREE.sRGBEncoding;
   if (THREE.ACESFilmicToneMapping) {
@@ -1705,6 +1959,60 @@ function initThreeCosmos() {
   atmosphere.scale.setScalar(1.13);
   group.add(atmosphere);
 
+  const locationMarkers = new THREE.Group();
+  const locationPickers = [];
+  MOVEMENTS.forEach((movement) => {
+    const loc = MOVEMENT_LOCATIONS[movement.id];
+    if (!loc) return;
+    const marker = new THREE.Group();
+    const pos = latLonToVector3(loc.lat, loc.lon, 1.665);
+    marker.position.copy(pos);
+    marker.lookAt(new THREE.Vector3(0, 0, 0));
+    const markerColor = new THREE.Color(movement.palette[2]);
+    const dot = new THREE.Mesh(
+      new THREE.SphereGeometry(0.035, 18, 12),
+      new THREE.MeshBasicMaterial({
+        color: markerColor,
+        transparent: true,
+        opacity: 0.95,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false
+      })
+    );
+    const halo = new THREE.Mesh(
+      new THREE.RingGeometry(0.062, 0.092, 36),
+      new THREE.MeshBasicMaterial({
+        color: markerColor,
+        side: THREE.DoubleSide,
+        transparent: true,
+        opacity: 0.68,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false
+      })
+    );
+    const plume = new THREE.Sprite(new THREE.SpriteMaterial({
+      map: makeBookGlowTexture(movement),
+      color: markerColor,
+      transparent: true,
+      opacity: 0.26,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false
+    }));
+    plume.scale.set(0.22, 0.32, 1);
+    plume.position.set(0, 0, 0.075);
+    marker.add(plume, halo, dot);
+    dot.userData = {
+      type: "location",
+      movementId: movement.id,
+      title: movement.title,
+      location: loc.label
+    };
+    halo.userData = dot.userData;
+    locationPickers.push(dot, halo);
+    locationMarkers.add(marker);
+  });
+  globe.add(locationMarkers);
+
   const ringMaterial = new THREE.MeshBasicMaterial({ color: 0xa994ff, transparent: true, opacity: 0.48 });
   const ringOne = new THREE.Mesh(new THREE.TorusGeometry(2.08, 0.012, 16, 180), ringMaterial);
   ringOne.rotation.x = Math.PI / 2.8;
@@ -1719,8 +2027,8 @@ function initThreeCosmos() {
     opacity: 0.18,
     blending: THREE.AdditiveBlending
   });
-  const moonOrbitPath = new THREE.Mesh(new THREE.TorusGeometry(3.36, 0.004, 10, 220), moonOrbitMaterial);
-  moonOrbitPath.scale.z = 0.42;
+  const moonOrbitPath = new THREE.Mesh(new THREE.TorusGeometry(4.48, 0.004, 10, 240), moonOrbitMaterial);
+  moonOrbitPath.scale.z = 0.52;
   moonOrbitPath.rotation.x = Math.PI / 2.28;
   moonOrbitPath.rotation.y = -0.42;
   group.add(moonOrbitPath);
@@ -1732,36 +2040,34 @@ function initThreeCosmos() {
     emissive: new THREE.Color(0x111927),
     emissiveIntensity: 0.12
   });
-  const moon = new THREE.Mesh(new THREE.SphereGeometry(0.24, 48, 48), moonMaterial);
+  const moon = new THREE.Mesh(new THREE.SphereGeometry(0.22, 48, 48), moonMaterial);
   moon.castShadow = false;
   group.add(moon);
 
   const satellites = new THREE.Group();
-  const bookGeometry = new THREE.BoxGeometry(0.46, 0.68, 0.1);
+  const bookGeometry = new THREE.BoxGeometry(0.54, 0.78, 0.12);
   for (let i = 0; i < MOVEMENTS.length; i += 1) {
     const movement = MOVEMENTS[i];
-    const face = new THREE.MeshBasicMaterial({ map: makeBookTexture(movement, i) });
-    const sideColor = new THREE.Color(movement.palette[1]);
-    const side = new THREE.MeshStandardMaterial({
-      color: sideColor,
-      roughness: 0.58,
-      metalness: 0.06,
-      emissive: new THREE.Color(movement.palette[2]),
-      emissiveIntensity: 0.04
-    });
-    const page = new THREE.MeshStandardMaterial({ color: 0xf2f6f7, roughness: 0.72, metalness: 0.02 });
-    const book = new THREE.Mesh(bookGeometry, [side, side, page, page, face, side]);
+    const bookKit = makeBookMaterials(movement, i);
+    const book = new THREE.Mesh(bookGeometry, bookKit.materials);
     const angle = i / MOVEMENTS.length * Math.PI * 2;
     book.userData = {
       movementId: movement.id,
       title: movement.title,
+      movement,
       angle,
       speed: 0.16 + (i % 4) * 0.018,
       radiusX: 2.92 + (i % 3) * 0.16,
       radiusZ: 1.62 + (i % 4) * 0.12,
       baseY: (i % 5 - 2) * 0.08,
       tilt: (i % 2 ? -1 : 1) * (0.08 + (i % 3) * 0.035),
-      hovered: false
+      hovered: false,
+      opening: false,
+      portalHidden: false,
+      materials: bookKit.materials,
+      coverTexture: bookKit.coverTexture,
+      glowTexture: bookKit.glowTexture,
+      coverPivot: null
     };
     satellites.add(book);
   }
@@ -1781,31 +2087,236 @@ function initThreeCosmos() {
 
   let lit = false;
   let hoveredBook = null;
+  let hoveredMarker = null;
+  let openingBook = false;
   let lastHoverSound = 0;
   const pointer = new THREE.Vector2();
   const raycaster = new THREE.Raycaster();
+  const tooltip = document.createElement("div");
+  tooltip.className = "cosmos-tooltip";
+  tooltip.setAttribute("aria-hidden", "true");
+  stage.appendChild(tooltip);
 
-  const updateBookHit = (event) => {
+  const setTooltip = (event, target) => {
+    if (!target) {
+      tooltip.classList.remove("is-visible");
+      tooltip.setAttribute("aria-hidden", "true");
+      return;
+    }
+    const rect = stage.getBoundingClientRect();
+    tooltip.style.left = `${event.clientX - rect.left}px`;
+    tooltip.style.top = `${event.clientY - rect.top}px`;
+    tooltip.innerHTML = target.type === "book"
+      ? `<strong>${target.book.userData.title}</strong><span>${target.book.userData.movement.lens}</span><em>${MOVEMENT_LOCATIONS[target.book.userData.movementId]?.label || target.book.userData.movement.region}</em>`
+      : `<strong>${target.marker.userData.title}</strong><span>${target.marker.userData.location}</span><em>点击从地理现场进入理论世界</em>`;
+    tooltip.classList.add("is-visible");
+    tooltip.setAttribute("aria-hidden", "false");
+  };
+
+  const updateHeroHit = (event) => {
+    if (openingBook) return null;
     const rect = canvas.getBoundingClientRect();
     pointer.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
     pointer.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
     raycaster.setFromCamera(pointer, camera);
-    const hits = raycaster.intersectObjects([globe, ...satellites.children], false);
-    const firstHit = hits[0]?.object;
-    const next = satellites.children.includes(firstHit) ? firstHit : null;
-    if (next === hoveredBook) return next;
-    if (hoveredBook) hoveredBook.userData.hovered = false;
-    hoveredBook = next;
-    if (hoveredBook) {
-      hoveredBook.userData.hovered = true;
+    const hits = raycaster.intersectObjects([...satellites.children, ...locationPickers, globe], false);
+    let nextBook = null;
+    let nextMarker = null;
+    for (const hit of hits) {
+      if (satellites.children.includes(hit.object)) {
+        nextBook = hit.object;
+        break;
+      }
+      if (locationPickers.includes(hit.object)) {
+        nextMarker = hit.object;
+        break;
+      }
+      if (hit.object === globe) break;
+    }
+    if (hoveredBook && hoveredBook !== nextBook) hoveredBook.userData.hovered = false;
+    hoveredBook = nextBook;
+    hoveredMarker = nextMarker;
+    if (hoveredBook) hoveredBook.userData.hovered = true;
+    if (hoveredBook || hoveredMarker) {
       const now = performance.now();
       if (now - lastHoverSound > 240) {
         lastHoverSound = now;
         playSound("hover");
       }
     }
-    canvas.style.cursor = hoveredBook ? "pointer" : "default";
-    return hoveredBook;
+    const target = hoveredBook
+      ? { type: "book", book: hoveredBook }
+      : (hoveredMarker ? { type: "location", marker: hoveredMarker } : null);
+    canvas.style.cursor = target ? "pointer" : "default";
+    setTooltip(event, target);
+    return target;
+  };
+
+  const fadeBookMaterials = (book, opacity, duration = 420) => {
+    book.userData.materials.forEach((material) => {
+      material.transparent = true;
+      if (window.anime) {
+        anime.remove(material);
+        anime({ targets: material, opacity, duration, easing: "easeOutQuad" });
+      } else {
+        material.opacity = opacity;
+      }
+    });
+  };
+
+  const resetBookField = (selectedBook) => {
+    satellites.children.forEach((book) => {
+      book.userData.portalHidden = false;
+      fadeBookMaterials(book, 1, 360);
+    });
+    if (selectedBook) {
+      const data = selectedBook.userData;
+      data.opening = false;
+      selectedBook.material[4].map = data.coverTexture;
+      selectedBook.material[4].emissiveIntensity = 0.035;
+      selectedBook.material[4].needsUpdate = true;
+      if (data.coverPivot) {
+        selectedBook.remove(data.coverPivot);
+        data.coverPivot = null;
+      }
+    }
+    openingBook = false;
+  };
+
+  const showPortal = (movement, onComplete) => {
+    const portal = document.createElement("div");
+    portal.className = "book-portal";
+    portal.style.setProperty("--portal-a", movement.palette[2]);
+    portal.style.setProperty("--portal-b", movement.palette[1]);
+    stage.appendChild(portal);
+    if (window.anime) {
+      anime({
+        targets: portal,
+        opacity: [0, 1],
+        scale: [0.24, 1.7],
+        duration: 520,
+        easing: "easeInCubic",
+        complete: () => {
+          onComplete();
+          anime({
+            targets: portal,
+            opacity: [1, 0],
+            scale: [1.7, 2.12],
+            duration: 620,
+            easing: "easeOutQuad",
+            complete: () => portal.remove()
+          });
+        }
+      });
+    } else {
+      onComplete();
+      setTimeout(() => portal.remove(), 520);
+    }
+  };
+
+  const finishBookTransition = (book) => {
+    const movement = book.userData.movement;
+    showPortal(movement, () => {
+      openWorld(movement.id);
+      window.setTimeout(() => resetBookField(book), 520);
+    });
+  };
+
+  const openBookTransition = (book) => {
+    if (openingBook || !book) return;
+    openingBook = true;
+    playSound("book");
+    setTooltip(null, null);
+    book.userData.opening = true;
+    book.userData.hovered = false;
+    hoveredBook = null;
+    hoveredMarker = null;
+    canvas.style.cursor = "default";
+    satellites.children.forEach((other) => {
+      if (other !== book) {
+        other.userData.portalHidden = true;
+        fadeBookMaterials(other, 0.08, 500);
+      }
+    });
+    const targetScale = Math.max(1.66, book.scale.x * 1.95);
+    if (window.anime) {
+      anime.remove(book.position);
+      anime.remove(book.scale);
+      anime({
+        targets: book.position,
+        x: 0,
+        y: 0.1,
+        z: 3.18,
+        duration: 820,
+        easing: "easeInOutCubic"
+      });
+      anime({
+        targets: book.scale,
+        x: targetScale,
+        y: targetScale,
+        z: targetScale,
+        duration: 820,
+        easing: "easeInOutCubic"
+      });
+    } else {
+      book.position.set(0, 0.1, 3.18);
+      book.scale.setScalar(targetScale);
+    }
+    window.setTimeout(() => {
+      const data = book.userData;
+      const coverGeo = new THREE.BoxGeometry(0.54, 0.78, 0.026);
+      const inner = new THREE.MeshStandardMaterial({ color: 0xefe3c3, roughness: 0.88, metalness: 0.02, transparent: true });
+      const rimMat = new THREE.MeshStandardMaterial({ color: 0x211622, roughness: 0.86, metalness: 0.06, transparent: true });
+      const coverMat = new THREE.MeshStandardMaterial({
+        map: data.coverTexture,
+        roughness: 0.72,
+        metalness: 0.1,
+        emissive: new THREE.Color(data.movement.palette[2]),
+        emissiveIntensity: 0.18,
+        transparent: true
+      });
+      const coverMesh = new THREE.Mesh(coverGeo, [rimMat, rimMat, rimMat, rimMat, coverMat, inner]);
+      coverMesh.position.set(0.27, 0, 0.07);
+      const pivot = new THREE.Group();
+      pivot.position.set(-0.27, 0, 0.062);
+      pivot.add(coverMesh);
+      book.add(pivot);
+      data.coverPivot = pivot;
+      book.material[4].map = data.glowTexture;
+      book.material[4].needsUpdate = true;
+      if (window.anime) {
+        anime({
+          targets: book.material[4],
+          emissiveIntensity: [0.035, 1.45],
+          duration: 560,
+          easing: "easeInQuad"
+        });
+        anime({
+          targets: pivot.rotation,
+          y: -2.28,
+          duration: 760,
+          easing: "easeInOutCubic",
+          complete: () => finishBookTransition(book)
+        });
+      } else {
+        pivot.rotation.y = -2.28;
+        finishBookTransition(book);
+      }
+    }, window.anime ? 760 : 0);
+  };
+
+  const openLocationTransition = (marker) => {
+    if (openingBook || !marker?.userData?.movementId) return;
+    openingBook = true;
+    hoveredMarker = null;
+    canvas.style.cursor = "default";
+    const movement = movementById(marker.userData.movementId);
+    playSound("success");
+    setTooltip(null, null);
+    showPortal(movement, () => {
+      openWorld(movement.id);
+      openingBook = false;
+    });
   };
 
   const resize = () => {
@@ -1824,18 +2335,32 @@ function initThreeCosmos() {
     nightLights.rotation.y = globe.rotation.y;
     clouds.rotation.y += lit ? 0.008 : 0.0038;
     atmosphere.rotation.y = globe.rotation.y;
+    locationMarkers.children.forEach((marker, index) => {
+      const pulse = 1 + Math.sin(time * 2.4 + index * 0.7) * 0.16;
+      marker.scale.setScalar(pulse);
+      const halo = marker.children[1];
+      if (halo?.material) halo.material.opacity = 0.48 + (pulse - 0.84) * 0.42;
+    });
     const moonAngle = time * (lit ? 0.36 : 0.22);
     moon.position.set(
-      Math.cos(moonAngle) * 3.38,
-      Math.sin(moonAngle * 0.72) * 0.46 + 0.12,
-      Math.sin(moonAngle) * 1.42
+      Math.cos(moonAngle) * 4.48,
+      Math.sin(moonAngle * 0.72) * 0.62 + 0.16,
+      Math.sin(moonAngle) * 2.28
     );
-    moon.scale.setScalar(0.86 + (Math.sin(moonAngle) + 1) * 0.16);
+    moon.scale.setScalar(0.72 + (Math.sin(moonAngle) + 1) * 0.12);
     moon.rotation.y += lit ? 0.012 : 0.006;
     moon.rotation.x = Math.sin(time * 0.45) * 0.12;
     moonOrbitPath.rotation.z += lit ? 0.0014 : 0.0007;
     satellites.children.forEach((book) => {
       const data = book.userData;
+      if (data.opening) {
+        book.lookAt(camera.position);
+        data.materials.forEach((material) => {
+          material.opacity += (1 - material.opacity) * 0.18;
+          material.depthWrite = true;
+        });
+        return;
+      }
       const angle = data.angle + time * data.speed * (lit ? 1.7 : 1);
       const depth = Math.sin(angle);
       const scale = 0.56 + (depth + 1) * 0.36;
@@ -1848,9 +2373,14 @@ function initThreeCosmos() {
       book.scale.setScalar(scale * (data.hovered ? 1.2 : 1));
       book.lookAt(camera.position);
       book.rotateZ(data.tilt + (data.hovered ? Math.sin(time * 5 + data.angle) * 0.07 : 0));
-      const sideMaterial = book.material[0];
-      if (sideMaterial?.emissiveIntensity !== undefined) {
-        sideMaterial.emissiveIntensity += ((data.hovered ? 0.42 : 0.04) - sideMaterial.emissiveIntensity) * 0.12;
+      const targetOpacity = data.portalHidden ? 0.07 : 1;
+      data.materials.forEach((material) => {
+        material.opacity += (targetOpacity - material.opacity) * 0.12;
+        material.depthWrite = material.opacity > 0.35;
+      });
+      const coverMaterial = book.material[4];
+      if (coverMaterial?.emissiveIntensity !== undefined) {
+        coverMaterial.emissiveIntensity += ((data.hovered ? 0.48 : 0.035) - coverMaterial.emissiveIntensity) * 0.12;
       }
     });
     starPoints.rotation.y += 0.0009;
@@ -1894,11 +2424,13 @@ function initThreeCosmos() {
     lit = false;
     if (hoveredBook) hoveredBook.userData.hovered = false;
     hoveredBook = null;
+    hoveredMarker = null;
     canvas.style.cursor = "default";
+    setTooltip(null, null);
     stage.classList.remove("is-lit");
   });
   stage.addEventListener("pointermove", (event) => {
-    updateBookHit(event);
+    updateHeroHit(event);
     const now = performance.now();
     if (now - lastSpark > 80) {
       lastSpark = now;
@@ -1906,10 +2438,11 @@ function initThreeCosmos() {
     }
   });
   canvas.addEventListener("click", (event) => {
-    const book = updateBookHit(event);
-    if (!book?.userData?.movementId) return;
+    const target = updateHeroHit(event);
+    if (!target) return;
     event.preventDefault();
-    openWorld(book.userData.movementId);
+    if (target.type === "book") openBookTransition(target.book);
+    if (target.type === "location") openLocationTransition(target.marker);
   });
 
   resize();
