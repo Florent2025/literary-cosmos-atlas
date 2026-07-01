@@ -153,6 +153,22 @@
       </section>
     </main>
 
+    <aside class="space-game" id="spaceGame" aria-hidden="true" aria-label="月球星战模拟舱">
+      <canvas id="spaceGameCanvas" aria-label="可游玩的月球星战小游戏"></canvas>
+      <div class="space-game__hud">
+        <div class="space-game__title">
+          <strong>月球星战模拟舱</strong>
+          <span>LUNAR BATTLE ORBIT</span>
+        </div>
+        <div class="space-game__stats">
+          <span>Score</span>
+          <strong id="gameScore">0000</strong>
+          <button class="space-game__button" id="closeSpaceGame" type="button">返回星图</button>
+        </div>
+      </div>
+      <div class="space-game__status" id="gameStatus">月面航道待命</div>
+    </aside>
+
     <aside class="world" id="world" aria-hidden="true" aria-label="理论世界详情">
       <div class="world__scrim" data-close-world></div>
       <div class="world__gate world__gate--left"></div>

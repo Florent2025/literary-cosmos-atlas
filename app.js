@@ -958,6 +958,19 @@ const SOUND_PATTERNS = {
     { freq: 146, delay: 0, duration: 0.09, volume: 0.1, type: "triangle" },
     { freq: 329, delay: 0.05, duration: 0.13, volume: 0.08, type: "sine" }
   ],
+  moon: [
+    { freq: 110, delay: 0, duration: 0.16, volume: 0.08, type: "sine" },
+    { freq: 220, delay: 0.09, duration: 0.2, volume: 0.07, type: "triangle" },
+    { freq: 440, delay: 0.18, duration: 0.18, volume: 0.05, type: "sine" }
+  ],
+  laser: [
+    { freq: 1180, delay: 0, duration: 0.04, volume: 0.045, type: "sawtooth" },
+    { freq: 520, delay: 0.03, duration: 0.07, volume: 0.035, type: "triangle" }
+  ],
+  blast: [
+    { freq: 86, delay: 0, duration: 0.14, volume: 0.08, type: "sawtooth" },
+    { freq: 180, delay: 0.05, duration: 0.12, volume: 0.05, type: "triangle" }
+  ],
   hover: [
     { freq: 880, delay: 0, duration: 0.06, volume: 0.035, type: "sine" }
   ],
@@ -1871,9 +1884,11 @@ function initThreeCosmos() {
 
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(42, 1, 0.1, 100);
-  camera.position.set(0, 0.28, 8.6);
+  camera.position.set(0, 0.2, 8.05);
 
   const group = new THREE.Group();
+  group.position.set(-0.16, 0.04, 0);
+  group.scale.setScalar(0.98);
   scene.add(group);
 
   const ambient = new THREE.AmbientLight(0x91b8da, 0.58);
@@ -2048,7 +2063,14 @@ function initThreeCosmos() {
   });
   const moon = new THREE.Mesh(new THREE.SphereGeometry(0.22, 48, 48), moonMaterial);
   moon.castShadow = false;
+  moon.userData = { type: "moon", hovered: false };
   group.add(moon);
+  const moonPicker = new THREE.Mesh(
+    new THREE.SphereGeometry(0.46, 32, 16),
+    new THREE.MeshBasicMaterial({ transparent: true, opacity: 0, depthWrite: false })
+  );
+  moonPicker.userData = moon.userData;
+  group.add(moonPicker);
 
   const satellites = new THREE.Group();
   const bookGeometry = new THREE.BoxGeometry(0.54, 0.78, 0.12);
@@ -2094,8 +2116,11 @@ function initThreeCosmos() {
   let lit = false;
   let hoveredBook = null;
   let hoveredMarker = null;
+  let hoveredMoon = false;
+  let earthHovered = false;
   let openingBook = false;
   let lastHoverSound = 0;
+  let lastMeteorPoint = null;
   const pointer = new THREE.Vector2();
   const raycaster = new THREE.Raycaster();
   const tooltip = document.createElement("div");
@@ -2112,9 +2137,13 @@ function initThreeCosmos() {
     const rect = stage.getBoundingClientRect();
     tooltip.style.left = `${event.clientX - rect.left}px`;
     tooltip.style.top = `${event.clientY - rect.top}px`;
-    tooltip.innerHTML = target.type === "book"
-      ? `<strong>${target.book.userData.title}</strong><span>${target.book.userData.movement.lens}</span><em>${MOVEMENT_LOCATIONS[target.book.userData.movementId]?.label || target.book.userData.movement.region}</em>`
-      : `<strong>${target.marker.userData.title}</strong><span>${target.marker.userData.location}</span><em>点击从地理现场进入理论世界</em>`;
+    if (target.type === "book") {
+      tooltip.innerHTML = `<strong>${target.book.userData.title}</strong><span>${target.book.userData.movement.lens}</span><em>${MOVEMENT_LOCATIONS[target.book.userData.movementId]?.label || target.book.userData.movement.region}</em>`;
+    } else if (target.type === "moon") {
+      tooltip.innerHTML = "<strong>月球星战模拟舱</strong><span>公转轨道上的隐藏游戏入口</span><em>点击进入可玩战斗航道</em>";
+    } else {
+      tooltip.innerHTML = `<strong>${target.marker.userData.title}</strong><span>${target.marker.userData.location}</span><em>点击从地理现场进入理论世界</em>`;
+    }
     tooltip.classList.add("is-visible");
     tooltip.setAttribute("aria-hidden", "false");
   };
@@ -2125,25 +2154,37 @@ function initThreeCosmos() {
     pointer.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
     pointer.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
     raycaster.setFromCamera(pointer, camera);
-    const hits = raycaster.intersectObjects([...satellites.children, ...locationPickers, globe], false);
+    const hits = raycaster.intersectObjects([...satellites.children, moonPicker, moon, ...locationPickers, globe], false);
     let nextBook = null;
     let nextMarker = null;
+    let nextMoon = false;
+    let nextEarth = false;
     for (const hit of hits) {
       if (satellites.children.includes(hit.object)) {
         nextBook = hit.object;
+        break;
+      }
+      if (hit.object === moonPicker || hit.object === moon) {
+        nextMoon = true;
         break;
       }
       if (locationPickers.includes(hit.object)) {
         nextMarker = hit.object;
         break;
       }
-      if (hit.object === globe) break;
+      if (hit.object === globe) {
+        nextEarth = true;
+        break;
+      }
     }
     if (hoveredBook && hoveredBook !== nextBook) hoveredBook.userData.hovered = false;
     hoveredBook = nextBook;
     hoveredMarker = nextMarker;
+    hoveredMoon = nextMoon;
+    earthHovered = nextEarth;
     if (hoveredBook) hoveredBook.userData.hovered = true;
-    if (hoveredBook || hoveredMarker) {
+    moon.userData.hovered = hoveredMoon;
+    if (hoveredBook || hoveredMarker || hoveredMoon) {
       const now = performance.now();
       if (now - lastHoverSound > 240) {
         lastHoverSound = now;
@@ -2152,7 +2193,7 @@ function initThreeCosmos() {
     }
     const target = hoveredBook
       ? { type: "book", book: hoveredBook }
-      : (hoveredMarker ? { type: "location", marker: hoveredMarker } : null);
+      : (hoveredMoon ? { type: "moon", moon } : (hoveredMarker ? { type: "location", marker: hoveredMarker } : null));
     canvas.style.cursor = target ? "pointer" : "default";
     setTooltip(event, target);
     return target;
@@ -2329,6 +2370,12 @@ function initThreeCosmos() {
     const rect = canvas.getBoundingClientRect();
     renderer.setSize(rect.width, rect.height, false);
     camera.aspect = rect.width / rect.height;
+    const isMobile = rect.width < 720;
+    const isTablet = rect.width >= 720 && rect.width < 1080;
+    camera.position.z = isMobile ? 10.9 : (isTablet ? 8.75 : 8.05);
+    camera.position.y = isMobile ? 0.34 : (isTablet ? 0.24 : 0.2);
+    group.scale.setScalar(isMobile ? 0.72 : (isTablet ? 0.88 : 0.98));
+    group.position.set(isMobile ? -0.04 : (isTablet ? -0.1 : -0.16), isMobile ? 0.08 : 0.04, 0);
     camera.updateProjectionMatrix();
   };
 
@@ -2348,14 +2395,20 @@ function initThreeCosmos() {
       if (halo?.material) halo.material.opacity = 0.48 + (pulse - 0.84) * 0.42;
     });
     const moonAngle = time * (lit ? 0.36 : 0.22);
+    const moonDepth = Math.sin(moonAngle);
+    const moonPerspective = 0.74 + (moonDepth + 1) * 0.14;
     moon.position.set(
       Math.cos(moonAngle) * 5.35,
       Math.sin(moonAngle * 0.72) * 0.74 + 0.2,
-      Math.sin(moonAngle) * 2.95
+      moonDepth * 2.95
     );
-    moon.scale.setScalar(0.58 + (Math.sin(moonAngle) + 1) * 0.08);
+    moon.scale.setScalar(moonPerspective * (hoveredMoon ? 1.18 : 1));
+    moonPicker.position.copy(moon.position);
+    moonPicker.scale.copy(moon.scale);
     moon.rotation.y += lit ? 0.012 : 0.006;
     moon.rotation.x = Math.sin(time * 0.45) * 0.12;
+    moonMaterial.emissiveIntensity += ((hoveredMoon ? 0.54 : 0.12) - moonMaterial.emissiveIntensity) * 0.08;
+    moonOrbitMaterial.opacity += ((hoveredMoon ? 0.52 : 0.18) - moonOrbitMaterial.opacity) * 0.06;
     moonOrbitPath.rotation.z += lit ? 0.0014 : 0.0007;
     satellites.children.forEach((book) => {
       const data = book.userData;
@@ -2369,14 +2422,14 @@ function initThreeCosmos() {
       }
       const angle = data.angle + time * data.speed * (lit ? 1.7 : 1);
       const depth = Math.sin(angle);
-      const scale = 0.56 + (depth + 1) * 0.36;
+      const scale = 0.48 + (depth + 1) * 0.27;
       const hoverLift = data.hovered ? 0.18 : 0;
       book.position.set(
         Math.cos(angle) * data.radiusX,
         Math.sin(angle * 1.7) * 0.38 + data.baseY + hoverLift,
         depth * data.radiusZ
       );
-      book.scale.setScalar(scale * (data.hovered ? 1.2 : 1));
+      book.scale.setScalar(scale * (data.hovered ? 1.14 : 1));
       book.lookAt(camera.position);
       book.rotateZ(data.tilt + (data.hovered ? Math.sin(time * 5 + data.angle) * 0.07 : 0));
       const targetOpacity = data.portalHidden ? 0.07 : 1;
@@ -2390,34 +2443,58 @@ function initThreeCosmos() {
       }
     });
     starPoints.rotation.y += 0.0009;
-    rim.intensity += ((lit ? 3.35 : 1.25) - rim.intensity) * 0.06;
-    nightMaterial.opacity += ((lit ? 0.44 : 0.16) - nightMaterial.opacity) * 0.06;
-    cloudMaterial.opacity += ((lit ? 0.42 : 0.26) - cloudMaterial.opacity) * 0.05;
-    atmosphereMaterial.uniforms.intensity.value += ((lit ? 1.12 : 0.55) - atmosphereMaterial.uniforms.intensity.value) * 0.06;
+    const globeAwake = earthHovered || lit;
+    rim.intensity += (((earthHovered ? 4.2 : (lit ? 3.35 : 1.25))) - rim.intensity) * 0.06;
+    nightMaterial.opacity += (((earthHovered ? 0.58 : (lit ? 0.44 : 0.16))) - nightMaterial.opacity) * 0.06;
+    cloudMaterial.opacity += (((earthHovered ? 0.5 : (lit ? 0.42 : 0.26))) - cloudMaterial.opacity) * 0.05;
+    earthMaterial.emissiveIntensity += (((earthHovered ? 0.19 : (lit ? 0.07 : 0.035))) - earthMaterial.emissiveIntensity) * 0.06;
+    atmosphereMaterial.uniforms.intensity.value += (((earthHovered ? 1.58 : (globeAwake ? 1.12 : 0.55))) - atmosphereMaterial.uniforms.intensity.value) * 0.06;
     ringMaterial.opacity += ((lit ? 0.92 : 0.5) - ringMaterial.opacity) * 0.06;
     renderer.render(scene, camera);
   };
 
   const sparkle = (event) => {
     const rect = stage.getBoundingClientRect();
-    const dot = document.createElement("i");
-    dot.className = "spark";
-    dot.style.left = `${event.clientX - rect.left}px`;
-    dot.style.top = `${event.clientY - rect.top}px`;
-    stage.appendChild(dot);
-    if (window.anime) {
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+    const previous = lastMeteorPoint || { x: x - 24, y };
+    const angle = Math.atan2(y - previous.y, x - previous.x) * 180 / Math.PI;
+    lastMeteorPoint = { x, y };
+    const trail = document.createElement("i");
+    trail.className = "meteor-trail";
+    trail.style.left = `${x}px`;
+    trail.style.top = `${y}px`;
+    trail.style.setProperty("--trail-angle", `${Number.isFinite(angle) ? angle : 0}deg`);
+    stage.appendChild(trail);
+    if (window.gsap) {
+      gsap.fromTo(trail, {
+        autoAlpha: 0,
+        "--trail-scale": 0.24
+      }, {
+        autoAlpha: 1,
+        "--trail-scale": 1,
+        duration: 0.12,
+        ease: "power2.out",
+        overwrite: true
+      });
+      gsap.to(trail, {
+        autoAlpha: 0,
+        "--trail-scale": 0.18,
+        duration: 0.62,
+        delay: 0.05,
+        ease: "power3.out",
+        onComplete: () => trail.remove()
+      });
+    } else if (window.anime) {
       anime({
-        targets: dot,
-        translateX: () => anime.random(-34, 34),
-        translateY: () => anime.random(-34, 34),
-        scale: [0.2, 1.2, 0],
+        targets: trail,
         opacity: [0, 1, 0],
-        duration: 900,
+        duration: 720,
         easing: "easeOutQuart",
-        complete: () => dot.remove()
+        complete: () => trail.remove()
       });
     } else {
-      setTimeout(() => dot.remove(), 900);
+      setTimeout(() => trail.remove(), 720);
     }
   };
 
@@ -2431,6 +2508,10 @@ function initThreeCosmos() {
     if (hoveredBook) hoveredBook.userData.hovered = false;
     hoveredBook = null;
     hoveredMarker = null;
+    hoveredMoon = false;
+    earthHovered = false;
+    moon.userData.hovered = false;
+    lastMeteorPoint = null;
     canvas.style.cursor = "default";
     setTooltip(null, null);
     stage.classList.remove("is-lit");
@@ -2449,6 +2530,10 @@ function initThreeCosmos() {
     event.preventDefault();
     if (target.type === "book") openBookTransition(target.book);
     if (target.type === "location") openLocationTransition(target.marker);
+    if (target.type === "moon") {
+      playSound("moon");
+      openSpaceGame();
+    }
   });
 
   resize();
@@ -2544,8 +2629,50 @@ function initClock() {
   });
   const newMoonEpoch = Date.UTC(2000, 0, 6, 18, 14, 0);
   const lunarCycleMs = 29.530588853 * 24 * 60 * 60 * 1000;
+  let networkOffsetMs = 0;
+  const syncNetworkTime = async () => {
+    const controller = new AbortController();
+    const timeout = window.setTimeout(() => controller.abort(), 4200);
+    const requestedAt = Date.now();
+    try {
+      let serverMs = Number.NaN;
+      if (window.location.protocol !== "file:") {
+        const url = new URL(window.location.href);
+        url.hash = "";
+        url.searchParams.set("_clock", String(Date.now()));
+        const head = await fetch(url.toString(), {
+          method: "HEAD",
+          cache: "no-store",
+          signal: controller.signal
+        });
+        const dateHeader = head.headers.get("date");
+        serverMs = Date.parse(dateHeader || "");
+      }
+      if (!Number.isFinite(serverMs)) {
+        const response = await fetch("https://worldtimeapi.org/api/ip", {
+          cache: "no-store",
+          signal: controller.signal
+        });
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const data = await response.json();
+        serverMs = typeof data.unixtime === "number"
+          ? data.unixtime * 1000
+          : Date.parse(data.datetime);
+      }
+      const receivedAt = Date.now();
+      if (Number.isFinite(serverMs)) {
+        const estimatedTransit = (receivedAt - requestedAt) / 2;
+        networkOffsetMs = serverMs + estimatedTransit - receivedAt;
+        timepiece?.classList.add("is-synced");
+      }
+    } catch (error) {
+      timepiece?.classList.remove("is-synced");
+    } finally {
+      window.clearTimeout(timeout);
+    }
+  };
   const update = () => {
-    const now = new Date();
+    const now = new Date(Date.now() + networkOffsetMs);
     const seconds = now.getSeconds() + now.getMilliseconds() / 1000;
     const minutes = now.getMinutes() + seconds / 60;
     const hours = (now.getHours() % 12) + minutes / 60;
@@ -2561,6 +2688,8 @@ function initClock() {
   };
   update();
   window.setInterval(update, 1000);
+  syncNetworkTime();
+  window.setInterval(syncNetworkTime, 10 * 60 * 1000);
 
   if (!timepiece) return;
   const resetInstrument = () => {
@@ -2614,6 +2743,449 @@ function initClock() {
   timepiece.addEventListener("pointerleave", resetInstrument);
 }
 
+let spaceGameController = null;
+
+function openSpaceGame() {
+  if (spaceGameController) spaceGameController.open();
+}
+
+function initSpaceGame() {
+  const overlay = $("#spaceGame");
+  const canvas = $("#spaceGameCanvas");
+  const closeButton = $("#closeSpaceGame");
+  const scoreText = $("#gameScore");
+  const statusText = $("#gameStatus");
+  if (!overlay || !canvas || !closeButton || !scoreText || !statusText) return;
+
+  const context = canvas.getContext("2d");
+  const game = {
+    running: false,
+    width: 0,
+    height: 0,
+    dpr: 1,
+    raf: 0,
+    last: 0,
+    score: 0,
+    lives: 3,
+    spawnTimer: 0,
+    asteroidTimer: 0,
+    cooldown: 0,
+    player: { x: 0, y: 0, targetX: 0, targetY: 0, shield: 0 },
+    keys: new Set(),
+    stars: [],
+    bullets: [],
+    enemies: [],
+    asteroids: [],
+    bursts: []
+  };
+
+  const resize = () => {
+    const rect = canvas.getBoundingClientRect();
+    game.dpr = Math.min(window.devicePixelRatio || 1, 2);
+    game.width = Math.max(320, rect.width);
+    game.height = Math.max(320, rect.height);
+    canvas.width = Math.round(game.width * game.dpr);
+    canvas.height = Math.round(game.height * game.dpr);
+    context.setTransform(game.dpr, 0, 0, game.dpr, 0, 0);
+    if (!game.player.x) {
+      game.player.x = game.width * 0.5;
+      game.player.y = game.height * 0.78;
+      game.player.targetX = game.player.x;
+      game.player.targetY = game.player.y;
+    }
+  };
+
+  const reset = () => {
+    game.score = 0;
+    game.lives = 3;
+    game.spawnTimer = 0.2;
+    game.asteroidTimer = 0.9;
+    game.cooldown = 0;
+    game.player.x = game.width * 0.5;
+    game.player.y = game.height * 0.78;
+    game.player.targetX = game.player.x;
+    game.player.targetY = game.player.y;
+    game.player.shield = 1.2;
+    game.stars = Array.from({ length: 170 }, () => ({
+      x: Math.random() * game.width,
+      y: Math.random() * game.height,
+      z: 0.35 + Math.random() * 1.7,
+      hue: Math.random() > 0.82 ? "#75f5ff" : "#ffffff"
+    }));
+    game.bullets = [];
+    game.enemies = [];
+    game.asteroids = [];
+    game.bursts = [];
+    scoreText.textContent = "0000";
+    statusText.textContent = "月面航道待命";
+  };
+
+  const addBurst = (x, y, color = "#75f5ff", amount = 18) => {
+    for (let i = 0; i < amount; i += 1) {
+      const angle = Math.random() * Math.PI * 2;
+      const speed = 70 + Math.random() * 260;
+      game.bursts.push({
+        x,
+        y,
+        vx: Math.cos(angle) * speed,
+        vy: Math.sin(angle) * speed,
+        life: 0.4 + Math.random() * 0.36,
+        maxLife: 0.76,
+        color
+      });
+    }
+  };
+
+  const spawnEnemy = () => {
+    const size = 20 + Math.random() * 18;
+    game.enemies.push({
+      x: 42 + Math.random() * Math.max(40, game.width - 84),
+      y: -size * 2,
+      r: size,
+      vy: 92 + Math.random() * 72 + Math.min(90, game.score * 0.012),
+      vx: (Math.random() - 0.5) * 45,
+      phase: Math.random() * Math.PI * 2
+    });
+  };
+
+  const spawnAsteroid = () => {
+    const radius = 18 + Math.random() * 38;
+    game.asteroids.push({
+      x: 34 + Math.random() * Math.max(40, game.width - 68),
+      y: -radius * 2,
+      r: radius,
+      vy: 72 + Math.random() * 86,
+      vx: (Math.random() - 0.5) * 36,
+      spin: (Math.random() - 0.5) * 2,
+      angle: Math.random() * Math.PI * 2
+    });
+  };
+
+  const shoot = () => {
+    if (!game.running || game.cooldown > 0) return;
+    game.cooldown = 0.16;
+    game.bullets.push(
+      { x: game.player.x - 14, y: game.player.y - 26, vy: -680, life: 1.1 },
+      { x: game.player.x + 14, y: game.player.y - 26, vy: -680, life: 1.1 }
+    );
+    playSound("laser");
+  };
+
+  const collide = (a, b, padding = 0) => {
+    const dx = a.x - b.x;
+    const dy = a.y - b.y;
+    const radius = a.r + b.r + padding;
+    return dx * dx + dy * dy < radius * radius;
+  };
+
+  const update = (dt) => {
+    game.cooldown = Math.max(0, game.cooldown - dt);
+    game.spawnTimer -= dt;
+    game.asteroidTimer -= dt;
+    if (game.spawnTimer <= 0) {
+      spawnEnemy();
+      game.spawnTimer = Math.max(0.34, 0.92 - game.score * 0.0008);
+    }
+    if (game.asteroidTimer <= 0) {
+      spawnAsteroid();
+      game.asteroidTimer = 1.05 + Math.random() * 0.9;
+    }
+
+    if (game.keys.has("ArrowLeft") || game.keys.has("KeyA")) game.player.targetX -= 520 * dt;
+    if (game.keys.has("ArrowRight") || game.keys.has("KeyD")) game.player.targetX += 520 * dt;
+    if (game.keys.has("ArrowUp") || game.keys.has("KeyW")) game.player.targetY -= 420 * dt;
+    if (game.keys.has("ArrowDown") || game.keys.has("KeyS")) game.player.targetY += 420 * dt;
+    game.player.targetX = Math.max(34, Math.min(game.width - 34, game.player.targetX));
+    game.player.targetY = Math.max(game.height * 0.36, Math.min(game.height - 44, game.player.targetY));
+    game.player.x += (game.player.targetX - game.player.x) * 0.2;
+    game.player.y += (game.player.targetY - game.player.y) * 0.2;
+    game.player.shield = Math.max(0, game.player.shield - dt);
+
+    game.stars.forEach((star) => {
+      star.y += (18 + star.z * 42) * dt;
+      star.x += Math.sin((star.y + star.z * 30) * 0.01) * star.z * 0.24;
+      if (star.y > game.height + 8) {
+        star.y = -8;
+        star.x = Math.random() * game.width;
+      }
+    });
+
+    game.bullets.forEach((bullet) => {
+      bullet.y += bullet.vy * dt;
+      bullet.life -= dt;
+    });
+    game.enemies.forEach((enemy) => {
+      enemy.y += enemy.vy * dt;
+      enemy.x += (enemy.vx + Math.sin(performance.now() / 360 + enemy.phase) * 34) * dt;
+    });
+    game.asteroids.forEach((asteroid) => {
+      asteroid.y += asteroid.vy * dt;
+      asteroid.x += asteroid.vx * dt;
+      asteroid.angle += asteroid.spin * dt;
+    });
+    game.bursts.forEach((burst) => {
+      burst.x += burst.vx * dt;
+      burst.y += burst.vy * dt;
+      burst.life -= dt;
+    });
+
+    game.bullets.forEach((bullet) => {
+      const bulletHit = { x: bullet.x, y: bullet.y, r: 5 };
+      game.enemies.forEach((enemy) => {
+        if (!enemy.dead && bullet.life > 0 && collide(bulletHit, enemy, -4)) {
+          enemy.dead = true;
+          bullet.life = 0;
+          game.score += 120;
+          addBurst(enemy.x, enemy.y, "#75f5ff", 22);
+          playSound("blast");
+        }
+      });
+      game.asteroids.forEach((asteroid) => {
+        if (!asteroid.dead && bullet.life > 0 && collide(bulletHit, asteroid, -6)) {
+          asteroid.r *= 0.62;
+          bullet.life = 0;
+          game.score += 35;
+          addBurst(bullet.x, bullet.y, "#f5d287", 10);
+          if (asteroid.r < 17) asteroid.dead = true;
+        }
+      });
+    });
+
+    const playerHit = { x: game.player.x, y: game.player.y, r: 24 };
+    [...game.enemies, ...game.asteroids].forEach((hazard) => {
+      if (!hazard.dead && game.player.shield <= 0 && collide(playerHit, hazard, -2)) {
+        hazard.dead = true;
+        game.lives -= 1;
+        game.player.shield = 1.35;
+        addBurst(game.player.x, game.player.y, "#ff8fa8", 30);
+        playSound("blast");
+        statusText.textContent = game.lives > 0 ? `护盾重启 · ${game.lives}` : "航道重启中";
+        if (game.lives <= 0) {
+          game.score = Math.max(0, Math.floor(game.score * 0.42));
+          game.lives = 3;
+        }
+      }
+    });
+
+    game.bullets = game.bullets.filter((bullet) => bullet.life > 0 && bullet.y > -20);
+    game.enemies = game.enemies.filter((enemy) => !enemy.dead && enemy.y < game.height + 70);
+    game.asteroids = game.asteroids.filter((asteroid) => !asteroid.dead && asteroid.y < game.height + 90);
+    game.bursts = game.bursts.filter((burst) => burst.life > 0);
+    scoreText.textContent = String(Math.floor(game.score)).padStart(4, "0");
+  };
+
+  const drawShip = () => {
+    const { x, y, shield } = game.player;
+    context.save();
+    context.translate(x, y);
+    context.shadowBlur = 24;
+    context.shadowColor = "rgba(117,245,255,.75)";
+    context.fillStyle = "#eaf8ff";
+    context.beginPath();
+    context.moveTo(0, -32);
+    context.lineTo(24, 28);
+    context.lineTo(0, 14);
+    context.lineTo(-24, 28);
+    context.closePath();
+    context.fill();
+    context.fillStyle = "#75f5ff";
+    context.fillRect(-4, -12, 8, 26);
+    context.fillStyle = "rgba(245,210,135,.88)";
+    context.beginPath();
+    context.ellipse(-13, 31, 5, 13, 0, 0, Math.PI * 2);
+    context.ellipse(13, 31, 5, 13, 0, 0, Math.PI * 2);
+    context.fill();
+    if (shield > 0) {
+      context.strokeStyle = `rgba(117,245,255,${Math.min(0.72, shield * 0.52)})`;
+      context.lineWidth = 2;
+      context.beginPath();
+      context.arc(0, 0, 42, 0, Math.PI * 2);
+      context.stroke();
+    }
+    context.restore();
+  };
+
+  const drawEnemy = (enemy) => {
+    context.save();
+    context.translate(enemy.x, enemy.y);
+    context.rotate(Math.sin(performance.now() / 520 + enemy.phase) * 0.08);
+    context.shadowBlur = 18;
+    context.shadowColor = "rgba(185,156,255,.55)";
+    context.fillStyle = "rgba(185,156,255,.85)";
+    context.beginPath();
+    context.moveTo(-enemy.r * 1.35, -enemy.r * 0.54);
+    context.lineTo(-enemy.r * 0.44, 0);
+    context.lineTo(-enemy.r * 1.35, enemy.r * 0.54);
+    context.closePath();
+    context.fill();
+    context.beginPath();
+    context.moveTo(enemy.r * 1.35, -enemy.r * 0.54);
+    context.lineTo(enemy.r * 0.44, 0);
+    context.lineTo(enemy.r * 1.35, enemy.r * 0.54);
+    context.closePath();
+    context.fill();
+    context.fillStyle = "#101827";
+    context.strokeStyle = "rgba(117,245,255,.7)";
+    context.lineWidth = 2;
+    context.beginPath();
+    context.arc(0, 0, enemy.r * 0.44, 0, Math.PI * 2);
+    context.fill();
+    context.stroke();
+    context.restore();
+  };
+
+  const drawAsteroid = (asteroid) => {
+    context.save();
+    context.translate(asteroid.x, asteroid.y);
+    context.rotate(asteroid.angle);
+    context.fillStyle = "rgba(180,145,105,.82)";
+    context.strokeStyle = "rgba(245,210,135,.52)";
+    context.lineWidth = 1.5;
+    context.shadowBlur = 12;
+    context.shadowColor = "rgba(245,210,135,.32)";
+    context.beginPath();
+    for (let i = 0; i < 9; i += 1) {
+      const angle = i / 9 * Math.PI * 2;
+      const radius = asteroid.r * (0.72 + Math.sin(i * 2.1 + asteroid.angle) * 0.14 + (i % 2) * 0.08);
+      const x = Math.cos(angle) * radius;
+      const y = Math.sin(angle) * radius;
+      if (i === 0) context.moveTo(x, y);
+      else context.lineTo(x, y);
+    }
+    context.closePath();
+    context.fill();
+    context.stroke();
+    context.restore();
+  };
+
+  const draw = () => {
+    context.clearRect(0, 0, game.width, game.height);
+    const gradient = context.createRadialGradient(game.width * 0.5, game.height * 0.68, 0, game.width * 0.5, game.height * 0.68, game.height * 0.72);
+    gradient.addColorStop(0, "rgba(18,44,70,.28)");
+    gradient.addColorStop(0.5, "rgba(4,9,20,.45)");
+    gradient.addColorStop(1, "rgba(1,2,8,.96)");
+    context.fillStyle = gradient;
+    context.fillRect(0, 0, game.width, game.height);
+
+    game.stars.forEach((star) => {
+      context.fillStyle = star.hue;
+      context.globalAlpha = Math.min(1, 0.26 + star.z * 0.26);
+      context.fillRect(star.x, star.y, star.z * 1.4, star.z * 1.4);
+    });
+    context.globalAlpha = 1;
+
+    context.save();
+    context.strokeStyle = "rgba(117,245,255,.14)";
+    context.lineWidth = 1;
+    for (let i = 0; i < 6; i += 1) {
+      context.beginPath();
+      context.ellipse(game.width * 0.5, game.height * 0.78, game.width * (0.26 + i * 0.075), game.height * (0.07 + i * 0.018), -0.22, 0, Math.PI * 2);
+      context.stroke();
+    }
+    context.restore();
+
+    game.bullets.forEach((bullet) => {
+      context.strokeStyle = "rgba(117,245,255,.96)";
+      context.lineWidth = 3;
+      context.shadowBlur = 18;
+      context.shadowColor = "#75f5ff";
+      context.beginPath();
+      context.moveTo(bullet.x, bullet.y + 14);
+      context.lineTo(bullet.x, bullet.y - 14);
+      context.stroke();
+      context.shadowBlur = 0;
+    });
+    game.enemies.forEach(drawEnemy);
+    game.asteroids.forEach(drawAsteroid);
+    game.bursts.forEach((burst) => {
+      context.globalAlpha = Math.max(0, burst.life / burst.maxLife);
+      context.fillStyle = burst.color;
+      context.shadowBlur = 12;
+      context.shadowColor = burst.color;
+      context.beginPath();
+      context.arc(burst.x, burst.y, 2.4 + burst.life * 5, 0, Math.PI * 2);
+      context.fill();
+    });
+    context.globalAlpha = 1;
+    context.shadowBlur = 0;
+    drawShip();
+  };
+
+  const loop = (now) => {
+    if (!game.running) return;
+    const dt = Math.min(0.034, (now - game.last) / 1000 || 0.016);
+    game.last = now;
+    update(dt);
+    draw();
+    game.raf = requestAnimationFrame(loop);
+  };
+
+  const open = () => {
+    if (game.running) return;
+    overlay.classList.add("is-open");
+    overlay.setAttribute("aria-hidden", "false");
+    document.body.classList.add("game-open");
+    resize();
+    reset();
+    game.running = true;
+    game.last = performance.now();
+    game.raf = requestAnimationFrame(loop);
+    playSound("moon");
+    if (window.gsap) {
+      gsap.killTweensOf(overlay);
+      gsap.fromTo(overlay, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.42, ease: "power3.out", clearProps: "opacity,visibility" });
+      gsap.fromTo(".space-game__hud, .space-game__status", { y: -14, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.46, stagger: 0.05, ease: "power3.out" });
+    }
+  };
+
+  const close = () => {
+    game.running = false;
+    cancelAnimationFrame(game.raf);
+    document.body.classList.remove("game-open");
+    playSound("close");
+    const finalize = () => {
+      overlay.classList.remove("is-open");
+      overlay.setAttribute("aria-hidden", "true");
+      if (window.gsap) gsap.set(overlay, { clearProps: "opacity,visibility" });
+    };
+    if (window.gsap) {
+      gsap.killTweensOf(overlay);
+      gsap.to(overlay, { autoAlpha: 0, duration: 0.24, ease: "power2.out", onComplete: finalize });
+    } else {
+      finalize();
+    }
+  };
+
+  canvas.addEventListener("pointermove", (event) => {
+    const rect = canvas.getBoundingClientRect();
+    game.player.targetX = event.clientX - rect.left;
+    game.player.targetY = event.clientY - rect.top;
+  });
+  canvas.addEventListener("pointerdown", shoot);
+  closeButton.addEventListener("click", close);
+  window.addEventListener("resize", () => {
+    if (overlay.classList.contains("is-open")) resize();
+  });
+  document.addEventListener("keydown", (event) => {
+    if (!overlay.classList.contains("is-open")) return;
+    if (event.code === "Escape") {
+      close();
+      return;
+    }
+    if (event.code === "Space") {
+      event.preventDefault();
+      shoot();
+      return;
+    }
+    game.keys.add(event.code);
+  });
+  document.addEventListener("keyup", (event) => {
+    game.keys.delete(event.code);
+  });
+
+  spaceGameController = { open, close };
+}
+
 function bindGlobalEvents() {
   $("#openFeatured").addEventListener("click", () => openWorld("modernism-symbolism"));
   $$("a[href^='#']").forEach((link) => link.addEventListener("click", () => playSound("select")));
@@ -2643,6 +3215,7 @@ function init() {
   initLibraryGate();
   initThreeCosmos();
   initClock();
+  initSpaceGame();
   bindGlobalEvents();
   initScrollAnimations();
 }
