@@ -1423,6 +1423,12 @@ function initLibraryGate() {
     const removeGate = () => {
       if (gate.isConnected) gate.remove();
       document.body.classList.remove("entry-locked");
+      const timepiece = $(".timepiece");
+      if (timepiece) {
+        timepiece.style.opacity = "1";
+        timepiece.style.visibility = "visible";
+        timepiece.style.transform = "";
+      }
       window.scrollTo(0, 0);
       if (window.ScrollTrigger) ScrollTrigger.refresh();
     };
