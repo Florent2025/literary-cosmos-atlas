@@ -2033,8 +2033,8 @@ function initThreeCosmos() {
     opacity: 0.18,
     blending: THREE.AdditiveBlending
   });
-  const moonOrbitPath = new THREE.Mesh(new THREE.TorusGeometry(4.48, 0.004, 10, 240), moonOrbitMaterial);
-  moonOrbitPath.scale.z = 0.52;
+  const moonOrbitPath = new THREE.Mesh(new THREE.TorusGeometry(5.35, 0.004, 10, 240), moonOrbitMaterial);
+  moonOrbitPath.scale.z = 0.56;
   moonOrbitPath.rotation.x = Math.PI / 2.28;
   moonOrbitPath.rotation.y = -0.42;
   group.add(moonOrbitPath);
@@ -2349,11 +2349,11 @@ function initThreeCosmos() {
     });
     const moonAngle = time * (lit ? 0.36 : 0.22);
     moon.position.set(
-      Math.cos(moonAngle) * 4.48,
-      Math.sin(moonAngle * 0.72) * 0.62 + 0.16,
-      Math.sin(moonAngle) * 2.28
+      Math.cos(moonAngle) * 5.35,
+      Math.sin(moonAngle * 0.72) * 0.74 + 0.2,
+      Math.sin(moonAngle) * 2.95
     );
-    moon.scale.setScalar(0.72 + (Math.sin(moonAngle) + 1) * 0.12);
+    moon.scale.setScalar(0.58 + (Math.sin(moonAngle) + 1) * 0.08);
     moon.rotation.y += lit ? 0.012 : 0.006;
     moon.rotation.x = Math.sin(time * 0.45) * 0.12;
     moonOrbitPath.rotation.z += lit ? 0.0014 : 0.0007;
@@ -2528,11 +2528,13 @@ function initScrollAnimations() {
 }
 
 function initClock() {
+  const timepiece = $("#timepiece");
   const hourHand = $("#clockHour");
   const minuteHand = $("#clockMinute");
   const secondHand = $("#clockSecond");
   const timeText = $("#clockTime");
   const dateText = $("#clockDate");
+  const moonPhase = $("#clockMoonPhase");
   if (!hourHand || !minuteHand || !secondHand || !timeText || !dateText) return;
 
   const formatDate = new Intl.DateTimeFormat("zh-CN", {
@@ -2540,6 +2542,8 @@ function initClock() {
     day: "numeric",
     weekday: "short"
   });
+  const newMoonEpoch = Date.UTC(2000, 0, 6, 18, 14, 0);
+  const lunarCycleMs = 29.530588853 * 24 * 60 * 60 * 1000;
   const update = () => {
     const now = new Date();
     const seconds = now.getSeconds() + now.getMilliseconds() / 1000;
@@ -2550,9 +2554,64 @@ function initClock() {
     secondHand.style.transform = `translateX(-50%) rotate(${seconds * 6}deg)`;
     timeText.textContent = now.toLocaleTimeString("zh-CN", { hour12: false });
     dateText.textContent = formatDate.format(now);
+    if (timepiece && moonPhase) {
+      const phase = (((now.getTime() - newMoonEpoch) % lunarCycleMs) + lunarCycleMs) % lunarCycleMs / lunarCycleMs;
+      timepiece.style.setProperty("--moon-angle", `${Math.round(phase * 360)}deg`);
+    }
   };
   update();
   window.setInterval(update, 1000);
+
+  if (!timepiece) return;
+  const resetInstrument = () => {
+    timepiece.classList.remove("is-awake");
+    if (window.gsap) {
+      gsap.to(timepiece, {
+        "--clock-rx": "14deg",
+        "--clock-ry": "-12deg",
+        "--chrono-glow": 0,
+        "--clock-scale": window.matchMedia("(max-width: 720px)").matches ? 0.78 : (window.matchMedia("(max-width: 1080px)").matches ? 0.86 : 0.92),
+        duration: 0.55,
+        ease: "power3.out",
+        overwrite: "auto"
+      });
+    }
+  };
+
+  timepiece.addEventListener("pointerenter", () => {
+    timepiece.classList.add("is-awake");
+    playSound("hover");
+    if (window.gsap) {
+      gsap.to(timepiece, {
+        "--chrono-glow": 1,
+        "--clock-scale": window.matchMedia("(max-width: 720px)").matches ? 0.82 : (window.matchMedia("(max-width: 1080px)").matches ? 0.9 : 0.96),
+        duration: 0.42,
+        ease: "power3.out",
+        overwrite: "auto"
+      });
+      gsap.fromTo(".timepiece__orbit--outer, .timepiece__orbit--inner", { autoAlpha: 0.52 }, { autoAlpha: 1, duration: 0.46, stagger: 0.06, overwrite: "auto" });
+    }
+  });
+
+  timepiece.addEventListener("pointermove", (event) => {
+    const rect = timepiece.getBoundingClientRect();
+    const x = (event.clientX - rect.left) / rect.width - 0.5;
+    const y = (event.clientY - rect.top) / rect.height - 0.5;
+    if (window.gsap) {
+      gsap.to(timepiece, {
+        "--clock-rx": `${14 - y * 7}deg`,
+        "--clock-ry": `${-12 + x * 10}deg`,
+        duration: 0.32,
+        ease: "power2.out",
+        overwrite: "auto"
+      });
+    } else {
+      timepiece.style.setProperty("--clock-rx", `${14 - y * 7}deg`);
+      timepiece.style.setProperty("--clock-ry", `${-12 + x * 10}deg`);
+    }
+  });
+
+  timepiece.addEventListener("pointerleave", resetInstrument);
 }
 
 function bindGlobalEvents() {

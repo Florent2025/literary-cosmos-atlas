@@ -65,11 +65,15 @@
 
         <div class="hero__stage" id="heroStage">
           <canvas id="cosmosCanvas" aria-label="旋转的文学星仪"></canvas>
-          <div class="timepiece" id="timepiece" aria-label="实时时间机械表">
+          <div class="timepiece" id="timepiece" aria-label="星盘实时时钟">
             <div class="timepiece__dial">
+              <span class="timepiece__orbit timepiece__orbit--outer" aria-hidden="true"></span>
+              <span class="timepiece__orbit timepiece__orbit--inner" aria-hidden="true"></span>
+              <span class="timepiece__orbit timepiece__orbit--ecliptic" aria-hidden="true"></span>
               <span class="timepiece__bezel" aria-hidden="true"></span>
               <span class="timepiece__bridge timepiece__bridge--top" aria-hidden="true"></span>
               <span class="timepiece__bridge timepiece__bridge--bottom" aria-hidden="true"></span>
+              <span class="timepiece__moonphase" id="clockMoonPhase" aria-hidden="true"></span>
               <span class="timepiece__tick timepiece__tick--12">XII</span>
               <span class="timepiece__tick timepiece__tick--3">III</span>
               <span class="timepiece__tick timepiece__tick--6">VI</span>

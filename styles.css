@@ -2283,6 +2283,446 @@ main {
   }
 }
 
+/* Integrated astrolabe chronometer: subtle, old, and part of the star-map system. */
+.hero__stage::before,
+.hero__stage::after {
+  content: "";
+  position: absolute;
+  pointer-events: none;
+}
+
+.hero__stage::before {
+  inset: 6% -4% 3% 13%;
+  z-index: 0;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 66% 64%, rgba(117, 245, 255, 0.16), transparent 0 1px, transparent 2px),
+    repeating-conic-gradient(from 18deg, rgba(186, 211, 229, 0.18) 0 0.35deg, transparent 0.35deg 12deg),
+    conic-gradient(from 120deg, transparent 0 11%, rgba(120, 207, 216, 0.14) 12%, transparent 14% 43%, rgba(161, 145, 220, 0.13) 44%, transparent 47% 100%);
+  mask-image: radial-gradient(ellipse at 58% 50%, transparent 0 28%, black 29% 47%, transparent 48% 100%);
+  opacity: 0.34;
+  transform: rotate(-8deg);
+}
+
+.hero__stage::after {
+  right: clamp(64px, 8vw, 136px);
+  bottom: clamp(82px, 9vw, 146px);
+  z-index: 4;
+  width: clamp(100px, 13vw, 178px);
+  aspect-ratio: 1;
+  border: 1px solid rgba(118, 204, 216, 0.16);
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 50% 50%, rgba(118, 204, 216, 0.32) 0 1px, transparent 2px),
+    conic-gradient(from 220deg, transparent, rgba(118, 204, 216, 0.16), transparent 38%, rgba(180, 151, 212, 0.14), transparent);
+  box-shadow: 0 0 28px rgba(118, 204, 216, 0.08);
+  opacity: 0.42;
+  transform: rotateX(62deg) rotateZ(-24deg);
+}
+
+#cosmosCanvas {
+  z-index: 2;
+}
+
+.timepiece {
+  --clock-rx: 14deg;
+  --clock-ry: -12deg;
+  --moon-angle: 0deg;
+  --chrono-glow: 0;
+  --clock-scale: 0.92;
+  right: clamp(-4px, 2vw, 30px);
+  bottom: clamp(18px, 3.2vw, 42px);
+  z-index: 7;
+  width: 156px;
+  height: 156px;
+  color: rgba(220, 218, 190, 0.78);
+  opacity: 0.68;
+  filter:
+    drop-shadow(0 22px 28px rgba(0, 0, 0, 0.54))
+    drop-shadow(0 0 calc(10px + var(--chrono-glow) * 16px) rgba(116, 204, 216, calc(0.08 + var(--chrono-glow) * 0.2)));
+  perspective: 760px;
+  transform: translateZ(0) scale(var(--clock-scale));
+  transform-origin: 68% 74%;
+  transition: opacity 260ms ease, filter 260ms ease;
+}
+
+.timepiece:hover,
+.timepiece.is-awake,
+.hero__stage.is-lit .timepiece {
+  --chrono-glow: 1;
+  opacity: 0.96;
+}
+
+.timepiece::before {
+  left: 50%;
+  top: 50%;
+  width: 286px;
+  height: 286px;
+  border: 0;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle, transparent 0 38%, rgba(118, 204, 216, 0.18) 39% 39.5%, transparent 40% 53%, rgba(193, 173, 123, 0.16) 54% 54.4%, transparent 55%),
+    repeating-conic-gradient(from 2deg, rgba(220, 218, 190, 0.16) 0 0.45deg, transparent 0.45deg 8deg),
+    conic-gradient(from 130deg, transparent, rgba(118, 204, 216, 0.18), transparent 30%, rgba(159, 140, 255, 0.13), transparent 72%);
+  box-shadow: none;
+  opacity: 0.42;
+  mask-image: radial-gradient(circle, transparent 0 28%, black 30% 61%, transparent 63% 100%);
+  transform: translate(-50%, -50%) rotateX(64deg) rotateZ(-18deg);
+  animation: chrono-map-turn 52s linear infinite;
+}
+
+.timepiece::after {
+  left: 50%;
+  top: -9px;
+  width: 36px;
+  height: 20px;
+  border: 1px solid rgba(159, 132, 84, 0.5);
+  border-bottom-color: rgba(118, 204, 216, 0.16);
+  border-radius: 18px 18px 7px 7px;
+  background:
+    linear-gradient(90deg, rgba(219, 202, 150, 0.18), transparent 38%, rgba(4, 6, 12, 0.24)),
+    linear-gradient(180deg, #4c3824, #14120f 80%);
+  box-shadow:
+    inset 0 0 8px rgba(0, 0, 0, 0.58),
+    0 6px 14px rgba(0, 0, 0, 0.34);
+  transform: translateX(-50%) translateZ(10px);
+  opacity: 0.78;
+}
+
+.timepiece__dial {
+  left: 50%;
+  top: 50%;
+  width: 116px;
+  overflow: visible;
+  background:
+    radial-gradient(circle at 52% 52%, rgba(137, 126, 91, 0.8) 0 3px, transparent 4px),
+    radial-gradient(circle at 36% 28%, rgba(116, 204, 216, 0.16), transparent 19%),
+    radial-gradient(circle at 58% 68%, rgba(159, 140, 255, 0.1), transparent 24%),
+    repeating-conic-gradient(from 0deg, rgba(118, 204, 216, 0.14) 0 0.65deg, transparent 0.65deg 7.5deg),
+    radial-gradient(circle at 50% 53%, rgba(8, 15, 22, 0.82) 0 38%, rgba(5, 8, 15, 0.96) 66%, #010309 100%);
+  box-shadow:
+    0 1px 0 rgba(220, 218, 190, 0.22),
+    0 7px 0 #14100c,
+    0 18px 24px rgba(0, 0, 0, 0.48),
+    inset 0 0 0 7px rgba(45, 39, 31, 0.52),
+    inset 0 0 0 11px rgba(116, 204, 216, 0.035),
+    inset 0 0 30px rgba(0, 0, 0, 0.9);
+  transform: translate(-50%, -50%) rotateX(var(--clock-rx)) rotateY(var(--clock-ry));
+  transition: transform 300ms ease;
+}
+
+.timepiece__dial::before {
+  inset: -11px;
+  background:
+    radial-gradient(circle at 33% 18%, rgba(230, 218, 178, 0.22), transparent 15%),
+    conic-gradient(from -34deg, #241f1a, #51432f 11%, #090c12 23%, #342d23 36%, #06080f 50%, #5a4a32 66%, #0c0d11 78%, #2c261f 91%, #241f1a);
+  box-shadow:
+    inset 0 0 0 2px rgba(118, 204, 216, 0.12),
+    inset 0 -16px 24px rgba(0, 0, 0, 0.62),
+    0 0 0 1px rgba(118, 204, 216, 0.08),
+    0 16px 28px rgba(0, 0, 0, 0.48);
+}
+
+.timepiece__dial::after {
+  inset: 9px;
+  border: 1px solid rgba(118, 204, 216, 0.12);
+  background:
+    radial-gradient(circle at 28% 16%, rgba(255, 255, 255, 0.13), transparent 17%),
+    linear-gradient(142deg, rgba(255, 255, 255, 0.06), transparent 36%),
+    radial-gradient(circle, transparent 42%, rgba(118, 204, 216, 0.05) 43%, transparent 49%);
+  box-shadow:
+    inset 0 0 16px rgba(0, 0, 0, 0.6),
+    inset 0 0 38px rgba(38, 58, 68, 0.2);
+}
+
+.timepiece__orbit {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 0;
+  border-radius: 50%;
+  pointer-events: none;
+  transform-style: preserve-3d;
+}
+
+.timepiece__orbit--outer {
+  width: 166px;
+  aspect-ratio: 1;
+  border: 1px solid rgba(118, 204, 216, 0.22);
+  box-shadow: inset 0 0 20px rgba(118, 204, 216, 0.04);
+  transform: translate(-50%, -50%) rotateX(62deg) rotateZ(18deg);
+  animation: chrono-orbit-turn 28s linear infinite;
+}
+
+.timepiece__orbit--inner {
+  width: 136px;
+  aspect-ratio: 1;
+  border: 1px dashed rgba(220, 218, 190, 0.18);
+  transform: translate(-50%, -50%) rotateX(68deg) rotateZ(-34deg);
+  animation: chrono-orbit-turn 36s linear infinite reverse;
+}
+
+.timepiece__orbit--ecliptic {
+  width: 150px;
+  height: 52px;
+  border: 1px solid rgba(159, 140, 255, 0.18);
+  transform: translate(-50%, -50%) rotateZ(-17deg);
+}
+
+.timepiece__bezel {
+  inset: -5px;
+  border: 1px solid rgba(177, 150, 96, 0.38);
+  background:
+    radial-gradient(circle at 27% 18%, rgba(230, 218, 178, 0.16), transparent 13%),
+    repeating-conic-gradient(from 8deg, rgba(118, 204, 216, 0.18) 0 1.5deg, rgba(13, 14, 16, 0.9) 1.5deg 5deg),
+    conic-gradient(from 18deg, rgba(255, 255, 255, 0.08), rgba(44, 38, 29, 0.7), rgba(6, 8, 12, 0.98), rgba(55, 46, 32, 0.68), rgba(118, 204, 216, 0.1));
+  opacity: 0.34;
+  mix-blend-mode: normal;
+}
+
+.timepiece__bridge {
+  width: 70px;
+  height: 27px;
+  border-color: rgba(177, 150, 96, 0.18);
+  background:
+    linear-gradient(135deg, rgba(220, 218, 190, 0.08), rgba(20, 16, 12, 0.06)),
+    rgba(60, 46, 31, 0.08);
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.42), 0 0 10px rgba(118, 204, 216, 0.05);
+}
+
+.timepiece__bridge--top {
+  top: 25px;
+}
+
+.timepiece__bridge--bottom {
+  bottom: 19px;
+}
+
+.timepiece__moonphase {
+  position: absolute;
+  left: 50%;
+  top: 24px;
+  z-index: 3;
+  width: 32px;
+  height: 17px;
+  border: 1px solid rgba(118, 204, 216, 0.18);
+  border-radius: 999px;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 38% 50%, rgba(221, 231, 225, 0.9) 0 5px, transparent 5.5px),
+    linear-gradient(180deg, rgba(5, 8, 16, 0.88), rgba(14, 18, 28, 0.96));
+  box-shadow:
+    inset 0 0 8px rgba(0, 0, 0, 0.7),
+    0 0 10px rgba(118, 204, 216, 0.08);
+  transform: translateX(-50%);
+}
+
+.timepiece__moonphase::after {
+  content: "";
+  position: absolute;
+  left: 38%;
+  top: 50%;
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background: rgba(5, 8, 16, 0.86);
+  transform: translate(-50%, -50%) rotate(var(--moon-angle)) translateX(5px);
+  transition: transform 500ms ease;
+}
+
+.timepiece__tick {
+  color: rgba(220, 218, 190, 0.72);
+  font-size: 0.48rem;
+  text-shadow: 0 0 7px rgba(118, 204, 216, 0.18);
+}
+
+.timepiece__tick--12 { top: 8px; }
+.timepiece__tick--3 { right: 9px; }
+.timepiece__tick--6 { bottom: 8px; }
+.timepiece__tick--9 { left: 9px; }
+
+.timepiece__gear {
+  border-color: rgba(118, 204, 216, 0.18);
+  background:
+    radial-gradient(circle, #070b10 0 14%, transparent 15% 24%, rgba(118, 204, 216, 0.2) 25% 31%, transparent 32%),
+    repeating-conic-gradient(#5b4c34 0 5deg, #26231d 5deg 10deg, #0b0d10 10deg 14deg);
+  box-shadow:
+    inset 0 0 9px rgba(0, 0, 0, 0.78),
+    0 1px 5px rgba(0, 0, 0, 0.45),
+    0 0 9px rgba(118, 204, 216, 0.06);
+  opacity: 0.4;
+}
+
+.timepiece__gear::before,
+.timepiece__gear::after {
+  background: rgba(76, 67, 49, 0.72);
+}
+
+.timepiece__gear--one {
+  left: 17px;
+  top: 36px;
+  width: 24px;
+  height: 24px;
+}
+
+.timepiece__gear--two {
+  right: 17px;
+  bottom: 23px;
+  width: 31px;
+  height: 31px;
+}
+
+.timepiece__gear--three {
+  right: 24px;
+  top: 30px;
+  width: 18px;
+  height: 18px;
+}
+
+.timepiece__gear--four {
+  left: 34px;
+  bottom: 21px;
+  width: 23px;
+  height: 23px;
+}
+
+.timepiece__jewel {
+  width: 5px;
+  height: 5px;
+  border-color: rgba(186, 226, 224, 0.5);
+  background: radial-gradient(circle at 35% 30%, #eafffb, #56a9ae 46%, #12313a);
+  box-shadow: 0 0 8px rgba(86, 169, 174, 0.36);
+}
+
+.timepiece__jewel--one {
+  left: 28px;
+  top: 50px;
+}
+
+.timepiece__jewel--two {
+  right: 35px;
+  top: 44px;
+}
+
+.timepiece__jewel--three {
+  right: 38px;
+  bottom: 39px;
+}
+
+.timepiece__subdial {
+  bottom: 15px;
+  width: 24px;
+  height: 24px;
+  border-color: rgba(118, 204, 216, 0.22);
+  background:
+    radial-gradient(circle at 64% 38%, rgba(118, 204, 216, 0.18), transparent 24%),
+    conic-gradient(from 0deg, rgba(118, 204, 216, 0.18), transparent 34%, rgba(177, 150, 96, 0.16), transparent 70%, rgba(118, 204, 216, 0.13)),
+    rgba(5, 8, 13, 0.48);
+  opacity: 0.78;
+}
+
+.timepiece__hand {
+  width: 1.5px;
+  background: rgba(214, 202, 156, 0.82);
+  box-shadow: 1px 2px 3px rgba(0, 0, 0, 0.42), 0 0 6px rgba(118, 204, 216, 0.16);
+}
+
+.timepiece__hand--hour {
+  height: 22px;
+  width: 3px;
+}
+
+.timepiece__hand--minute {
+  height: 31px;
+}
+
+.timepiece__hand--second {
+  height: 36px;
+  width: 1px;
+  background: rgba(118, 204, 216, 0.82);
+  box-shadow: 0 0 8px rgba(118, 204, 216, 0.3);
+}
+
+.timepiece__pin {
+  width: 8px;
+  height: 8px;
+  background: #7f744f;
+  box-shadow:
+    0 0 9px rgba(118, 204, 216, 0.28),
+    inset 0 1px 2px rgba(230, 218, 178, 0.44);
+}
+
+.timepiece__readout {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+@keyframes chrono-map-turn {
+  to { transform: translate(-50%, -50%) rotateX(64deg) rotateZ(342deg); }
+}
+
+@keyframes chrono-orbit-turn {
+  to { transform: translate(-50%, -50%) rotateX(62deg) rotateZ(378deg); }
+}
+
+@media (max-width: 1080px) {
+  .timepiece {
+    right: clamp(6px, 3vw, 24px);
+    bottom: clamp(12px, 3vw, 28px);
+    width: 136px;
+    height: 136px;
+    --clock-scale: 0.86;
+    transform: translateZ(0) scale(var(--clock-scale));
+    transform-origin: right bottom;
+  }
+
+  .timepiece__dial {
+    width: 104px;
+  }
+}
+
+@media (max-width: 720px) {
+  .hero__stage::after {
+    right: 52px;
+    bottom: 62px;
+    width: 108px;
+  }
+
+  .timepiece {
+    left: auto;
+    right: -8px;
+    bottom: 10px;
+    width: 112px;
+    height: 112px;
+    --clock-scale: 0.78;
+    transform: translateZ(0) scale(var(--clock-scale));
+    transform-origin: right bottom;
+    opacity: 0.68;
+  }
+
+  .timepiece::before {
+    width: 214px;
+    height: 214px;
+  }
+
+  .timepiece__dial {
+    width: 92px;
+  }
+
+  .timepiece__orbit--outer {
+    width: 132px;
+  }
+
+  .timepiece__orbit--inner {
+    width: 112px;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
