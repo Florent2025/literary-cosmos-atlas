@@ -125,9 +125,11 @@
           <div class="book-rail" id="bookRail">
             <div class="book-track" id="bookTrack"></div>
           </div>
-          <div class="rail-instruction">
-            <span>滚动让书架移动</span>
-            <span>点击任意书脊，打开新的知识世界</span>
+          <div class="rail-instruction" aria-label="书架浏览状态">
+            <button class="rail-control rail-control--prev" id="railPrev" type="button" aria-label="上一本文学理论书"></button>
+            <span class="rail-progress" aria-hidden="true"><i id="railProgress"></i></span>
+            <strong id="railCount">01/16</strong>
+            <button class="rail-control rail-control--next" id="railNext" type="button" aria-label="下一本文学理论书"></button>
           </div>
         </div>
       </section>
@@ -164,9 +166,20 @@
           <span>Score</span><strong id="gameScore">0000</strong>
           <span>Wave</span><strong id="gameWave">1/3</strong>
           <span>Hull</span><strong id="gameHull">100</strong>
+          <span>Energy</span><strong id="gameEnergy">100</strong>
+          <span>Combo</span><strong id="gameCombo">x1</strong>
           <span>Skill</span><strong id="gameSkill">Ready</strong>
           <button class="space-game__button" id="closeSpaceGame" type="button">返回星图</button>
         </div>
+      </div>
+      <div class="space-game__meters" aria-hidden="true">
+        <span class="space-game__meter space-game__meter--hull"><i id="gameHullFill"></i></span>
+        <span class="space-game__meter space-game__meter--energy"><i id="gameEnergyFill"></i></span>
+        <span class="space-game__boss" id="gameBossMeter"><b>CORE</b><i id="gameBossFill"></i></span>
+      </div>
+      <div class="space-game__touch" aria-label="移动端战机控制">
+        <button class="space-game__touch-button space-game__touch-button--fire" id="touchFire" type="button" aria-label="开火"></button>
+        <button class="space-game__touch-button space-game__touch-button--skill" id="touchSkill" type="button" aria-label="释放技能"></button>
       </div>
       <div class="space-game__status" id="gameStatus">舰队启动：月球航道正在校准</div>
     </aside>

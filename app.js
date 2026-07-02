@@ -923,13 +923,65 @@ function renderOrbitMap() {
 
 function setActiveBook(index) {
   const bounded = Math.max(0, Math.min(MOVEMENTS.length - 1, index));
-  if (state.activeIndex === bounded) return;
   state.activeIndex = bounded;
   const active = MOVEMENTS[bounded];
   $("#activeIndex").textContent = String(bounded + 1).padStart(2, "0");
   $("#activeTitle").textContent = active.title;
   $("#activeMeta").textContent = active.lens;
+  const railCount = $("#railCount");
+  const railProgress = $("#railProgress");
+  if (railCount) railCount.textContent = `${String(bounded + 1).padStart(2, "0")}/${String(MOVEMENTS.length).padStart(2, "0")}`;
+  if (railProgress) railProgress.style.width = `${((bounded + 1) / MOVEMENTS.length) * 100}%`;
   $$(".book").forEach((book, i) => book.classList.toggle("is-active", i === bounded));
+}
+
+function setupBookRail() {
+  const rail = $("#bookRail");
+  const track = $("#bookTrack");
+  if (!rail || !track) return;
+
+  let scrollTimer = 0;
+  const nearestIndex = () => {
+    const books = $$(".book", track);
+    if (!books.length) return 0;
+    const railRect = rail.getBoundingClientRect();
+    const center = railRect.left + railRect.width / 2;
+    let bestIndex = 0;
+    let bestDistance = Infinity;
+    books.forEach((book, index) => {
+      const rect = book.getBoundingClientRect();
+      const distance = Math.abs(rect.left + rect.width / 2 - center);
+      if (distance < bestDistance) {
+        bestDistance = distance;
+        bestIndex = index;
+      }
+    });
+    return bestIndex;
+  };
+
+  const updateFromScroll = () => {
+    setActiveBook(nearestIndex());
+    window.clearTimeout(scrollTimer);
+    scrollTimer = window.setTimeout(() => rail.classList.remove("is-dragging"), 180);
+  };
+
+  const scrollToBook = (index) => {
+    const books = $$(".book", track);
+    const target = books[Math.max(0, Math.min(books.length - 1, index))];
+    if (!target) return;
+    target.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+    setActiveBook(index);
+    playSound("select");
+  };
+
+  rail.addEventListener("scroll", updateFromScroll, { passive: true });
+  rail.addEventListener("pointerdown", () => rail.classList.add("is-dragging"));
+  rail.addEventListener("pointerup", () => window.setTimeout(updateFromScroll, 80));
+  rail.addEventListener("pointercancel", () => rail.classList.remove("is-dragging"));
+  $("#railPrev")?.addEventListener("click", () => scrollToBook(state.activeIndex - 1));
+  $("#railNext")?.addEventListener("click", () => scrollToBook(state.activeIndex + 1));
+  window.addEventListener("resize", () => window.setTimeout(updateFromScroll, 120));
+  setActiveBook(0);
 }
 
 function figureMarkup(figure) {
@@ -2901,9 +2953,17 @@ function initSpaceGame() {
   const scoreText = $("#gameScore");
   const waveText = $("#gameWave");
   const hullText = $("#gameHull");
+  const energyText = $("#gameEnergy");
+  const comboText = $("#gameCombo");
   const skillText = $("#gameSkill");
+  const hullFill = $("#gameHullFill");
+  const energyFill = $("#gameEnergyFill");
+  const bossMeter = $("#gameBossMeter");
+  const bossFill = $("#gameBossFill");
   const statusText = $("#gameStatus");
-  if (!overlay || !mount || !closeButton || !scoreText || !waveText || !hullText || !skillText || !statusText) return;
+  const touchFire = $("#touchFire");
+  const touchSkill = $("#touchSkill");
+  if (!overlay || !mount || !closeButton || !scoreText || !waveText || !hullText || !energyText || !comboText || !skillText || !statusText) return;
 
   const WAVE_CONFIGS = [
     { label: "月面巡逻圈", objective: "击落 18 架侦察机，收集任意升级。", target: 18, spawn: 760, speed: 1, boss: false },
@@ -2922,7 +2982,18 @@ function initSpaceGame() {
     scoreText.textContent = String(Math.max(0, Math.floor(state.score))).padStart(4, "0");
     waveText.textContent = `${Math.min(state.wave + 1, WAVE_CONFIGS.length)}/${WAVE_CONFIGS.length}`;
     hullText.textContent = String(Math.max(0, Math.ceil(state.hull)));
-    skillText.textContent = state.skillReady ? "Ready" : `${Math.ceil(state.skillCooldown / 1000)}s`;
+    energyText.textContent = String(Math.max(0, Math.floor(state.energy ?? 0)));
+    comboText.textContent = `x${Math.max(1, Math.floor(state.combo || 1))}`;
+    const hasSkill = state.skillReady && (state.energy ?? 0) >= 100;
+    skillText.textContent = hasSkill ? "Ready" : ((state.energy ?? 0) < 100 ? `${Math.floor(state.energy ?? 0)}%` : `${Math.ceil(state.skillCooldown / 1000)}s`);
+    if (hullFill) hullFill.style.width = `${Math.max(0, Math.min(100, state.hull))}%`;
+    if (energyFill) energyFill.style.width = `${Math.max(0, Math.min(100, state.energy ?? 0))}%`;
+    if (bossMeter && bossFill) {
+      const bossRatio = state.bossMax ? Math.max(0, Math.min(1, (state.bossHp || 0) / state.bossMax)) : 0;
+      bossMeter.classList.toggle("is-visible", bossRatio > 0 && !state.missionComplete && !state.gameOver);
+      bossFill.style.width = `${bossRatio * 100}%`;
+    }
+    touchSkill?.classList.toggle("is-ready", hasSkill);
   };
 
   class LunarSquadronScene extends Phaser.Scene {
@@ -2933,11 +3004,15 @@ function initSpaceGame() {
         wave: 0,
         kills: 0,
         hull: 100,
+        energy: 100,
+        combo: 1,
         weapon: 1,
         overdrive: 0,
         shield: 0,
         skillCooldown: 0,
         skillReady: true,
+        bossHp: 0,
+        bossMax: 0,
         missionComplete: false,
         gameOver: false
       };
@@ -2984,6 +3059,8 @@ function initSpaceGame() {
       this.input.keyboard.on("keydown-R", () => {
         if (this.state.gameOver || this.state.missionComplete) this.scene.restart();
       });
+      this.scale.on("resize", this.resizeScene, this);
+      this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => this.scale.off("resize", this.resizeScene, this));
 
       this.fireTimer = this.time.addEvent({ delay: 150, callback: () => this.fire(false), loop: true });
       this.spawnTimer = this.time.addEvent({ delay: WAVE_CONFIGS[0].spawn, callback: () => this.spawnEnemy(), loop: true });
@@ -2991,7 +3068,7 @@ function initSpaceGame() {
       this.bossTimer = null;
       this.waveBanner = this.add.text(this.width / 2, this.height * 0.23, "", {
         fontFamily: "Noto Serif SC, serif",
-        fontSize: "42px",
+        fontSize: this.bannerFontSize(),
         color: "#fff8df",
         align: "center",
         stroke: "#06131f",
@@ -2999,6 +3076,25 @@ function initSpaceGame() {
       }).setOrigin(0.5).setDepth(30).setAlpha(0);
       this.startWave(0);
       updateHud(this.state);
+    }
+
+    resizeScene(gameSize) {
+      this.width = gameSize.width;
+      this.height = gameSize.height;
+      this.physics.world.setBounds(0, 0, this.width, this.height);
+      if (this.waveBanner) {
+        this.waveBanner
+          .setStyle({ fontSize: this.bannerFontSize() })
+          .setPosition(this.width / 2, this.bannerY());
+      }
+    }
+
+    bannerFontSize() {
+      return `${Math.round(Phaser.Math.Clamp(this.width * 0.052, 19, 42))}px`;
+    }
+
+    bannerY() {
+      return this.height * (this.width < 520 ? 0.27 : 0.23);
     }
 
     createTextures() {
@@ -3091,7 +3187,8 @@ function initSpaceGame() {
         this.asteroidTimer.delay = index === 0 ? 1120 : 720;
       }
       this.waveBanner.setText(`${config.label}\n${config.objective}`);
-      this.tweens.add({ targets: this.waveBanner, alpha: 1, y: this.height * 0.2, duration: 420, yoyo: true, hold: 1350, ease: "Sine.easeInOut" });
+      this.waveBanner.setStyle({ fontSize: this.bannerFontSize() });
+      this.tweens.add({ targets: this.waveBanner, alpha: 1, y: this.bannerY(), duration: 420, yoyo: true, hold: 1350, ease: "Sine.easeInOut" });
       setStatus(`任务 ${index + 1}: ${config.objective}`);
       updateHud(this.state);
     }
@@ -3101,16 +3198,23 @@ function initSpaceGame() {
       const config = WAVE_CONFIGS[this.state.wave];
       const x = Phaser.Math.Between(60, this.width - 60);
       const enemy = this.enemies.create(x, -40, "enemy");
+      const elite = this.state.wave > 0 && Math.random() > 0.74;
       enemy.setCircle(18, 24, 0);
-      enemy.hp = this.state.wave === 0 ? 1 : 2;
-      enemy.score = 120 + this.state.wave * 45;
-      enemy.kind = "fighter";
+      enemy.hp = elite ? 4 : (this.state.wave === 0 ? 1 : 2);
+      enemy.score = elite ? 320 + this.state.wave * 80 : 120 + this.state.wave * 45;
+      enemy.kind = elite ? "elite" : "fighter";
       enemy.pattern = Math.random() > 0.5 ? "sine" : "dive";
       enemy.phase = Math.random() * Math.PI * 2;
       enemy.setVelocity(Phaser.Math.Between(-50, 50), (118 + this.state.wave * 32) * config.speed);
       enemy.setDepth(8);
+      enemy.setScale(elite ? 1.18 : 1);
+      enemy.setTint(elite ? 0xf5d287 : 0xffffff);
       if (this.state.wave > 0 && Math.random() > 0.56) {
         this.time.delayedCall(700, () => this.fireEnemy(enemy));
+      }
+      if (elite) {
+        this.time.delayedCall(1180, () => this.fireEnemy(enemy));
+        this.time.delayedCall(1540, () => this.fireEnemy(enemy));
       }
     }
 
@@ -3122,6 +3226,8 @@ function initSpaceGame() {
       this.boss.score = 2600;
       this.boss.isBoss = true;
       this.boss.kind = "boss";
+      this.state.bossHp = this.boss.hp;
+      this.state.bossMax = this.boss.hp;
       this.boss.setDepth(9);
       this.tweens.add({ targets: this.boss, y: this.height * 0.2, duration: 900, ease: "Power2" });
       this.bossTimer = this.time.addEvent({ delay: 620, callback: () => this.fireBoss(), loop: true });
@@ -3144,7 +3250,7 @@ function initSpaceGame() {
 
     fire(manual) {
       if (this.state.gameOver || this.state.missionComplete) return;
-      if (!manual && !this.input.activePointer.isDown && !this.keys.SPACE.isDown) return;
+      if (!manual && !this.input.activePointer.isDown && !this.keys.SPACE.isDown && !this.touchFire) return;
       const count = this.state.weapon >= 3 ? 3 : (this.state.weapon >= 2 ? 2 : 1);
       const offsets = count === 3 ? [-22, 0, 22] : (count === 2 ? [-14, 14] : [0]);
       offsets.forEach((offset, index) => {
@@ -3183,12 +3289,15 @@ function initSpaceGame() {
     hitEnemy(bullet, enemy) {
       bullet.disableBody(true, true);
       enemy.hp -= bullet.damage || 1;
+      if (enemy.isBoss) this.state.bossHp = Math.max(0, enemy.hp);
       this.flashAt(enemy.x, enemy.y, enemy.isBoss ? "#f5d287" : "#75f5ff", enemy.isBoss ? 22 : 12);
       if (enemy.hp > 0) return;
       const wasBoss = enemy.isBoss;
       const score = enemy.score || 100;
       enemy.disableBody(true, true);
-      this.state.score += score;
+      this.state.combo = Math.min(9, (this.state.combo || 1) + (wasBoss ? 2 : 1));
+      this.state.energy = Math.min(100, (this.state.energy || 0) + (wasBoss ? 40 : 8));
+      this.state.score += score * this.state.combo;
       this.state.kills += 1;
       if (Math.random() > (wasBoss ? 0.1 : 0.72)) this.dropPowerup(enemy.x, enemy.y);
       playSound(wasBoss ? "success" : "blast");
@@ -3203,7 +3312,8 @@ function initSpaceGame() {
       this.flashAt(bullet.x, bullet.y, "#f5d287", 8);
       if (asteroid.hp > 0) return;
       asteroid.disableBody(true, true);
-      this.state.score += asteroid.score;
+      this.state.energy = Math.min(100, (this.state.energy || 0) + 3);
+      this.state.score += asteroid.score * Math.max(1, this.state.combo || 1);
       if (Math.random() > 0.82) this.dropPowerup(asteroid.x, asteroid.y);
       updateHud(this.state);
     }
@@ -3212,6 +3322,8 @@ function initSpaceGame() {
       if (!hazard.active || this.state.shield > 0 || this.state.gameOver || this.state.missionComplete) return;
       hazard.disableBody(true, true);
       this.state.hull -= hazard.isBoss ? 35 : 18;
+      this.state.combo = 1;
+      this.state.energy = Math.max(0, this.state.energy - 18);
       this.state.shield = 850;
       this.flashAt(player.x, player.y, "#ff8fa8", 26);
       this.cameras.main.shake(170, 0.007);
@@ -3231,6 +3343,7 @@ function initSpaceGame() {
         setStatus("修复完成：舰体装甲恢复。");
       } else {
         this.state.overdrive = 8000;
+        this.state.energy = Math.min(100, this.state.energy + 18);
         setStatus("过载启动：短时间双倍伤害。");
       }
       playSound("success");
@@ -3248,9 +3361,10 @@ function initSpaceGame() {
     }
 
     castSkill() {
-      if (!this.state.skillReady || this.state.gameOver || this.state.missionComplete) return;
+      if (!this.state.skillReady || this.state.energy < 100 || this.state.gameOver || this.state.missionComplete) return;
       this.state.skillReady = false;
       this.state.skillCooldown = 9000;
+      this.state.energy = 0;
       this.state.shield = 1100;
       const ring = this.add.circle(this.player.x, this.player.y, 28, 0x75f5ff, 0.18).setStrokeStyle(3, 0xf5d287, 0.92).setDepth(20);
       this.tweens.add({ targets: ring, radius: 340, alpha: 0, duration: 520, ease: "Expo.easeOut", onComplete: () => ring.destroy() });
@@ -3290,6 +3404,7 @@ function initSpaceGame() {
     completeMission() {
       if (this.state.missionComplete) return;
       this.state.missionComplete = true;
+      this.state.bossHp = 0;
       this.spawnTimer.paused = true;
       this.asteroidTimer.paused = true;
       this.bossTimer?.remove(false);
@@ -3305,6 +3420,7 @@ function initSpaceGame() {
     endGame() {
       if (this.state.gameOver) return;
       this.state.gameOver = true;
+      this.state.bossHp = 0;
       this.spawnTimer.paused = true;
       this.asteroidTimer.paused = true;
       this.bossTimer?.remove(false);
@@ -3348,6 +3464,8 @@ function initSpaceGame() {
       this.state.skillCooldown = Math.max(0, this.state.skillCooldown - delta);
       this.state.skillReady = this.state.skillCooldown <= 0;
       this.state.overdrive = Math.max(0, this.state.overdrive - delta);
+      this.state.energy = Math.min(100, this.state.energy + dt * 2.4);
+      if (this.boss?.active) this.state.bossHp = Math.max(0, this.boss.hp);
       this.cleanupOffscreen();
       updateHud(this.state);
     }
@@ -3356,10 +3474,16 @@ function initSpaceGame() {
       this.nebula.clear();
       this.nebula.fillStyle(0x01030a, 1);
       this.nebula.fillRect(0, 0, this.width, this.height);
-      this.nebula.fillStyle(0x061120, 0.58);
-      this.nebula.fillCircle(this.width * 0.5, this.height * 0.7, Math.min(this.width, this.height) * 0.46);
-      this.nebula.fillStyle(0x2a1738, 0.18);
-      this.nebula.fillEllipse(this.width * 0.25, this.height * 0.22, this.width * 0.62, this.height * 0.34);
+      this.nebula.fillStyle(0x061120, 0.64);
+      this.nebula.fillCircle(this.width * 0.5, this.height * 0.7, Math.min(this.width, this.height) * 0.5);
+      this.nebula.fillStyle(0x2a1738, 0.22);
+      this.nebula.fillEllipse(this.width * 0.26, this.height * 0.22, this.width * 0.68, this.height * 0.36);
+      this.nebula.fillStyle(0x0d3359, 0.18);
+      this.nebula.fillEllipse(this.width * 0.74, this.height * 0.32, this.width * 0.76, this.height * 0.22);
+      this.nebula.lineStyle(2, 0x75f5ff, 0.08);
+      this.nebula.lineBetween(this.width * 0.08, this.height * 0.78, this.width * 0.92, this.height * 0.12);
+      this.nebula.lineStyle(1, 0xb99cff, 0.08);
+      this.nebula.lineBetween(this.width * 0.02, this.height * 0.64, this.width * 0.84, this.height * 0.04);
       this.nebula.lineStyle(1, 0x75f5ff, 0.1);
       for (let i = 0; i < 7; i += 1) {
         this.nebula.strokeEllipse(this.width * 0.52, this.height * 0.78, this.width * (0.36 + i * 0.1), this.height * (0.12 + i * 0.035));
@@ -3405,7 +3529,7 @@ function initSpaceGame() {
     document.body.classList.add("game-open");
     mount.innerHTML = "";
     setStatus("舰队启动：月球航道正在校准。");
-    updateHud({ score: 0, wave: 0, hull: 100, skillReady: true, skillCooldown: 0 });
+    updateHud({ score: 0, wave: 0, hull: 100, energy: 100, combo: 1, skillReady: true, skillCooldown: 0, bossHp: 0, bossMax: 0 });
     phaserGame = new Phaser.Game({
       type: Phaser.AUTO,
       parent: mount,
@@ -3452,6 +3576,26 @@ function initSpaceGame() {
     }
   };
 
+  const setTouchFire = (enabled) => {
+    touchFire?.classList.toggle("is-active", enabled);
+    if (!activeScene) return;
+    activeScene.touchFire = enabled;
+    if (enabled) activeScene.fire(true);
+  };
+
+  touchFire?.addEventListener("pointerdown", (event) => {
+    event.preventDefault();
+    setTouchFire(true);
+    playSound("laser");
+  });
+  ["pointerup", "pointerleave", "pointercancel"].forEach((type) => {
+    touchFire?.addEventListener(type, () => setTouchFire(false));
+  });
+  touchSkill?.addEventListener("pointerdown", (event) => {
+    event.preventDefault();
+    activeScene?.castSkill();
+  });
+
   closeButton.addEventListener("click", close);
   window.addEventListener("resize", () => {
     if (phaserGame) phaserGame.scale.resize(Math.max(360, mount.clientWidth), Math.max(360, mount.clientHeight));
@@ -3482,6 +3626,7 @@ function init() {
   renderBooks();
   renderArchive();
   renderOrbitMap();
+  setupBookRail();
   setupOpenButtons();
   setupTilt();
   setupMagnetic();
