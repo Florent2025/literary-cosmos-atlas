@@ -286,8 +286,9 @@ body::before {
   left: 0;
   z-index: 40;
   display: grid;
-  grid-template-columns: 1fr auto 1fr;
+  grid-template-columns: minmax(220px, 1fr) auto auto auto;
   align-items: center;
+  gap: 12px;
   width: 100%;
   min-height: 86px;
   padding: 18px 32px;
@@ -314,6 +315,7 @@ body::before {
 
 .brand,
 .nav-links,
+.language-switcher,
 .icon-button {
   pointer-events: auto;
 }
@@ -382,6 +384,41 @@ body::before {
 .nav-links a:hover {
   color: var(--paper);
   background: rgba(117, 245, 255, 0.12);
+}
+
+.language-switcher {
+  justify-self: end;
+  display: inline-flex;
+  gap: 4px;
+  padding: 5px;
+  border: 1px solid rgba(237, 243, 248, 0.16);
+  border-radius: 999px;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.08), transparent 42%),
+    rgba(4, 9, 18, 0.48);
+  box-shadow: inset 0 0 16px rgba(117, 245, 255, 0.06);
+}
+
+.language-switcher button {
+  min-width: 34px;
+  min-height: 30px;
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
+  color: rgba(225, 238, 248, 0.76);
+  background: transparent;
+  font-family: "Space Grotesk", "Noto Sans SC", sans-serif;
+  font-size: 0.72rem;
+  font-weight: 800;
+}
+
+.language-switcher button:hover,
+.language-switcher button:focus-visible,
+.language-switcher button.is-active {
+  outline: 0;
+  color: #06101b;
+  background: linear-gradient(135deg, #eaf8ff, #75f5ff);
+  box-shadow: 0 0 18px rgba(117, 245, 255, 0.22);
 }
 
 .icon-button {
@@ -1815,6 +1852,88 @@ main {
   font-weight: 900;
 }
 
+.world-section--sources {
+  background:
+    radial-gradient(circle at 86% 8%, color-mix(in srgb, var(--book-glow) 13%, transparent), transparent 26%),
+    radial-gradient(circle at 13% 96%, rgba(126, 86, 38, 0.1), transparent 24%),
+    repeating-linear-gradient(0deg, rgba(69, 46, 27, 0.035) 0 1px, transparent 1px 11px),
+    linear-gradient(145deg, rgba(255, 250, 230, 0.72), rgba(221, 201, 158, 0.7));
+}
+
+.dossier-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.dossier-grid article {
+  padding: 16px 18px;
+  border: 1px solid rgba(100, 67, 35, 0.18);
+  border-radius: 8px;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.28), transparent 44%),
+    rgba(106, 72, 34, 0.08);
+}
+
+.dossier-grid h4 {
+  margin: 0 0 10px;
+  color: #6a431f;
+  font-family: "Noto Serif SC", serif;
+  font-size: 1rem;
+}
+
+.dossier-grid ol,
+.dossier-grid ul {
+  margin: 0;
+  padding-left: 1.15rem;
+}
+
+.source-strip {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.source-strip a {
+  min-height: 92px;
+  padding: 13px 14px;
+  border: 1px solid rgba(100, 67, 35, 0.22);
+  border-radius: 8px;
+  color: #2f2318;
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--book-glow) 10%, transparent), transparent 42%),
+    rgba(255, 250, 228, 0.4);
+  box-shadow: inset 0 0 16px rgba(87, 55, 24, 0.08);
+  transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
+}
+
+.source-strip a:hover,
+.source-strip a:focus-visible {
+  outline: 0;
+  border-color: color-mix(in srgb, var(--book-glow) 42%, rgba(100, 67, 35, 0.22));
+  background: rgba(255, 251, 232, 0.72);
+  transform: translateY(-3px);
+}
+
+.source-strip span {
+  display: block;
+  margin-bottom: 6px;
+  color: #79552c;
+  font-size: 0.64rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.source-strip strong {
+  display: block;
+  color: #2e2115;
+  font-family: "Noto Serif SC", serif;
+  font-size: 0.95rem;
+  line-height: 1.45;
+}
+
 .quiz-section {
   border-color: color-mix(in srgb, var(--book-glow) 18%, rgba(100, 67, 35, 0.26));
   background:
@@ -2557,7 +2676,7 @@ main {
   }
 
   .site-header {
-    grid-template-columns: 1fr auto;
+    grid-template-columns: 1fr auto auto;
   }
 
   .nav-links {
@@ -2588,7 +2707,8 @@ main {
     width: 138px;
   }
 
-  .insight-grid {
+  .insight-grid,
+  .dossier-grid {
     grid-template-columns: 1fr;
   }
 
@@ -2765,6 +2885,14 @@ main {
 
   .quiz-section__head {
     display: grid;
+  }
+
+  .dossier-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .source-strip {
+    grid-template-columns: 1fr;
   }
 
   .quiz-check {
@@ -3232,9 +3360,11 @@ main {
 
 /* Art-directed opening scene: match the supplied cosmic-library reference. */
 body.has-entered .site-header:not(.is-compact) {
-  opacity: 0;
-  pointer-events: none;
-  transform: translateY(-120%);
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+  background: linear-gradient(180deg, rgba(1, 5, 13, 0.62), rgba(1, 5, 13, 0));
+  backdrop-filter: blur(10px);
 }
 
 .site-header.is-compact {

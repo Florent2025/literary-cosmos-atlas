@@ -660,8 +660,97 @@ const MOVEMENTS = [
 const state = {
   activeIndex: 0,
   worldOpen: false,
+  currentWorldId: null,
+  language: "zh",
   sound: true,
   audioContext: null
+};
+
+const UI_COPY = {
+  zh: {
+    brandTitle: "文学理论宇宙",
+    brandSubtitle: "The Literary Cosmos",
+    navLibrary: "书架轨道",
+    navAtlas: "星图索引",
+    navArchive: "思想档案",
+    heroOverline: "GLOBAL LITERARY THEORY ATLAS",
+    heroTitle: "每一本流派，都是一扇世界之门。",
+    heroLead: "你已进入一座会呼吸的文学图书馆。真实地球缓慢旋转，十六本理论之书沿轨道漂移：近处的书脊放大成入口，远处的书影退入星尘。",
+    heroPrimary: "进入书架轨道",
+    heroSecondary: "打开今日之书",
+    theoryEntry: "理论入口",
+    coreIdeas: "核心命题",
+    method: "如何用它读文本",
+    cases: "文本案例",
+    figures: "思想家与作家肖像",
+    works: "代表作品书封",
+    relations: "关联流派",
+    quizTitle: "理论测试题库",
+    quizIntro: "完成全部题目后会自动核对答案，适合快速检查是否真正进入这本书的阅读方法。",
+    quizSubmit: "提交核对",
+    quizWaiting: "等待作答",
+    researchDepth: "研究纵深",
+    sourceDossier: "研究档案与开放资源",
+    readRoute: "深读路线",
+    fieldQuestions: "可追问的问题",
+    sourceTrail: "开放来源"
+  },
+  en: {
+    brandTitle: "Literary Theory Cosmos",
+    brandSubtitle: "The Literary Cosmos",
+    navLibrary: "Book Orbit",
+    navAtlas: "Theory Map",
+    navArchive: "Archive",
+    heroOverline: "GLOBAL LITERARY THEORY ATLAS",
+    heroTitle: "Every movement is a book; every book opens a world.",
+    heroLead: "Enter a breathing literary observatory. The real Earth turns slowly while sixteen theory volumes drift in orbit: near books swell into portals, distant spines recede into stardust.",
+    heroPrimary: "Enter Book Orbit",
+    heroSecondary: "Open Today’s Book",
+    theoryEntry: "Theory Gateway",
+    coreIdeas: "Core Claims",
+    method: "How To Read With It",
+    cases: "Textual Cases",
+    figures: "Thinkers And Writers",
+    works: "Representative Works",
+    relations: "Related Movements",
+    quizTitle: "Theory Quiz Bank",
+    quizIntro: "Answer all questions and the site checks them automatically, so you can test whether you have entered this book’s method.",
+    quizSubmit: "Check Answers",
+    quizWaiting: "Waiting for answers",
+    researchDepth: "Research Depth",
+    sourceDossier: "Research Dossier And Open Sources",
+    readRoute: "Reading Route",
+    fieldQuestions: "Questions To Pursue",
+    sourceTrail: "Open Sources"
+  },
+  fr: {
+    brandTitle: "Cosmos de la théorie littéraire",
+    brandSubtitle: "The Literary Cosmos",
+    navLibrary: "Orbite des livres",
+    navAtlas: "Carte théorique",
+    navArchive: "Archive",
+    heroOverline: "ATLAS MONDIAL DE LA THÉORIE LITTÉRAIRE",
+    heroTitle: "Chaque courant est un livre; chaque livre ouvre un monde.",
+    heroLead: "Entrez dans un observatoire littéraire vivant. La Terre réelle tourne lentement tandis que seize volumes théoriques dérivent en orbite: les livres proches deviennent des portails, les dos lointains se retirent dans la poussière d’étoiles.",
+    heroPrimary: "Entrer dans l’orbite",
+    heroSecondary: "Ouvrir le livre du jour",
+    theoryEntry: "Porte théorique",
+    coreIdeas: "Thèses essentielles",
+    method: "Lire avec cette théorie",
+    cases: "Cas textuels",
+    figures: "Penseurs et écrivains",
+    works: "Œuvres représentatives",
+    relations: "Courants associés",
+    quizTitle: "Banque de quiz théoriques",
+    quizIntro: "Répondez à toutes les questions; le site les corrige automatiquement pour vérifier votre entrée dans la méthode du livre.",
+    quizSubmit: "Vérifier",
+    quizWaiting: "En attente de réponses",
+    researchDepth: "Profondeur de recherche",
+    sourceDossier: "Dossier de recherche et sources ouvertes",
+    readRoute: "Parcours de lecture",
+    fieldQuestions: "Questions à poursuivre",
+    sourceTrail: "Sources ouvertes"
+  }
 };
 
 const FIGURE_IMAGES = {
@@ -759,6 +848,45 @@ function hydrateMovementMedia() {
 
 hydrateMovementMedia();
 
+const MOVEMENT_TRANSLATIONS = {
+  en: {
+    "classical-poetics": { title: "Classical Poetics", era: "Ancient Greece to Rome", region: "Mediterranean", lens: "Mimesis · Catharsis · Genre" },
+    "chinese-poetics": { title: "Chinese Poetics", era: "Pre-Qin to Ming-Qing", region: "East Asia", lens: "Expressing Intent · Yijing · Resonance" },
+    "romanticism": { title: "Romanticism", era: "Late 18th to 19th century", region: "Europe and the Americas", lens: "Imagination · Sublime · Subject" },
+    "realism-naturalism": { title: "Realism", era: "19th century", region: "Global modern novel", lens: "Social totality · Typicality · Determinism" },
+    "modernism-symbolism": { title: "Modernism", era: "Late 19th to 20th century", region: "Transatlantic modernity", lens: "Rupture · Stream of consciousness · Symbol" },
+    "russian-formalism": { title: "Russian Formalism", era: "1910s-1930s", region: "Russia", lens: "Defamiliarization · Literariness · Device" },
+    "psychoanalysis": { title: "Psychoanalytic Criticism", era: "20th century", region: "Vienna, Paris and beyond", lens: "Desire · Unconscious · Symptom" },
+    "marxism": { title: "Marxist Criticism", era: "19th to 20th century", region: "Europe and the world", lens: "Class · Ideology · Totality" },
+    "structuralism": { title: "Structuralism", era: "1950s-1970s", region: "Paris and Geneva", lens: "Sign · Structure · System" },
+    "poststructuralism": { title: "Poststructuralism", era: "1960s onward", region: "France and global theory", lens: "Différance · Power · Textuality" },
+    "reader-response": { title: "Reception Aesthetics", era: "1960s-1980s", region: "Konstanz and the US", lens: "Reader · Horizon · Interpretation" },
+    "feminism-queer": { title: "Feminist Theory", era: "20th century onward", region: "Global gender politics", lens: "Gender · Body · Voice" },
+    "postcolonial": { title: "Postcolonial Criticism", era: "20th century onward", region: "Global South and diaspora", lens: "Empire · Subaltern · Hybridity" },
+    "new-historicism": { title: "New Historicism", era: "1980s onward", region: "US and UK", lens: "Power · Anecdote · Cultural poetics" },
+    "postmodernism": { title: "Postmodernism", era: "Late 20th century", region: "Global media culture", lens: "Simulation · Pastiche · Metafiction" },
+    "ecocriticism-world": { title: "Ecocriticism", era: "Late 20th century onward", region: "Planetary humanities", lens: "Anthropocene · Nonhuman · Environmental justice" }
+  },
+  fr: {
+    "classical-poetics": { title: "Poétique classique", era: "Grèce antique à Rome", region: "Méditerranée", lens: "Mimèsis · Catharsis · Genre" },
+    "chinese-poetics": { title: "Poétique chinoise", era: "Des Qin anciens aux Ming-Qing", region: "Asie de l’Est", lens: "Intention · Yijing · Résonance" },
+    "romanticism": { title: "Romantisme", era: "Fin XVIIIe-XIXe siècle", region: "Europe et Amériques", lens: "Imagination · Sublime · Sujet" },
+    "realism-naturalism": { title: "Réalisme", era: "XIXe siècle", region: "Roman moderne mondial", lens: "Totalité sociale · Typicité · Déterminisme" },
+    "modernism-symbolism": { title: "Modernisme", era: "Fin XIXe-XXe siècle", region: "Modernité transatlantique", lens: "Rupture · Flux de conscience · Symbole" },
+    "russian-formalism": { title: "Formalisme russe", era: "Années 1910-1930", region: "Russie", lens: "Défamiliarisation · Littérarité · Procédé" },
+    "psychoanalysis": { title: "Critique psychanalytique", era: "XXe siècle", region: "Vienne, Paris et au-delà", lens: "Désir · Inconscient · Symptôme" },
+    "marxism": { title: "Critique marxiste", era: "XIXe-XXe siècle", region: "Europe et monde", lens: "Classe · Idéologie · Totalité" },
+    "structuralism": { title: "Structuralisme", era: "Années 1950-1970", region: "Paris et Genève", lens: "Signe · Structure · Système" },
+    "poststructuralism": { title: "Poststructuralisme", era: "Depuis les années 1960", region: "France et théorie mondiale", lens: "Différance · Pouvoir · Textualité" },
+    "reader-response": { title: "Esthétique de la réception", era: "Années 1960-1980", region: "Constance et États-Unis", lens: "Lecteur · Horizon · Interprétation" },
+    "feminism-queer": { title: "Théorie féministe", era: "Depuis le XXe siècle", region: "Politiques mondiales du genre", lens: "Genre · Corps · Voix" },
+    "postcolonial": { title: "Critique postcoloniale", era: "Depuis le XXe siècle", region: "Sud global et diaspora", lens: "Empire · Subalterne · Hybridité" },
+    "new-historicism": { title: "Nouveau historicisme", era: "Depuis les années 1980", region: "États-Unis et Royaume-Uni", lens: "Pouvoir · Anecdote · Poétique culturelle" },
+    "postmodernism": { title: "Postmodernisme", era: "Fin du XXe siècle", region: "Culture médiatique mondiale", lens: "Simulation · Pastiche · Métafiction" },
+    "ecocriticism-world": { title: "Écocritique", era: "Depuis la fin du XXe siècle", region: "Humanités planétaires", lens: "Anthropocène · Non-humain · Justice environnementale" }
+  }
+};
+
 const MOVEMENT_LOCATIONS = {
   "classical-poetics": { lat: 37.98, lon: 23.72, label: "雅典 / 地中海诗学源头" },
   "chinese-poetics": { lat: 34.34, lon: 108.94, label: "长安 / 中国诗学传统" },
@@ -776,6 +904,95 @@ const MOVEMENT_LOCATIONS = {
   "new-historicism": { lat: 37.87, lon: -122.27, label: "伯克利 / 新历史主义" },
   "postmodernism": { lat: 40.71, lon: -74.01, label: "纽约-巴黎 / 后现代文化" },
   "ecocriticism-world": { lat: 42.44, lon: -71.34, label: "瓦尔登湖 / 生态批评源流" }
+};
+
+const SOURCE_READING_LIBRARY = {
+  global: [
+    { label: "Open Yale Courses · Introduction to Theory of Literature", url: "https://oyc.yale.edu/english/engl-300" },
+    { label: "Internet Encyclopedia of Philosophy · Literary Theory", url: "https://iep.utm.edu/literary/" },
+    { label: "Purdue OWL · Writing in Literature", url: "https://owl.purdue.edu/owl/subject_specific_writing/writing_in_literature/index.html" },
+    { label: "Purdue OWL · Literary Terms", url: "https://owl.purdue.edu/owl/subject_specific_writing/writing_in_literature/literary_terms/index.html" }
+  ],
+  "classical-poetics": [
+    { label: "Perseus Digital Library · Aristotle, Poetics", url: "https://www.perseus.tufts.edu/hopper/text?doc=Aristot.%20Poet." },
+    { label: "Purdue OWL · Stasis Theory", url: "https://owl.purdue.edu/owl/general_writing/the_writing_process/stasis_theory/index.html" },
+    { label: "Open Yale Courses · Introduction to Theory of Literature", url: "https://oyc.yale.edu/english/engl-300" }
+  ],
+  "chinese-poetics": [
+    { label: "Chinese Text Project · Wen Xin Diao Long", url: "https://ctext.org/wen-xin-diao-long" },
+    { label: "Chinese Text Project · Book of Songs", url: "https://ctext.org/book-of-poetry" },
+    { label: "Purdue OWL · Writing in Literature", url: "https://owl.purdue.edu/owl/subject_specific_writing/writing_in_literature/index.html" }
+  ],
+  "romanticism": [
+    { label: "British Library · The Romantics", url: "https://www.bl.uk/romantics-and-victorians/articles/the-romantics" },
+    { label: "Open Yale Courses · Introduction to Theory of Literature", url: "https://oyc.yale.edu/english/engl-300" },
+    { label: "Purdue OWL · Writing About Poetry", url: "https://owl.purdue.edu/owl/subject_specific_writing/writing_in_literature/writing_about_poetry.html" }
+  ],
+  "realism-naturalism": [
+    { label: "EBSCO Research Starters · Realism Literary Period", url: "https://www.ebsco.com/research-starters/literature-and-writing/realism-literary-period" },
+    { label: "NOVA Open Publishing · Realism", url: "https://pressbooks.nvcc.edu/eng255/part/realism/" },
+    { label: "Purdue OWL · Reading Criticism", url: "https://owl.purdue.edu/owl/subject_specific_writing/writing_in_literature/writing_in_literature_detailed_discussion/reading_criticism.html" }
+  ],
+  "modernism-symbolism": [
+    { label: "Modernist Journals Project", url: "https://modjourn.org/" },
+    { label: "Open Yale Courses · Introduction to Theory of Literature", url: "https://oyc.yale.edu/english/engl-300" },
+    { label: "Purdue OWL · Literary Terms", url: "https://owl.purdue.edu/owl/subject_specific_writing/writing_in_literature/literary_terms/index.html" }
+  ],
+  "russian-formalism": [
+    { label: "Marxists Internet Archive · Shklovsky, Art as Technique", url: "https://www.marxists.org/subject/art/lit_crit/works/shklovsky.htm" },
+    { label: "Open Yale Courses · Theory of Literature", url: "https://oyc.yale.edu/english/engl-300" },
+    { label: "Purdue OWL · Literary Terms", url: "https://owl.purdue.edu/owl/subject_specific_writing/writing_in_literature/literary_terms/index.html" }
+  ],
+  "psychoanalysis": [
+    { label: "Open Yale Courses · Theory, Freud, Nietzsche, Marx", url: "https://oyc.yale.edu/english/engl-300/lecture-1" },
+    { label: "Internet Encyclopedia of Philosophy · Literary Theory", url: "https://iep.utm.edu/literary/" },
+    { label: "Purdue OWL · Reading Criticism", url: "https://owl.purdue.edu/owl/subject_specific_writing/writing_in_literature/writing_in_literature_detailed_discussion/reading_criticism.html" }
+  ],
+  "marxism": [
+    { label: "Open Yale Courses · Introduction to Theory of Literature", url: "https://oyc.yale.edu/english/engl-300" },
+    { label: "Marxists Internet Archive · Literary Criticism", url: "https://www.marxists.org/subject/art/lit_crit/" },
+    { label: "Internet Encyclopedia of Philosophy · Literary Theory", url: "https://iep.utm.edu/literary/" }
+  ],
+  "structuralism": [
+    { label: "Poetry Foundation · Structuralism", url: "https://www.poetryfoundation.org/education/glossary/structuralism" },
+    { label: "EBSCO Research Starters · Structuralist and Poststructuralist Criticism", url: "https://www.ebsco.com/research-starters/literature-and-writing/structuralist-and-poststructuralist-criticism" },
+    { label: "Open Yale Courses · Introduction to Theory of Literature", url: "https://oyc.yale.edu/english/engl-300" }
+  ],
+  "poststructuralism": [
+    { label: "Internet Encyclopedia of Philosophy · Derrida", url: "https://iep.utm.edu/derrida/" },
+    { label: "Open Yale Courses · Deconstruction II", url: "https://oyc.yale.edu/english/engl-300/lecture-11" },
+    { label: "EBSCO Research Starters · Structuralist and Poststructuralist Criticism", url: "https://www.ebsco.com/research-starters/literature-and-writing/structuralist-and-poststructuralist-criticism" }
+  ],
+  "reader-response": [
+    { label: "Critical Worlds · What Is Reader Response?", url: "https://cwi.pressbooks.pub/lit-crit/chapter/what-is-reader-response/" },
+    { label: "Purdue OWL · Reading Criticism", url: "https://owl.purdue.edu/owl/subject_specific_writing/writing_in_literature/writing_in_literature_detailed_discussion/reading_criticism.html" },
+    { label: "Open Yale Courses · Theory of Literature", url: "https://oyc.yale.edu/english/engl-300" }
+  ],
+  "feminism-queer": [
+    { label: "Internet Encyclopedia of Philosophy · Feminist Standpoint Theory", url: "https://iep.utm.edu/fem-stan/" },
+    { label: "Purdue OWL · Writing in Literature", url: "https://owl.purdue.edu/owl/subject_specific_writing/writing_in_literature/index.html" },
+    { label: "Internet Encyclopedia of Philosophy · Literary Theory", url: "https://iep.utm.edu/literary/" }
+  ],
+  "postcolonial": [
+    { label: "Internet Encyclopedia of Philosophy · Literary Theory", url: "https://iep.utm.edu/literary/" },
+    { label: "Open Yale Courses · Introduction to Theory of Literature", url: "https://oyc.yale.edu/english/engl-300" },
+    { label: "Purdue OWL · Reading Criticism", url: "https://owl.purdue.edu/owl/subject_specific_writing/writing_in_literature/writing_in_literature_detailed_discussion/reading_criticism.html" }
+  ],
+  "new-historicism": [
+    { label: "Purdue OWL · Reading Criticism", url: "https://owl.purdue.edu/owl/subject_specific_writing/writing_in_literature/writing_in_literature_detailed_discussion/reading_criticism.html" },
+    { label: "Open Yale Courses · Introduction to Theory of Literature", url: "https://oyc.yale.edu/english/engl-300" },
+    { label: "Internet Encyclopedia of Philosophy · Literary Theory", url: "https://iep.utm.edu/literary/" }
+  ],
+  "postmodernism": [
+    { label: "Internet Encyclopedia of Philosophy · Postmodernism", url: "https://iep.utm.edu/postmod/" },
+    { label: "Internet Encyclopedia of Philosophy · Deleuze", url: "https://iep.utm.edu/deleuze/" },
+    { label: "Open Yale Courses · Introduction to Theory of Literature", url: "https://oyc.yale.edu/english/engl-300" }
+  ],
+  "ecocriticism-world": [
+    { label: "ASLE · Explore Our Field", url: "https://www.asle.org/explore-our-field/" },
+    { label: "Internet Encyclopedia of Philosophy · Literary Theory", url: "https://iep.utm.edu/literary/" },
+    { label: "Open Yale Courses · Introduction to Theory of Literature", url: "https://oyc.yale.edu/english/engl-300" }
+  ]
 };
 
 const GRAPH_GROUPS = [
@@ -825,6 +1042,14 @@ function graphEdgeType(source, target) {
 const $ = (selector, root = document) => root.querySelector(selector);
 const $$ = (selector, root = document) => Array.from(root.querySelectorAll(selector));
 
+function t(key) {
+  return UI_COPY[state.language]?.[key] || UI_COPY.zh[key] || key;
+}
+
+function movementText(movement, key) {
+  return MOVEMENT_TRANSLATIONS[state.language]?.[movement.id]?.[key] || movement[key];
+}
+
 function cssVarsFor(movement) {
   return `--book-a:${movement.palette[0]};--book-b:${movement.palette[1]};--book-glow:${movement.palette[2]};`;
 }
@@ -837,8 +1062,8 @@ function renderBooks() {
   const track = $("#bookTrack");
   track.innerHTML = MOVEMENTS.map((movement, index) => `
     <button class="book tilt-target${index === 0 ? " is-active" : ""}" type="button" data-open="${movement.id}" style="${cssVarsFor(movement)}">
-      <p class="book__kicker">${String(index + 1).padStart(2, "0")} · ${movement.era}</p>
-      <h3>${movement.title}</h3>
+      <p class="book__kicker">${String(index + 1).padStart(2, "0")} · ${movementText(movement, "era")}</p>
+      <h3>${movementText(movement, "title")}</h3>
       <div class="book__footer">
         ${movement.keywords.slice(0, 3).map((keyword) => `<span>${keyword}</span>`).join("")}
       </div>
@@ -849,8 +1074,8 @@ function renderBooks() {
 function renderArchive() {
   $("#archiveGrid").innerHTML = MOVEMENTS.map((movement) => `
     <button class="archive-card magnetic" type="button" data-open="${movement.id}" style="${cssVarsFor(movement)}">
-      <span class="archive-card__meta">${movement.era} · ${movement.region}</span>
-      <h3>${movement.title}</h3>
+      <span class="archive-card__meta">${movementText(movement, "era")} · ${movementText(movement, "region")}</span>
+      <h3>${movementText(movement, "title")}</h3>
       <p>${movement.intro}</p>
     </button>
   `).join("");
@@ -900,8 +1125,8 @@ function renderOrbitMap() {
 
   const nodeMarkup = nodes.map(({ movement, x, y, group }) => `
     <button class="orbit-node magnetic orbit-node--${group}" type="button" data-open="${movement.id}" style="left:${x}%;top:${y}%;${cssVarsFor(movement)}">
-      <span>${movement.title}</span>
-      <em>${movement.lens.split("·")[0].trim()}</em>
+      <span>${movementText(movement, "title")}</span>
+      <em>${movementText(movement, "lens").split("·")[0].trim()}</em>
     </button>
   `).join("");
 
@@ -926,8 +1151,8 @@ function setActiveBook(index) {
   state.activeIndex = bounded;
   const active = MOVEMENTS[bounded];
   $("#activeIndex").textContent = String(bounded + 1).padStart(2, "0");
-  $("#activeTitle").textContent = active.title;
-  $("#activeMeta").textContent = active.lens;
+  $("#activeTitle").textContent = movementText(active, "title");
+  $("#activeMeta").textContent = movementText(active, "lens");
   const railCount = $("#railCount");
   const railProgress = $("#railProgress");
   if (railCount) railCount.textContent = `${String(bounded + 1).padStart(2, "0")}/${String(MOVEMENTS.length).padStart(2, "0")}`;
@@ -982,6 +1207,36 @@ function setupBookRail() {
   $("#railNext")?.addEventListener("click", () => scrollToBook(state.activeIndex + 1));
   window.addEventListener("resize", () => window.setTimeout(updateFromScroll, 120));
   setActiveBook(0);
+}
+
+function applyLanguage(language) {
+  state.language = UI_COPY[language] ? language : "zh";
+  document.documentElement.lang = state.language === "zh" ? "zh-CN" : (state.language === "fr" ? "fr" : "en");
+  $$("[data-i18n]").forEach((node) => {
+    node.textContent = t(node.dataset.i18n);
+  });
+  $$("[data-lang]").forEach((button) => {
+    button.classList.toggle("is-active", button.dataset.lang === state.language);
+  });
+  renderBooks();
+  renderArchive();
+  renderOrbitMap();
+  setActiveBook(state.activeIndex);
+  setupTilt();
+  setupMagnetic();
+  if (state.worldOpen && state.currentWorldId) openWorld(state.currentWorldId);
+}
+
+function setupLanguageSwitcher() {
+  const switcher = $(".language-switcher");
+  if (!switcher) return;
+  switcher.addEventListener("click", (event) => {
+    const button = event.target.closest("[data-lang]");
+    if (!button || button.dataset.lang === state.language) return;
+    applyLanguage(button.dataset.lang);
+    playSound("select");
+  });
+  applyLanguage(state.language);
 }
 
 function figureMarkup(figure) {
@@ -1080,14 +1335,18 @@ function escapeAttribute(value) {
 }
 
 function researchMarkup(movement) {
-  const relations = movement.relations.map((id) => movementById(id).title).join("、");
+  const title = movementText(movement, "title");
+  const lens = movementText(movement, "lens");
+  const era = movementText(movement, "era");
+  const region = movementText(movement, "region");
+  const relations = movement.relations.map((id) => movementText(movementById(id), "title")).join("、");
   return `
     <section class="world-section world-section--deep">
-      <h3>研究纵深</h3>
+      <h3>${t("researchDepth")}</h3>
       <div class="insight-grid">
         <article>
           <span>谱系位置</span>
-          <p>${movement.title}位于“${movement.lens}”这条问题链中：它从${movement.era}的历史经验出发，把${movement.region}的文学实践转化为可迁移的阅读方法。</p>
+          <p>${title}位于“${lens}”这条问题链中：它从${era}的历史经验出发，把${region}的文学实践转化为可迁移的阅读方法。</p>
         </article>
         <article>
           <span>分析焦点</span>
@@ -1101,6 +1360,92 @@ function researchMarkup(movement) {
           <span>关联路径</span>
           <p>它与${relations}形成可连续阅读的理论通道：一条通道追问形式，一条通道追问权力，另一条通道追问主体经验如何被文本组织。</p>
         </article>
+      </div>
+    </section>
+  `;
+}
+
+function dossierLines(movement) {
+  const title = movementText(movement, "title");
+  const firstWork = movement.works[0];
+  const secondWork = movement.works[1] || movement.works[0];
+  const related = movement.relations.slice(0, 2).map((id) => movementText(movementById(id), "title")).join(" / ");
+  const keyTerms = movement.keywords.slice(0, 4).join(" · ");
+
+  if (state.language === "en") {
+    return {
+      route: [
+        `Begin with ${firstWork.title} (${firstWork.author}) and write down how ${keyTerms} appear as textual operations rather than decorative labels.`,
+        `Read one scene or poem twice: first for narrative surface, then for form, power, voice, and historical pressure.`,
+        `Compare the result with ${related}; the contrast makes the method’s blind spots and strengths visible.`
+      ],
+      questions: [
+        `What kind of reader does ${title} train: a formal analyst, a historical critic, an interpreter of desire, or a witness to world systems?`,
+        `Which element carries the argument most strongly: plot, metaphor, genre, voice, archive, body, space, or ecology?`,
+        `How would the interpretation change if ${secondWork.title} became the counter-example?`
+      ]
+    };
+  }
+
+  if (state.language === "fr") {
+    return {
+      route: [
+        `Commencez par ${firstWork.title} (${firstWork.author}) et notez comment ${keyTerms} fonctionnent comme opérations textuelles.`,
+        `Relisez une scène ou un poème deux fois: d’abord pour la surface narrative, puis pour la forme, le pouvoir, la voix et la pression historique.`,
+        `Comparez avec ${related}; l’écart rend visibles les forces et les limites de la méthode.`
+      ],
+      questions: [
+        `Quel type de lecteur ${title} forme-t-il: analyste des formes, critique historique, interprète du désir ou témoin des systèmes-monde?`,
+        `Quel élément porte le plus l’argument: intrigue, métaphore, genre, voix, archive, corps, espace ou écologie?`,
+        `Comment l’interprétation changerait-elle si ${secondWork.title} devenait le contre-exemple?`
+      ]
+    };
+  }
+
+  return {
+    route: [
+      `先从${firstWork.title}（${firstWork.author}）进入，把${keyTerms}写成可观察的文本操作，而不是停留在概念口号。`,
+      "同一段文字至少读两遍：第一遍看情节与主题，第二遍追踪形式、权力、声音、历史压力与阅读位置。",
+      `再与${related}对照，比较它们分别强调什么、遮蔽什么，理论的边界会更清楚。`
+    ],
+    questions: [
+      `${title}训练的读者是谁：形式分析者、历史批评者、欲望阐释者，还是世界系统的观察者？`,
+      "文本中最能承载论证的元素是什么：情节、隐喻、文类、声音、档案、身体、空间还是生态关系？",
+      `如果把${secondWork.title}当作反例，原先的解释会在哪些地方需要重写？`
+    ]
+  };
+}
+
+function sourceDossierMarkup(movement) {
+  const lines = dossierLines(movement);
+  const sources = [
+    ...(SOURCE_READING_LIBRARY[movement.id] || []),
+    ...SOURCE_READING_LIBRARY.global.slice(0, 2)
+  ];
+  const uniqueSources = sources.filter((source, index, list) => (
+    list.findIndex((item) => item.url === source.url) === index
+  )).slice(0, 5);
+
+  return `
+    <section class="world-section world-section--sources">
+      <h3>${t("sourceDossier")}</h3>
+      <div class="dossier-grid">
+        <article>
+          <h4>${t("readRoute")}</h4>
+          <ol>${lines.route.map((line) => `<li>${line}</li>`).join("")}</ol>
+        </article>
+        <article>
+          <h4>${t("fieldQuestions")}</h4>
+          <ul>${lines.questions.map((line) => `<li>${line}</li>`).join("")}</ul>
+        </article>
+      </div>
+      <div class="source-strip" aria-label="${t("sourceTrail")}">
+        ${uniqueSources.map((source) => `
+          <a href="${source.url}" target="_blank" rel="noreferrer">
+            <span>${t("sourceTrail")}</span>
+            <strong>${source.label}</strong>
+          </a>
+        `).join("")}
       </div>
     </section>
   `;
@@ -1173,10 +1518,10 @@ function quizMarkup(movement) {
     <section class="world-section quiz-section" data-quiz>
       <div class="quiz-section__head">
         <div>
-          <h3>理论测试题库</h3>
-          <p>完成全部题目后会自动核对答案，适合快速检查是否真正进入这本书的阅读方法。</p>
+          <h3>${t("quizTitle")}</h3>
+          <p>${t("quizIntro")}</p>
         </div>
-        <button class="quiz-check magnetic" type="button">提交核对</button>
+        <button class="quiz-check magnetic" type="button">${t("quizSubmit")}</button>
       </div>
       <div class="quiz-list">
         ${questions.map((item, questionIndex) => `
@@ -1194,7 +1539,7 @@ function quizMarkup(movement) {
           </fieldset>
         `).join("")}
       </div>
-      <div class="quiz-result" aria-live="polite">等待作答</div>
+      <div class="quiz-result" aria-live="polite">${t("quizWaiting")}</div>
     </section>
   `;
 }
@@ -1248,6 +1593,7 @@ function setupQuiz(root) {
 
 function openWorld(id) {
   const movement = movementById(id);
+  state.currentWorldId = movement.id;
   const world = $("#world");
   const content = $("#worldContent");
   world.style.setProperty("--book-a", movement.palette[0]);
@@ -1256,8 +1602,8 @@ function openWorld(id) {
   content.innerHTML = `
     <div class="world-hero">
       <div class="world-book-cover tilt-target" style="${cssVarsFor(movement)}">
-        <p class="world-kicker">${movement.era} · ${movement.region}</p>
-        <h2 id="worldTitle">${movement.title}</h2>
+        <p class="world-kicker">${movementText(movement, "era")} · ${movementText(movement, "region")}</p>
+        <h2 id="worldTitle">${movementText(movement, "title")}</h2>
         <p>${movement.door}</p>
         <div class="world-tag-row">
           ${movement.keywords.map((keyword) => `<span>${keyword}</span>`).join("")}
@@ -1265,29 +1611,30 @@ function openWorld(id) {
       </div>
       <div class="world-pages">
         <section class="world-section">
-          <h3>理论入口</h3>
+          <h3>${t("theoryEntry")}</h3>
           <p>${movement.intro}</p>
           ${movement.deepDive.map((paragraph) => `<p>${paragraph}</p>`).join("")}
         </section>
         <section class="world-section">
-          <h3>核心命题</h3>
+          <h3>${t("coreIdeas")}</h3>
           <ul class="idea-list">${movement.coreIdeas.map((item) => `<li>${item}</li>`).join("")}</ul>
         </section>
         <section class="world-section">
-          <h3>如何用它读文本</h3>
+          <h3>${t("method")}</h3>
           <ol class="method-list">${movement.method.map((item) => `<li>${item}</li>`).join("")}</ol>
         </section>
         <section class="world-section">
-          <h3>文本案例</h3>
+          <h3>${t("cases")}</h3>
           <ul class="case-list">${movement.cases.map((item) => `<li>${item}</li>`).join("")}</ul>
         </section>
         ${researchMarkup(movement)}
+        ${sourceDossierMarkup(movement)}
         <section class="world-section">
-          <h3>思想家与作家肖像</h3>
+          <h3>${t("figures")}</h3>
           <div class="portrait-grid">${movement.figures.map(figureMarkup).join("")}</div>
         </section>
         <section class="world-section">
-          <h3>代表作品书封</h3>
+          <h3>${t("works")}</h3>
           <div class="works-grid">
             ${movement.works.map((work) => `
               <div class="work-cover tilt-target" style="${cssVarsFor(movement)}">
@@ -1300,11 +1647,11 @@ function openWorld(id) {
         </section>
         ${quizMarkup(movement)}
         <section class="world-section">
-          <h3>关联流派</h3>
+          <h3>${t("relations")}</h3>
           <div class="relation-row">
             ${movement.relations.map((relation) => {
               const target = movementById(relation);
-              return `<button type="button" data-open="${target.id}">${target.title}</button>`;
+              return `<button type="button" data-open="${target.id}">${movementText(target, "title")}</button>`;
             }).join("")}
           </div>
         </section>
@@ -1337,6 +1684,7 @@ function closeWorld() {
   const world = $("#world");
   if (!state.worldOpen) return;
   state.worldOpen = false;
+  state.currentWorldId = null;
   playSound("close");
   document.body.style.overflow = "";
   if (window.gsap) {
@@ -1356,20 +1704,22 @@ function closeWorld() {
   }
 }
 
-function setupOpenButtons(root = document) {
-  $$("[data-open]", root).forEach((button) => {
-    button.addEventListener("click", (event) => {
-      event.preventDefault();
-      openWorld(button.dataset.open);
-      if (window.anime) {
-        anime({
-          targets: button,
-          scale: [1, 0.96, 1.04, 1],
-          duration: 540,
-          easing: "easeOutElastic(1, .5)"
-        });
-      }
-    });
+function setupOpenButtons() {
+  if (setupOpenButtons.bound) return;
+  setupOpenButtons.bound = true;
+  document.addEventListener("click", (event) => {
+    const button = event.target.closest("[data-open]");
+    if (!button) return;
+    event.preventDefault();
+    openWorld(button.dataset.open);
+    if (window.anime) {
+      anime({
+        targets: button,
+        scale: [1, 0.96, 1.04, 1],
+        duration: 540,
+        easing: "easeOutElastic(1, .5)"
+      });
+    }
   });
 }
 
@@ -1408,6 +1758,8 @@ function setupTilt(root = document) {
 
 function setupMagnetic() {
   $$(".magnetic").forEach((el) => {
+    if (el.dataset.magneticReady) return;
+    el.dataset.magneticReady = "true";
     el.addEventListener("mouseenter", () => {
       const now = performance.now();
       if (!setupMagnetic.lastSound || now - setupMagnetic.lastSound > 260) {
@@ -1828,17 +2180,45 @@ function makeBookTexture(movement, index) {
   ctx.fillRect(width * 0.98, height * 0.03, width * 0.012, height * 0.94);
 
   const margin = width * 0.065;
-  const gold = "rgba(226,183,101,0.92)";
-  const softGold = "rgba(226,183,101,0.45)";
+  const gold = "rgba(239,207,128,0.94)";
+  const softGold = "rgba(226,183,101,0.48)";
+  const tarnishedGold = "rgba(116,78,34,0.72)";
+  ctx.save();
+  ctx.shadowColor = "rgba(0,0,0,0.46)";
+  ctx.shadowBlur = 9;
+  ctx.shadowOffsetY = 5;
   ctx.strokeStyle = gold;
   ctx.lineWidth = Math.max(1, width * 0.01);
   ctx.strokeRect(margin, margin, width - margin * 2, height - margin * 2);
+  ctx.restore();
   ctx.strokeStyle = softGold;
   ctx.lineWidth = Math.max(0.5, width * 0.004);
   ctx.strokeRect(margin + width * 0.02, margin + width * 0.02, width - (margin + width * 0.02) * 2, height - (margin + width * 0.02) * 2);
   ctx.strokeStyle = "rgba(255, 239, 184, 0.2)";
   ctx.lineWidth = 1;
   ctx.strokeRect(margin + width * 0.035, margin + width * 0.035, width - (margin + width * 0.035) * 2, height - (margin + width * 0.035) * 2);
+
+  ctx.strokeStyle = tarnishedGold;
+  ctx.lineWidth = Math.max(1, width * 0.006);
+  for (let i = 0; i < 5; i += 1) {
+    const y = height * (0.18 + i * 0.14);
+    ctx.beginPath();
+    ctx.moveTo(gutter * 0.34, y);
+    ctx.bezierCurveTo(gutter * 0.78, y - 12, gutter * 0.78, y + 12, gutter * 0.34, y);
+    ctx.stroke();
+  }
+
+  ctx.fillStyle = "rgba(239,207,128,0.54)";
+  [0.22, 0.78].forEach((x) => {
+    [0.19, 0.81].forEach((y) => {
+      ctx.beginPath();
+      ctx.arc(width * x, height * y, width * 0.018, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.strokeStyle = "rgba(23,14,8,0.42)";
+      ctx.lineWidth = 1;
+      ctx.stroke();
+    });
+  });
 
   const corner = width * 0.16;
   paintOrnateCorner(ctx, margin + 5, margin + 5, 1, 1, corner, softGold);
@@ -1859,6 +2239,13 @@ function makeBookTexture(movement, index) {
   ctx.beginPath();
   ctx.ellipse(width * 0.58, height * 0.58, width * 0.28, height * 0.11, -0.5, 0, Math.PI * 2);
   ctx.fill();
+  ctx.strokeStyle = "rgba(239,207,128,0.26)";
+  ctx.lineWidth = 1;
+  for (let i = 0; i < 3; i += 1) {
+    ctx.beginPath();
+    ctx.ellipse(width * 0.5, height * (0.5 + i * 0.012), width * (0.18 + i * 0.065), height * (0.07 + i * 0.026), 0.16, 0, Math.PI * 2);
+    ctx.stroke();
+  }
 
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
@@ -1901,13 +2288,20 @@ function makeBookSpineTexture(movement, index = movementIndex(movement)) {
   ctx.fillStyle = "rgba(226,183,101,0.66)";
   ctx.fillRect(0, canvas.height * 0.075, canvas.width, canvas.height * 0.018);
   ctx.fillRect(0, canvas.height * 0.9, canvas.width, canvas.height * 0.018);
+  ctx.fillStyle = "rgba(239,207,128,0.5)";
+  for (let y = 0.19; y <= 0.78; y += 0.15) {
+    ctx.fillRect(canvas.width * 0.1, canvas.height * y, canvas.width * 0.8, 3);
+  }
   ctx.fillStyle = "rgba(0,0,0,0.25)";
   ctx.fillRect(0, 0, canvas.width * 0.16, canvas.height);
   ctx.fillStyle = "rgba(255,244,199,0.08)";
   ctx.fillRect(canvas.width * 0.78, 0, canvas.width * 0.12, canvas.height);
-  ctx.strokeStyle = "rgba(226,183,101,0.44)";
-  ctx.lineWidth = 1;
+  ctx.strokeStyle = "rgba(239,207,128,0.58)";
+  ctx.lineWidth = 2;
   ctx.strokeRect(8, 18, canvas.width - 16, canvas.height - 36);
+  ctx.strokeStyle = "rgba(0,0,0,0.34)";
+  ctx.lineWidth = 1;
+  ctx.strokeRect(12, 24, canvas.width - 24, canvas.height - 48);
   paintCompassMedallion(ctx, canvas.width / 2, canvas.height * 0.18, 16, "rgba(226,183,101,0.7)");
   ctx.save();
   ctx.translate(canvas.width * 0.62, canvas.height * 0.78);
@@ -2228,23 +2622,36 @@ function initThreeCosmos() {
   group.add(moonPicker);
 
   const satellites = new THREE.Group();
-  const bookGeometry = new THREE.BoxGeometry(0.64, 0.92, 0.16);
+  const bookGeometry = new THREE.BoxGeometry(0.72, 1.02, 0.22);
+  const orbitLanes = [
+    { radiusX: 3.78, radiusZ: 2.22, baseY: -0.46, phase: 0.18, speed: 0.128 },
+    { radiusX: 4.16, radiusZ: 2.64, baseY: -0.15, phase: Math.PI * 0.52, speed: 0.118 },
+    { radiusX: 4.55, radiusZ: 3.04, baseY: 0.16, phase: Math.PI * 1.05, speed: 0.108 },
+    { radiusX: 4.92, radiusZ: 3.42, baseY: 0.47, phase: Math.PI * 1.58, speed: 0.098 }
+  ];
+  const laneSlots = Math.ceil(MOVEMENTS.length / orbitLanes.length);
   for (let i = 0; i < MOVEMENTS.length; i += 1) {
     const movement = MOVEMENTS[i];
     const bookKit = makeBookMaterials(movement, i);
     const book = new THREE.Mesh(bookGeometry, bookKit.materials);
-    const angle = i / MOVEMENTS.length * Math.PI * 2;
+    const laneIndex = i % orbitLanes.length;
+    const lane = orbitLanes[laneIndex];
+    const slotIndex = Math.floor(i / orbitLanes.length);
+    const angle = (slotIndex / laneSlots) * Math.PI * 2 + lane.phase;
     book.userData = {
       movementId: movement.id,
       title: movement.title,
       movement,
       angle,
-      speed: 0.16 + (i % 4) * 0.018,
-      radiusX: 3.08 + (i % 3) * 0.18,
-      radiusZ: 1.82 + (i % 4) * 0.18,
-      baseY: (i % 5 - 2) * 0.075,
-      tilt: (i % 2 ? -1 : 1) * (0.08 + (i % 3) * 0.035),
-      depthTwist: (i % 2 ? -1 : 1) * (0.12 + (i % 4) * 0.028),
+      laneIndex,
+      slotIndex,
+      speed: lane.speed + (slotIndex % 2) * 0.006,
+      radiusX: lane.radiusX,
+      radiusZ: lane.radiusZ,
+      baseY: lane.baseY,
+      bob: 0.1 + laneIndex * 0.018,
+      tilt: (i % 2 ? -1 : 1) * (0.06 + laneIndex * 0.026),
+      depthTwist: (i % 2 ? -1 : 1) * (0.1 + laneIndex * 0.034),
       hovered: false,
       opening: false,
       portalHidden: false,
@@ -2578,21 +2985,24 @@ function initThreeCosmos() {
       }
       const angle = data.angle + time * data.speed * (lit ? 1.7 : 1);
       const depth = Math.sin(angle);
-      const scale = 0.42 + (depth + 1) * 0.34;
-      const hoverLift = data.hovered ? 0.18 : 0;
+      const nearFactor = (depth + 1) / 2;
+      const scale = 0.26 + Math.pow(nearFactor, 1.55) * 0.9;
+      const hoverLift = data.hovered ? 0.24 : 0;
       book.position.set(
         Math.cos(angle) * data.radiusX,
-        Math.sin(angle * 1.7) * 0.38 + data.baseY + hoverLift,
+        Math.sin(angle * 1.7 + data.laneIndex * 0.72) * data.bob + data.baseY + hoverLift,
         depth * data.radiusZ
       );
       book.scale.setScalar(scale * (data.hovered ? 1.14 : 1));
       book.lookAt(camera.position);
       book.rotateY(data.depthTwist + (data.hovered ? data.depthTwist * 0.32 : 0));
       book.rotateZ(data.tilt + (data.hovered ? Math.sin(time * 5 + data.angle) * 0.07 : 0));
+      book.renderOrder = Math.round((book.position.z + 6) * 100);
       const targetOpacity = data.portalHidden ? 0.07 : 1;
       data.materials.forEach((material) => {
         material.opacity += (targetOpacity - material.opacity) * 0.12;
         material.depthWrite = material.opacity > 0.35;
+        material.depthTest = true;
       });
       const coverMaterial = book.material[4];
       if (coverMaterial?.emissiveIntensity !== undefined) {
@@ -3027,13 +3437,17 @@ function initSpaceGame() {
       this.createBackdrop();
       this.physics.world.setBounds(0, 0, this.width, this.height);
       this.player = this.physics.add.image(this.width * 0.5, this.height * 0.78, "ship");
-      this.player.setCircle(22, 17, 12);
+      this.player.setCircle(8, 24, 28);
       this.player.setDepth(12);
       this.player.setDamping(true);
       this.player.setDrag(0.92);
       this.player.setMaxVelocity(620);
       this.player.target = new Phaser.Math.Vector2(this.player.x, this.player.y);
       this.playerGlow = this.add.image(this.player.x, this.player.y, "shipGlow").setBlendMode(Phaser.BlendModes.ADD).setAlpha(0.52).setDepth(11);
+      this.hitCore = this.add.circle(this.player.x, this.player.y, 5, 0x75f5ff, 0.92)
+        .setStrokeStyle(2, 0xfff8df, 0.82)
+        .setBlendMode(Phaser.BlendModes.ADD)
+        .setDepth(13);
 
       this.bullets = this.physics.add.group({ classType: Phaser.Physics.Arcade.Image, maxSize: 90 });
       this.enemyBullets = this.physics.add.group({ classType: Phaser.Physics.Arcade.Image, maxSize: 120 });
@@ -3049,6 +3463,7 @@ function initSpaceGame() {
       this.physics.add.overlap(this.player, this.powerups, this.collectPowerup, null, this);
 
       this.keys = this.input.keyboard.addKeys("W,A,S,D,UP,DOWN,LEFT,RIGHT,SPACE,SHIFT,R");
+      this.focusKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.CTRL);
       this.input.on("pointermove", (pointer) => this.player.target.set(pointer.x, pointer.y));
       this.input.on("pointerdown", (pointer) => {
         if (pointer.rightButtonDown()) this.castSkill();
@@ -3100,14 +3515,25 @@ function initSpaceGame() {
     createTextures() {
       const g = this.add.graphics();
       g.clear();
-      g.fillStyle(0xeaf8ff, 1);
-      g.fillTriangle(32, 4, 56, 66, 32, 52);
-      g.fillTriangle(32, 4, 8, 66, 32, 52);
+      g.fillStyle(0x0a1222, 1);
+      g.fillTriangle(32, 2, 60, 70, 32, 56);
+      g.fillTriangle(32, 2, 4, 70, 32, 56);
+      g.fillStyle(0xeaf8ff, 0.92);
+      g.fillTriangle(32, 4, 48, 62, 32, 52);
+      g.fillTriangle(32, 4, 16, 62, 32, 52);
       g.fillStyle(0x75f5ff, 1);
-      g.fillRoundedRect(27, 22, 10, 36, 4);
+      g.fillRoundedRect(27, 17, 10, 42, 4);
+      g.fillStyle(0x14233a, 1);
+      g.fillEllipse(32, 26, 13, 18);
+      g.lineStyle(2, 0x75f5ff, 0.82);
+      g.strokeEllipse(32, 26, 15, 20);
+      g.lineStyle(3, 0xf5d287, 0.64);
+      g.lineBetween(16, 58, 48, 58);
       g.fillStyle(0xf5d287, 1);
-      g.fillEllipse(21, 68, 9, 20);
-      g.fillEllipse(43, 68, 9, 20);
+      g.fillEllipse(20, 70, 8, 20);
+      g.fillEllipse(44, 70, 8, 20);
+      g.fillStyle(0x75f5ff, 0.9);
+      g.fillEllipse(32, 76, 10, 24);
       g.generateTexture("ship", 64, 82);
       g.clear();
       g.fillStyle(0x75f5ff, 0.44);
@@ -3118,23 +3544,40 @@ function initSpaceGame() {
       g.fillRoundedRect(6, 0, 8, 34, 5);
       g.generateTexture("laser", 20, 36);
       g.clear();
-      g.fillStyle(0xb99cff, 1);
-      g.fillTriangle(0, 18, 42, 2, 42, 34);
-      g.fillTriangle(84, 18, 42, 2, 42, 34);
+      g.fillStyle(0x3c3156, 1);
+      g.fillTriangle(0, 20, 42, 2, 36, 38);
+      g.fillTriangle(84, 20, 42, 2, 48, 38);
+      g.fillStyle(0xb99cff, 0.9);
+      g.fillTriangle(7, 18, 42, 6, 39, 28);
+      g.fillTriangle(77, 18, 42, 6, 45, 28);
       g.fillStyle(0x0b1724, 1);
-      g.fillCircle(42, 18, 14);
+      g.fillEllipse(42, 18, 25, 28);
+      g.fillStyle(0xff8fa8, 0.88);
+      g.fillCircle(42, 18, 6);
       g.lineStyle(3, 0x75f5ff, 1);
       g.strokeCircle(42, 18, 14);
+      g.lineStyle(2, 0xf5d287, 0.52);
+      g.lineBetween(18, 20, 66, 20);
       g.generateTexture("enemy", 84, 36);
       g.clear();
       g.fillStyle(0xdec182, 1);
-      g.fillCircle(28, 28, 26);
+      g.beginPath();
+      g.moveTo(31, 2);
+      g.lineTo(52, 10);
+      g.lineTo(58, 30);
+      g.lineTo(45, 55);
+      g.lineTo(19, 58);
+      g.lineTo(4, 39);
+      g.lineTo(8, 14);
+      g.closePath();
+      g.fillPath();
       g.fillStyle(0x7a5a38, 0.82);
-      g.fillCircle(18, 18, 7);
-      g.fillCircle(38, 33, 9);
+      g.fillCircle(18, 19, 6);
+      g.fillCircle(39, 34, 9);
+      g.fillCircle(28, 47, 5);
       g.lineStyle(2, 0xf5d287, 0.62);
-      g.strokeCircle(28, 28, 25);
-      g.generateTexture("asteroid", 56, 56);
+      g.strokeCircle(30, 30, 27);
+      g.generateTexture("asteroid", 62, 62);
       g.clear();
       g.fillStyle(0xff8fa8, 1);
       g.fillCircle(8, 8, 7);
@@ -3146,13 +3589,23 @@ function initSpaceGame() {
       g.strokeCircle(17, 17, 10);
       g.generateTexture("powerup", 34, 34);
       g.clear();
+      g.fillStyle(0x070b14, 1);
+      g.fillRoundedRect(0, 18, 260, 88, 22);
       g.fillStyle(0x15192d, 1);
-      g.fillRoundedRect(0, 0, 240, 96, 22);
+      g.fillRoundedRect(16, 0, 228, 112, 26);
+      g.fillStyle(0x242c45, 1);
+      g.fillTriangle(0, 58, 62, 18, 62, 100);
+      g.fillTriangle(260, 58, 198, 18, 198, 100);
       g.lineStyle(4, 0xf5d287, 0.9);
-      g.strokeRoundedRect(3, 3, 234, 90, 20);
-      g.lineStyle(2, 0x75f5ff, 0.42);
-      g.strokeRoundedRect(13, 13, 214, 70, 15);
-      g.generateTexture("boss", 240, 96);
+      g.strokeRoundedRect(18, 8, 224, 96, 22);
+      g.lineStyle(2, 0x75f5ff, 0.5);
+      g.strokeRoundedRect(34, 24, 192, 64, 16);
+      g.fillStyle(0xff8fa8, 0.92);
+      g.fillCircle(130, 56, 18);
+      g.fillStyle(0x75f5ff, 0.64);
+      g.fillCircle(72, 56, 8);
+      g.fillCircle(188, 56, 8);
+      g.generateTexture("boss", 260, 112);
       g.destroy();
     }
 
@@ -3221,9 +3674,9 @@ function initSpaceGame() {
     spawnBoss() {
       if (this.boss || this.state.gameOver) return;
       this.boss = this.enemies.create(this.width / 2, -80, "boss");
-      this.boss.setSize(210, 72, true);
-      this.boss.hp = 90;
-      this.boss.score = 2600;
+      this.boss.setSize(224, 84, true);
+      this.boss.hp = 120;
+      this.boss.score = 3600;
       this.boss.isBoss = true;
       this.boss.kind = "boss";
       this.state.bossHp = this.boss.hp;
@@ -3267,6 +3720,7 @@ function initSpaceGame() {
 
     fireEnemy(enemy) {
       if (!enemy?.active || this.state.gameOver) return;
+      if (enemy.y < 16 || enemy.y > this.height - 42) return;
       const bullet = this.enemyBullets.get(enemy.x, enemy.y + 24, "enemyBullet");
       if (!bullet) return;
       bullet.setActive(true).setVisible(true).setDepth(7);
@@ -3276,13 +3730,21 @@ function initSpaceGame() {
 
     fireBoss() {
       if (!this.boss?.active || this.state.gameOver) return;
-      for (let i = 0; i < 10; i += 1) {
-        const angle = -160 + i * 20 + Math.sin(this.time.now / 380) * 9;
+      const mode = Math.floor(this.time.now / 1600) % 3;
+      const count = mode === 0 ? 12 : (mode === 1 ? 18 : 7);
+      const aim = Phaser.Math.RadToDeg(Phaser.Math.Angle.Between(this.boss.x, this.boss.y, this.player.x, this.player.y));
+      for (let i = 0; i < count; i += 1) {
+        const angle = mode === 0
+          ? -168 + i * 28 + Math.sin(this.time.now / 380) * 8
+          : (mode === 1
+            ? 18 + i * 20 + this.time.now * 0.055
+            : aim - 42 + i * 14);
         const bullet = this.enemyBullets.get(this.boss.x, this.boss.y + 38, "enemyBullet");
         if (!bullet) continue;
         bullet.setActive(true).setVisible(true).setDepth(7);
         bullet.body.enable = true;
-        this.physics.velocityFromAngle(angle, 210, bullet.body.velocity);
+        bullet.setBlendMode(Phaser.BlendModes.ADD);
+        this.physics.velocityFromAngle(angle, mode === 2 ? 260 : 210, bullet.body.velocity);
       }
     }
 
@@ -3446,20 +3908,35 @@ function initSpaceGame() {
       if (this.keys.W.isDown || this.keys.UP.isDown) move.y -= 1;
       if (this.keys.S.isDown || this.keys.DOWN.isDown) move.y += 1;
       if (move.lengthSq() > 0) {
-        move.normalize().scale(520);
+        move.normalize().scale(this.focusKey?.isDown ? 310 : 520);
         this.player.setAcceleration(move.x, move.y);
       } else {
         const pointer = this.input.activePointer;
         if (pointer.isDown || pointer.x !== 0 || pointer.y !== 0) {
           this.player.target.set(pointer.x, pointer.y);
         }
-        const dx = Phaser.Math.Clamp(this.player.target.x - this.player.x, -1, 1);
-        const dy = Phaser.Math.Clamp(this.player.target.y - this.player.y, -1, 1);
-        this.player.setAcceleration(dx * 480, dy * 480);
+        const dx = this.player.target.x - this.player.x;
+        const dy = this.player.target.y - this.player.y;
+        const distance = Math.max(1, Math.hypot(dx, dy));
+        const focused = this.focusKey?.isDown;
+        const speed = Phaser.Math.Clamp(distance * (focused ? 4.2 : 7.2), 0, focused ? 390 : 760);
+        const desiredX = dx / distance * speed;
+        const desiredY = dy / distance * speed;
+        this.player.setAcceleration(0, 0);
+        this.player.setVelocity(
+          Phaser.Math.Linear(this.player.body.velocity.x, desiredX, 0.26),
+          Phaser.Math.Linear(this.player.body.velocity.y, desiredY, 0.26)
+        );
       }
       this.player.x = Phaser.Math.Clamp(this.player.x, 34, this.width - 34);
       this.player.y = Phaser.Math.Clamp(this.player.y, this.height * 0.34, this.height - 46);
-      this.playerGlow.setPosition(this.player.x, this.player.y).setAlpha(this.state.shield > 0 ? 0.9 : 0.42);
+      const roll = Phaser.Math.Clamp(this.player.body.velocity.x / 1180, -0.35, 0.35);
+      this.player.setRotation(roll);
+      this.playerGlow.setPosition(this.player.x, this.player.y).setRotation(roll).setAlpha(this.state.shield > 0 ? 0.9 : 0.42);
+      this.hitCore
+        .setPosition(this.player.x, this.player.y)
+        .setScale(this.focusKey?.isDown ? 1.32 : 1)
+        .setAlpha(this.state.shield > 0 ? 1 : 0.82);
       this.state.shield = Math.max(0, this.state.shield - delta);
       this.state.skillCooldown = Math.max(0, this.state.skillCooldown - delta);
       this.state.skillReady = this.state.skillCooldown <= 0;
@@ -3628,6 +4105,7 @@ function init() {
   renderOrbitMap();
   setupBookRail();
   setupOpenButtons();
+  setupLanguageSwitcher();
   setupTilt();
   setupMagnetic();
   initStars();

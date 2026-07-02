@@ -34,15 +34,20 @@
       <a class="brand" href="#hero" aria-label="回到开场">
         <span class="brand__seal">文</span>
         <span>
-          <strong>文学理论宇宙</strong>
-          <em>The Literary Cosmos</em>
+          <strong data-i18n="brandTitle">文学理论宇宙</strong>
+          <em data-i18n="brandSubtitle">The Literary Cosmos</em>
         </span>
       </a>
       <nav class="nav-links" aria-label="页面导航">
-        <a href="#library">书架轨道</a>
-        <a href="#atlas">星图索引</a>
-        <a href="#archive">思想档案</a>
+        <a href="#library" data-i18n="navLibrary">书架轨道</a>
+        <a href="#atlas" data-i18n="navAtlas">星图索引</a>
+        <a href="#archive" data-i18n="navArchive">思想档案</a>
       </nav>
+      <div class="language-switcher" aria-label="网页语言">
+        <button type="button" data-lang="zh" class="is-active">中</button>
+        <button type="button" data-lang="en">EN</button>
+        <button type="button" data-lang="fr">FR</button>
+      </div>
       <button class="icon-button" id="soundToggle" type="button" aria-label="切换界面声效">
         <span></span>
       </button>
@@ -51,15 +56,15 @@
     <main>
       <section class="hero" id="hero">
         <div class="hero__copy">
-          <p class="overline">GLOBAL LITERARY THEORY ATLAS</p>
-          <h1>每一本流派，都是一扇世界之门。</h1>
-          <p class="hero__lead">
+          <p class="overline" data-i18n="heroOverline">GLOBAL LITERARY THEORY ATLAS</p>
+          <h1 data-i18n="heroTitle">每一本流派，都是一扇世界之门。</h1>
+          <p class="hero__lead" data-i18n="heroLead">
             你已进入一座会呼吸的文学图书馆。真实地球缓慢旋转，十六本理论之书沿轨道漂移：
             近处的书脊放大成入口，远处的书影退入星尘。
           </p>
           <div class="hero__actions">
-            <a class="primary-link magnetic" href="#library">进入书架轨道</a>
-            <button class="secondary-link magnetic" id="openFeatured" type="button">打开今日之书</button>
+            <a class="primary-link magnetic" href="#library" data-i18n="heroPrimary">进入书架轨道</a>
+            <button class="secondary-link magnetic" id="openFeatured" type="button" data-i18n="heroSecondary">打开今日之书</button>
           </div>
         </div>
 
