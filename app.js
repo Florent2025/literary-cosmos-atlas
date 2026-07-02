@@ -1618,8 +1618,33 @@ function finishCanvasTexture(texture) {
   return texture;
 }
 
-function leatherColor(movement, amount = 0.48) {
-  return new THREE.Color(movement.palette[1]).lerp(new THREE.Color(0x3a2c1e), amount);
+const ANTIQUE_BOOK_COLORS = [
+  0x182943,
+  0x50311f,
+  0x302748,
+  0x1f3a32,
+  0x472436,
+  0x263446,
+  0x5a3a23,
+  0x243838,
+  0x3d2b24,
+  0x20253c,
+  0x3b402d,
+  0x412b48,
+  0x24404a,
+  0x4a2d2a,
+  0x2d3351,
+  0x31402e
+];
+
+function movementIndex(movement) {
+  return Math.max(0, MOVEMENTS.findIndex((item) => item.id === movement.id));
+}
+
+function leatherColor(movement, amount = 0.34, index = movementIndex(movement)) {
+  const antique = new THREE.Color(ANTIQUE_BOOK_COLORS[index % ANTIQUE_BOOK_COLORS.length]);
+  const accent = new THREE.Color(movement.palette[1]);
+  return antique.lerp(accent, 0.11).lerp(new THREE.Color(0x120f0d), amount);
 }
 
 function paintBookGrain(ctx, width, height, density = 18) {
@@ -1652,134 +1677,210 @@ function wrapCanvasText(ctx, text, x, y, maxWidth, lineHeight, maxLines = 3) {
   trimmed.forEach((line, lineIndex) => ctx.fillText(line, x, startY + lineIndex * lineHeight));
 }
 
+function paintOrnateCorner(ctx, x, y, sx, sy, size, color) {
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.scale(sx, sy);
+  ctx.strokeStyle = color;
+  ctx.lineWidth = Math.max(1, size * 0.055);
+  ctx.beginPath();
+  ctx.moveTo(0, size * 0.78);
+  ctx.quadraticCurveTo(size * 0.18, size * 0.35, size * 0.5, size * 0.25);
+  ctx.quadraticCurveTo(size * 0.77, size * 0.17, size, 0);
+  ctx.moveTo(size * 0.12, size);
+  ctx.quadraticCurveTo(size * 0.2, size * 0.64, size * 0.52, size * 0.52);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.arc(size * 0.45, size * 0.44, size * 0.11, 0, Math.PI * 2);
+  ctx.stroke();
+  ctx.restore();
+}
+
+function paintCompassMedallion(ctx, x, y, radius, color) {
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.strokeStyle = color;
+  ctx.fillStyle = color;
+  ctx.lineWidth = Math.max(1, radius * 0.045);
+  ctx.beginPath();
+  ctx.arc(0, 0, radius, 0, Math.PI * 2);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.arc(0, 0, radius * 0.58, 0, Math.PI * 2);
+  ctx.stroke();
+  for (let i = 0; i < 16; i += 1) {
+    const angle = i / 16 * Math.PI * 2;
+    const inner = i % 2 === 0 ? radius * 0.22 : radius * 0.42;
+    ctx.beginPath();
+    ctx.moveTo(Math.cos(angle) * inner, Math.sin(angle) * inner);
+    ctx.lineTo(Math.cos(angle) * radius * 0.88, Math.sin(angle) * radius * 0.88);
+    ctx.stroke();
+  }
+  ctx.beginPath();
+  ctx.moveTo(0, -radius * 0.74);
+  ctx.lineTo(radius * 0.13, 0);
+  ctx.lineTo(0, radius * 0.74);
+  ctx.lineTo(-radius * 0.13, 0);
+  ctx.closePath();
+  ctx.fill();
+  ctx.restore();
+}
+
 function makeBookTexture(movement, index) {
   const canvas = document.createElement("canvas");
   canvas.width = 420;
   canvas.height = 596;
   const ctx = canvas.getContext("2d");
   const { width, height } = canvas;
-  const base = leatherColor(movement, 0.48);
-  const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
-  gradient.addColorStop(0, `#${base.clone().offsetHSL(0, -0.02, 0.06).getHexString()}`);
-  gradient.addColorStop(0.55, `#${base.getHexString()}`);
-  gradient.addColorStop(1, `#${base.clone().offsetHSL(0, 0.01, -0.1).getHexString()}`);
+  const base = leatherColor(movement, 0.18, index);
+  const gradient = ctx.createLinearGradient(0, 0, width, height);
+  gradient.addColorStop(0, `#${base.clone().offsetHSL(0, -0.03, 0.07).getHexString()}`);
+  gradient.addColorStop(0.42, `#${base.getHexString()}`);
+  gradient.addColorStop(1, `#${base.clone().offsetHSL(0, 0.03, -0.16).getHexString()}`);
   ctx.fillStyle = gradient;
   ctx.fillRect(0, 0, width, height);
-  paintBookGrain(ctx, width, height, 22);
+  paintBookGrain(ctx, width, height, 13);
+
+  ctx.globalAlpha = 0.18;
+  for (let y = 0; y < height; y += 11) {
+    ctx.fillStyle = y % 22 === 0 ? "#fff4c4" : "#050407";
+    ctx.fillRect(0, y + Math.sin((y + index * 9) * 0.2) * 2, width, 1);
+  }
+  ctx.globalAlpha = 1;
 
   const sheen = ctx.createLinearGradient(0, 0, width, height * 0.55);
-  sheen.addColorStop(0, "rgba(255,255,255,0.08)");
-  sheen.addColorStop(0.45, "rgba(255,255,255,0.01)");
+  sheen.addColorStop(0, "rgba(255,240,190,0.16)");
+  sheen.addColorStop(0.28, "rgba(255,255,255,0.035)");
+  sheen.addColorStop(0.62, "rgba(0,0,0,0.08)");
   sheen.addColorStop(1, "rgba(255,255,255,0)");
   ctx.fillStyle = sheen;
   ctx.fillRect(0, 0, width, height);
 
   const vignette = ctx.createRadialGradient(width / 2, height / 2, height * 0.12, width / 2, height / 2, height * 0.78);
   vignette.addColorStop(0, "rgba(0,0,0,0)");
-  vignette.addColorStop(1, "rgba(0,0,0,0.45)");
+  vignette.addColorStop(0.72, "rgba(0,0,0,0.2)");
+  vignette.addColorStop(1, "rgba(0,0,0,0.6)");
   ctx.fillStyle = vignette;
   ctx.fillRect(0, 0, width, height);
 
-  const gutter = width * 0.13;
-  ctx.fillStyle = "rgba(0, 0, 0, 0.16)";
+  const gutter = width * 0.15;
+  const gutterGradient = ctx.createLinearGradient(0, 0, gutter * 1.7, 0);
+  gutterGradient.addColorStop(0, "rgba(0, 0, 0, 0.42)");
+  gutterGradient.addColorStop(0.62, "rgba(0, 0, 0, 0.16)");
+  gutterGradient.addColorStop(1, "rgba(255, 224, 154, 0.11)");
+  ctx.fillStyle = gutterGradient;
   ctx.fillRect(0, 0, gutter, height);
-  ctx.fillStyle = "rgba(226, 183, 101, 0.16)";
-  ctx.fillRect(gutter + width * 0.01, 0, width * 0.008, height);
+  ctx.fillStyle = "rgba(226, 183, 101, 0.36)";
+  ctx.fillRect(gutter + width * 0.006, height * 0.035, width * 0.008, height * 0.93);
+  ctx.fillStyle = "rgba(255, 246, 211, 0.11)";
+  ctx.fillRect(width * 0.98, height * 0.03, width * 0.012, height * 0.94);
 
-  const margin = width * 0.06;
-  ctx.strokeStyle = "rgba(226,183,101,0.9)";
+  const margin = width * 0.065;
+  const gold = "rgba(226,183,101,0.92)";
+  const softGold = "rgba(226,183,101,0.45)";
+  ctx.strokeStyle = gold;
   ctx.lineWidth = Math.max(1, width * 0.01);
   ctx.strokeRect(margin, margin, width - margin * 2, height - margin * 2);
-  ctx.strokeStyle = "rgba(226,183,101,0.4)";
+  ctx.strokeStyle = softGold;
   ctx.lineWidth = Math.max(0.5, width * 0.004);
   ctx.strokeRect(margin + width * 0.02, margin + width * 0.02, width - (margin + width * 0.02) * 2, height - (margin + width * 0.02) * 2);
+  ctx.strokeStyle = "rgba(255, 239, 184, 0.2)";
+  ctx.lineWidth = 1;
+  ctx.strokeRect(margin + width * 0.035, margin + width * 0.035, width - (margin + width * 0.035) * 2, height - (margin + width * 0.035) * 2);
 
-  ctx.strokeStyle = "rgba(226,183,101,0.46)";
+  const corner = width * 0.16;
+  paintOrnateCorner(ctx, margin + 5, margin + 5, 1, 1, corner, softGold);
+  paintOrnateCorner(ctx, width - margin - 5, margin + 5, -1, 1, corner, softGold);
+  paintOrnateCorner(ctx, margin + 5, height - margin - 5, 1, -1, corner, softGold);
+  paintOrnateCorner(ctx, width - margin - 5, height - margin - 5, -1, -1, corner, softGold);
+
+  ctx.strokeStyle = "rgba(226,183,101,0.5)";
   ctx.lineWidth = Math.max(1, width * 0.006);
   ctx.beginPath();
-  ctx.moveTo(width * 0.22, height * 0.25);
-  ctx.lineTo(width * 0.78, height * 0.25);
-  ctx.moveTo(width * 0.22, height * 0.72);
-  ctx.lineTo(width * 0.78, height * 0.72);
+  ctx.moveTo(width * 0.28, height * 0.24);
+  ctx.lineTo(width * 0.76, height * 0.24);
+  ctx.moveTo(width * 0.28, height * 0.72);
+  ctx.lineTo(width * 0.76, height * 0.72);
   ctx.stroke();
 
-  ctx.fillStyle = "rgba(255,255,255,0.08)";
+  ctx.fillStyle = "rgba(255,255,255,0.055)";
   ctx.beginPath();
-  ctx.ellipse(width * 0.58, height * 0.64, width * 0.31, height * 0.12, -0.5, 0, Math.PI * 2);
+  ctx.ellipse(width * 0.58, height * 0.58, width * 0.28, height * 0.11, -0.5, 0, Math.PI * 2);
   ctx.fill();
 
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
   ctx.fillStyle = "#F2D79A";
-  ctx.font = `${Math.max(14, width * 0.042)}px Cinzel, 'Space Grotesk', serif`;
-  ctx.fillText(String(index + 1).padStart(2, "0"), width / 2, height * 0.17);
+  ctx.font = `800 ${Math.max(14, width * 0.04)}px Cinzel, 'Space Grotesk', serif`;
+  ctx.fillText(String(index + 1).padStart(2, "0"), width / 2, height * 0.16);
 
   ctx.fillStyle = "#FBF3DD";
-  ctx.font = `900 ${Math.max(34, width * 0.12)}px 'Noto Serif SC', Cinzel, serif`;
-  wrapCanvasText(ctx, movement.title, width / 2, height * 0.47, width * 0.72, width * 0.13, 3);
+  ctx.shadowColor = "rgba(0,0,0,0.58)";
+  ctx.shadowBlur = 10;
+  ctx.shadowOffsetY = 3;
+  ctx.font = `900 ${Math.max(34, width * 0.118)}px 'Noto Serif SC', Cinzel, serif`;
+  wrapCanvasText(ctx, movement.title, width / 2, height * 0.47, width * 0.68, width * 0.128, 3);
+  ctx.shadowColor = "transparent";
+  ctx.shadowBlur = 0;
+  ctx.shadowOffsetY = 0;
 
   ctx.fillStyle = "rgba(246, 234, 200, 0.86)";
-  ctx.font = `700 ${Math.max(13, width * 0.044)}px 'Noto Sans SC', sans-serif`;
+  ctx.font = `800 ${Math.max(13, width * 0.04)}px 'Noto Sans SC', sans-serif`;
   wrapCanvasText(ctx, movement.era, width / 2, height * 0.79, width * 0.68, width * 0.054, 2);
 
-  ctx.strokeStyle = "#E2B765";
-  ctx.lineWidth = Math.max(1, width * 0.007);
-  ctx.beginPath();
-  ctx.arc(width / 2, height * 0.86, width * 0.075, 0, Math.PI * 2);
-  ctx.stroke();
-  ctx.fillStyle = "#E2B765";
-  ctx.font = `${Math.max(18, width * 0.06)}px Cinzel, serif`;
-  ctx.fillText("✦", width / 2, height * 0.862);
+  paintCompassMedallion(ctx, width / 2, height * 0.87, width * 0.07, "rgba(226,183,101,0.86)");
 
   return finishCanvasTexture(new THREE.CanvasTexture(canvas));
 }
 
-function makeBookSpineTexture(movement) {
+function makeBookSpineTexture(movement, index = movementIndex(movement)) {
   const canvas = document.createElement("canvas");
   canvas.width = 84;
   canvas.height = 430;
   const ctx = canvas.getContext("2d");
-  const base = leatherColor(movement, 0.5);
+  const base = leatherColor(movement, 0.26, index);
   const gradient = ctx.createLinearGradient(0, 0, canvas.width, 0);
-  gradient.addColorStop(0, `#${base.clone().offsetHSL(0, 0, -0.28).getHexString()}`);
-  gradient.addColorStop(0.5, `#${base.clone().offsetHSL(0, 0, -0.02).getHexString()}`);
-  gradient.addColorStop(1, `#${base.clone().offsetHSL(0, 0, -0.28).getHexString()}`);
+  gradient.addColorStop(0, `#${base.clone().offsetHSL(0, 0, -0.32).getHexString()}`);
+  gradient.addColorStop(0.42, `#${base.clone().offsetHSL(0, 0, 0.04).getHexString()}`);
+  gradient.addColorStop(1, `#${base.clone().offsetHSL(0, 0, -0.24).getHexString()}`);
   ctx.fillStyle = gradient;
   ctx.fillRect(0, 0, canvas.width, canvas.height);
-  paintBookGrain(ctx, canvas.width, canvas.height, 20);
-  ctx.fillStyle = "rgba(226,183,101,0.8)";
-  ctx.fillRect(0, canvas.height * 0.08, canvas.width, canvas.height * 0.018);
+  paintBookGrain(ctx, canvas.width, canvas.height, 12);
+  ctx.fillStyle = "rgba(226,183,101,0.66)";
+  ctx.fillRect(0, canvas.height * 0.075, canvas.width, canvas.height * 0.018);
   ctx.fillRect(0, canvas.height * 0.9, canvas.width, canvas.height * 0.018);
-  ctx.strokeStyle = "rgba(226,183,101,0.32)";
+  ctx.fillStyle = "rgba(0,0,0,0.25)";
+  ctx.fillRect(0, 0, canvas.width * 0.16, canvas.height);
+  ctx.fillStyle = "rgba(255,244,199,0.08)";
+  ctx.fillRect(canvas.width * 0.78, 0, canvas.width * 0.12, canvas.height);
+  ctx.strokeStyle = "rgba(226,183,101,0.44)";
   ctx.lineWidth = 1;
   ctx.strokeRect(8, 18, canvas.width - 16, canvas.height - 36);
+  paintCompassMedallion(ctx, canvas.width / 2, canvas.height * 0.18, 16, "rgba(226,183,101,0.7)");
   ctx.save();
-  ctx.translate(canvas.width * 0.6, canvas.height * 0.78);
+  ctx.translate(canvas.width * 0.62, canvas.height * 0.78);
   ctx.rotate(-Math.PI / 2);
   ctx.fillStyle = "#F6EAC8";
-  ctx.font = "700 18px 'Noto Serif SC', Cinzel, serif";
+  ctx.font = "900 19px 'Noto Serif SC', Cinzel, serif";
   ctx.textAlign = "left";
   ctx.fillText(movement.title, 0, 0);
   ctx.restore();
   return finishCanvasTexture(new THREE.CanvasTexture(canvas));
 }
 
-function makeBookBackTexture(movement) {
+function makeBookBackTexture(movement, index = movementIndex(movement)) {
   const canvas = document.createElement("canvas");
   canvas.width = 180;
   canvas.height = 256;
   const ctx = canvas.getContext("2d");
-  const base = leatherColor(movement, 0.55);
+  const base = leatherColor(movement, 0.34, index);
   ctx.fillStyle = `#${base.clone().offsetHSL(0, 0, -0.22).getHexString()}`;
   ctx.fillRect(0, 0, canvas.width, canvas.height);
-  paintBookGrain(ctx, canvas.width, canvas.height, 24);
+  paintBookGrain(ctx, canvas.width, canvas.height, 14);
   ctx.strokeStyle = "rgba(226,183,101,0.45)";
   ctx.lineWidth = 3;
   ctx.strokeRect(13, 13, canvas.width - 26, canvas.height - 26);
-  ctx.strokeStyle = "rgba(226,183,101,0.55)";
-  ctx.beginPath();
-  ctx.arc(canvas.width / 2, canvas.height / 2, 22, 0, Math.PI * 2);
-  ctx.stroke();
+  paintCompassMedallion(ctx, canvas.width / 2, canvas.height / 2, 23, "rgba(226,183,101,0.52)");
   return finishCanvasTexture(new THREE.CanvasTexture(canvas));
 }
 
@@ -1821,27 +1922,27 @@ function makeBookGlowTexture(movement) {
 
 function makeBookMaterials(movement, index) {
   const coverTexture = makeBookTexture(movement, index);
-  const spineTexture = makeBookSpineTexture(movement);
-  const backTexture = makeBookBackTexture(movement);
+  const spineTexture = makeBookSpineTexture(movement, index);
+  const backTexture = makeBookBackTexture(movement, index);
   const pageTexture = makePageTexture();
-  const sideColor = leatherColor(movement, 0.46);
+  const sideColor = leatherColor(movement, 0.22, index);
   const pageMaterial = new THREE.MeshStandardMaterial({ map: pageTexture, roughness: 0.92, metalness: 0.02, transparent: true });
-  const spineMaterial = new THREE.MeshStandardMaterial({ map: spineTexture, roughness: 0.84, metalness: 0.08, transparent: true });
+  const spineMaterial = new THREE.MeshStandardMaterial({ map: spineTexture, roughness: 0.8, metalness: 0.12, transparent: true });
   const coverMaterial = new THREE.MeshStandardMaterial({
     map: coverTexture,
-    roughness: 0.78,
-    metalness: 0.08,
+    roughness: 0.74,
+    metalness: 0.1,
     emissive: new THREE.Color(movement.palette[2]),
-    emissiveIntensity: 0.035,
+    emissiveIntensity: 0.018,
     transparent: true
   });
-  const backMaterial = new THREE.MeshStandardMaterial({ map: backTexture, roughness: 0.86, metalness: 0.04, transparent: true });
+  const backMaterial = new THREE.MeshStandardMaterial({ map: backTexture, roughness: 0.82, metalness: 0.08, transparent: true });
   const edgeMaterial = new THREE.MeshStandardMaterial({
     color: sideColor,
-    roughness: 0.84,
-    metalness: 0.05,
+    roughness: 0.8,
+    metalness: 0.08,
     emissive: new THREE.Color(movement.palette[2]),
-    emissiveIntensity: 0.02,
+    emissiveIntensity: 0.012,
     transparent: true
   });
   return {
@@ -2048,20 +2149,22 @@ function initThreeCosmos() {
     opacity: 0.18,
     blending: THREE.AdditiveBlending
   });
-  const moonOrbitPath = new THREE.Mesh(new THREE.TorusGeometry(5.35, 0.004, 10, 240), moonOrbitMaterial);
+  const moonOrbitPath = new THREE.Mesh(new THREE.TorusGeometry(4.35, 0.004, 10, 240), moonOrbitMaterial);
   moonOrbitPath.scale.z = 0.56;
+  moonOrbitPath.position.y = 0.72;
   moonOrbitPath.rotation.x = Math.PI / 2.28;
   moonOrbitPath.rotation.y = -0.42;
   group.add(moonOrbitPath);
 
   const moonMaterial = new THREE.MeshStandardMaterial({
     map: moonTexture,
+    color: new THREE.Color(0xdedbd2),
     roughness: 0.88,
     metalness: 0,
-    emissive: new THREE.Color(0x111927),
-    emissiveIntensity: 0.12
+    emissive: new THREE.Color(0x050607),
+    emissiveIntensity: 0.06
   });
-  const moon = new THREE.Mesh(new THREE.SphereGeometry(0.22, 48, 48), moonMaterial);
+  const moon = new THREE.Mesh(new THREE.SphereGeometry(0.26, 48, 48), moonMaterial);
   moon.castShadow = false;
   moon.userData = { type: "moon", hovered: false };
   group.add(moon);
@@ -2073,7 +2176,7 @@ function initThreeCosmos() {
   group.add(moonPicker);
 
   const satellites = new THREE.Group();
-  const bookGeometry = new THREE.BoxGeometry(0.54, 0.78, 0.12);
+  const bookGeometry = new THREE.BoxGeometry(0.64, 0.92, 0.16);
   for (let i = 0; i < MOVEMENTS.length; i += 1) {
     const movement = MOVEMENTS[i];
     const bookKit = makeBookMaterials(movement, i);
@@ -2085,10 +2188,11 @@ function initThreeCosmos() {
       movement,
       angle,
       speed: 0.16 + (i % 4) * 0.018,
-      radiusX: 2.92 + (i % 3) * 0.16,
-      radiusZ: 1.62 + (i % 4) * 0.12,
-      baseY: (i % 5 - 2) * 0.08,
+      radiusX: 3.08 + (i % 3) * 0.18,
+      radiusZ: 1.82 + (i % 4) * 0.18,
+      baseY: (i % 5 - 2) * 0.075,
       tilt: (i % 2 ? -1 : 1) * (0.08 + (i % 3) * 0.035),
+      depthTwist: (i % 2 ? -1 : 1) * (0.12 + (i % 4) * 0.028),
       hovered: false,
       opening: false,
       portalHidden: false,
@@ -2220,7 +2324,7 @@ function initThreeCosmos() {
       const data = selectedBook.userData;
       data.opening = false;
       selectedBook.material[4].map = data.coverTexture;
-      selectedBook.material[4].emissiveIntensity = 0.035;
+      selectedBook.material[4].emissiveIntensity = 0.018;
       selectedBook.material[4].needsUpdate = true;
       if (data.coverPivot) {
         selectedBook.remove(data.coverPivot);
@@ -2311,7 +2415,7 @@ function initThreeCosmos() {
     }
     window.setTimeout(() => {
       const data = book.userData;
-      const coverGeo = new THREE.BoxGeometry(0.54, 0.78, 0.026);
+      const coverGeo = new THREE.BoxGeometry(0.64, 0.92, 0.03);
       const inner = new THREE.MeshStandardMaterial({ color: 0xefe3c3, roughness: 0.88, metalness: 0.02, transparent: true });
       const rimMat = new THREE.MeshStandardMaterial({ color: 0x211622, roughness: 0.86, metalness: 0.06, transparent: true });
       const coverMat = new THREE.MeshStandardMaterial({
@@ -2334,7 +2438,7 @@ function initThreeCosmos() {
       if (window.anime) {
         anime({
           targets: book.material[4],
-          emissiveIntensity: [0.035, 1.45],
+          emissiveIntensity: [0.018, 1.45],
           duration: 560,
           easing: "easeInQuad"
         });
@@ -2394,20 +2498,20 @@ function initThreeCosmos() {
       const halo = marker.children[1];
       if (halo?.material) halo.material.opacity = 0.48 + (pulse - 0.84) * 0.42;
     });
-    const moonAngle = time * (lit ? 0.36 : 0.22);
+    const moonAngle = time * (lit ? 0.36 : 0.22) - 0.14;
     const moonDepth = Math.sin(moonAngle);
     const moonPerspective = 0.74 + (moonDepth + 1) * 0.14;
     moon.position.set(
-      Math.cos(moonAngle) * 5.35,
-      Math.sin(moonAngle * 0.72) * 0.74 + 0.2,
-      moonDepth * 2.95
+      Math.cos(moonAngle) * 4.6,
+      Math.sin(moonAngle * 0.72) * 0.5 + 2.08,
+      moonDepth * 2.5
     );
     moon.scale.setScalar(moonPerspective * (hoveredMoon ? 1.18 : 1));
     moonPicker.position.copy(moon.position);
     moonPicker.scale.copy(moon.scale);
     moon.rotation.y += lit ? 0.012 : 0.006;
     moon.rotation.x = Math.sin(time * 0.45) * 0.12;
-    moonMaterial.emissiveIntensity += ((hoveredMoon ? 0.54 : 0.12) - moonMaterial.emissiveIntensity) * 0.08;
+    moonMaterial.emissiveIntensity += ((hoveredMoon ? 0.3 : 0.06) - moonMaterial.emissiveIntensity) * 0.08;
     moonOrbitMaterial.opacity += ((hoveredMoon ? 0.52 : 0.18) - moonOrbitMaterial.opacity) * 0.06;
     moonOrbitPath.rotation.z += lit ? 0.0014 : 0.0007;
     satellites.children.forEach((book) => {
@@ -2422,7 +2526,7 @@ function initThreeCosmos() {
       }
       const angle = data.angle + time * data.speed * (lit ? 1.7 : 1);
       const depth = Math.sin(angle);
-      const scale = 0.48 + (depth + 1) * 0.27;
+      const scale = 0.42 + (depth + 1) * 0.34;
       const hoverLift = data.hovered ? 0.18 : 0;
       book.position.set(
         Math.cos(angle) * data.radiusX,
@@ -2431,6 +2535,7 @@ function initThreeCosmos() {
       );
       book.scale.setScalar(scale * (data.hovered ? 1.14 : 1));
       book.lookAt(camera.position);
+      book.rotateY(data.depthTwist + (data.hovered ? data.depthTwist * 0.32 : 0));
       book.rotateZ(data.tilt + (data.hovered ? Math.sin(time * 5 + data.angle) * 0.07 : 0));
       const targetOpacity = data.portalHidden ? 0.07 : 1;
       data.materials.forEach((material) => {
@@ -2439,7 +2544,7 @@ function initThreeCosmos() {
       });
       const coverMaterial = book.material[4];
       if (coverMaterial?.emissiveIntensity !== undefined) {
-        coverMaterial.emissiveIntensity += ((data.hovered ? 0.48 : 0.035) - coverMaterial.emissiveIntensity) * 0.12;
+        coverMaterial.emissiveIntensity += ((data.hovered ? 0.42 : 0.018) - coverMaterial.emissiveIntensity) * 0.12;
       }
     });
     starPoints.rotation.y += 0.0009;
@@ -2751,385 +2856,532 @@ function openSpaceGame() {
 
 function initSpaceGame() {
   const overlay = $("#spaceGame");
-  const canvas = $("#spaceGameCanvas");
+  const mount = $("#spaceGameMount");
   const closeButton = $("#closeSpaceGame");
   const scoreText = $("#gameScore");
+  const waveText = $("#gameWave");
+  const hullText = $("#gameHull");
+  const skillText = $("#gameSkill");
   const statusText = $("#gameStatus");
-  if (!overlay || !canvas || !closeButton || !scoreText || !statusText) return;
+  if (!overlay || !mount || !closeButton || !scoreText || !waveText || !hullText || !skillText || !statusText) return;
 
-  const context = canvas.getContext("2d");
-  const game = {
-    running: false,
-    width: 0,
-    height: 0,
-    dpr: 1,
-    raf: 0,
-    last: 0,
-    score: 0,
-    lives: 3,
-    spawnTimer: 0,
-    asteroidTimer: 0,
-    cooldown: 0,
-    player: { x: 0, y: 0, targetX: 0, targetY: 0, shield: 0 },
-    keys: new Set(),
-    stars: [],
-    bullets: [],
-    enemies: [],
-    asteroids: [],
-    bursts: []
+  const WAVE_CONFIGS = [
+    { label: "月面巡逻圈", objective: "击落 18 架侦察机，收集任意升级。", target: 18, spawn: 760, speed: 1, boss: false },
+    { label: "碎星带突围", objective: "击落 26 架护卫机，避开陨石潮。", target: 26, spawn: 560, speed: 1.22, boss: false },
+    { label: "轨道母舰决战", objective: "摧毁母舰核心，完成通关。", target: 1, spawn: 720, speed: 1.34, boss: true }
+  ];
+
+  let phaserGame = null;
+  let activeScene = null;
+
+  const setStatus = (text) => {
+    statusText.textContent = text;
   };
 
-  const resize = () => {
-    const rect = canvas.getBoundingClientRect();
-    game.dpr = Math.min(window.devicePixelRatio || 1, 2);
-    game.width = Math.max(320, rect.width);
-    game.height = Math.max(320, rect.height);
-    canvas.width = Math.round(game.width * game.dpr);
-    canvas.height = Math.round(game.height * game.dpr);
-    context.setTransform(game.dpr, 0, 0, game.dpr, 0, 0);
-    if (!game.player.x) {
-      game.player.x = game.width * 0.5;
-      game.player.y = game.height * 0.78;
-      game.player.targetX = game.player.x;
-      game.player.targetY = game.player.y;
+  const updateHud = (state) => {
+    scoreText.textContent = String(Math.max(0, Math.floor(state.score))).padStart(4, "0");
+    waveText.textContent = `${Math.min(state.wave + 1, WAVE_CONFIGS.length)}/${WAVE_CONFIGS.length}`;
+    hullText.textContent = String(Math.max(0, Math.ceil(state.hull)));
+    skillText.textContent = state.skillReady ? "Ready" : `${Math.ceil(state.skillCooldown / 1000)}s`;
+  };
+
+  class LunarSquadronScene extends Phaser.Scene {
+    constructor() {
+      super("LunarSquadronScene");
+      this.state = {
+        score: 0,
+        wave: 0,
+        kills: 0,
+        hull: 100,
+        weapon: 1,
+        overdrive: 0,
+        shield: 0,
+        skillCooldown: 0,
+        skillReady: true,
+        missionComplete: false,
+        gameOver: false
+      };
     }
-  };
 
-  const reset = () => {
-    game.score = 0;
-    game.lives = 3;
-    game.spawnTimer = 0.2;
-    game.asteroidTimer = 0.9;
-    game.cooldown = 0;
-    game.player.x = game.width * 0.5;
-    game.player.y = game.height * 0.78;
-    game.player.targetX = game.player.x;
-    game.player.targetY = game.player.y;
-    game.player.shield = 1.2;
-    game.stars = Array.from({ length: 170 }, () => ({
-      x: Math.random() * game.width,
-      y: Math.random() * game.height,
-      z: 0.35 + Math.random() * 1.7,
-      hue: Math.random() > 0.82 ? "#75f5ff" : "#ffffff"
-    }));
-    game.bullets = [];
-    game.enemies = [];
-    game.asteroids = [];
-    game.bursts = [];
-    scoreText.textContent = "0000";
-    statusText.textContent = "月面航道待命";
-  };
+    create() {
+      activeScene = this;
+      this.input.mouse?.disableContextMenu();
+      this.width = this.scale.width;
+      this.height = this.scale.height;
+      this.createTextures();
+      this.createBackdrop();
+      this.physics.world.setBounds(0, 0, this.width, this.height);
+      this.player = this.physics.add.image(this.width * 0.5, this.height * 0.78, "ship");
+      this.player.setCircle(22, 17, 12);
+      this.player.setDepth(12);
+      this.player.setDamping(true);
+      this.player.setDrag(0.92);
+      this.player.setMaxVelocity(620);
+      this.player.target = new Phaser.Math.Vector2(this.player.x, this.player.y);
+      this.playerGlow = this.add.image(this.player.x, this.player.y, "shipGlow").setBlendMode(Phaser.BlendModes.ADD).setAlpha(0.52).setDepth(11);
 
-  const addBurst = (x, y, color = "#75f5ff", amount = 18) => {
-    for (let i = 0; i < amount; i += 1) {
-      const angle = Math.random() * Math.PI * 2;
-      const speed = 70 + Math.random() * 260;
-      game.bursts.push({
-        x,
-        y,
-        vx: Math.cos(angle) * speed,
-        vy: Math.sin(angle) * speed,
-        life: 0.4 + Math.random() * 0.36,
-        maxLife: 0.76,
-        color
+      this.bullets = this.physics.add.group({ classType: Phaser.Physics.Arcade.Image, maxSize: 90 });
+      this.enemyBullets = this.physics.add.group({ classType: Phaser.Physics.Arcade.Image, maxSize: 120 });
+      this.enemies = this.physics.add.group();
+      this.asteroids = this.physics.add.group();
+      this.powerups = this.physics.add.group();
+
+      this.physics.add.overlap(this.bullets, this.enemies, this.hitEnemy, null, this);
+      this.physics.add.overlap(this.bullets, this.asteroids, this.hitAsteroid, null, this);
+      this.physics.add.overlap(this.player, this.enemies, this.damagePlayer, null, this);
+      this.physics.add.overlap(this.player, this.asteroids, this.damagePlayer, null, this);
+      this.physics.add.overlap(this.player, this.enemyBullets, this.damagePlayer, null, this);
+      this.physics.add.overlap(this.player, this.powerups, this.collectPowerup, null, this);
+
+      this.keys = this.input.keyboard.addKeys("W,A,S,D,UP,DOWN,LEFT,RIGHT,SPACE,SHIFT,R");
+      this.input.on("pointermove", (pointer) => this.player.target.set(pointer.x, pointer.y));
+      this.input.on("pointerdown", (pointer) => {
+        if (pointer.rightButtonDown()) this.castSkill();
+        else this.fire(true);
       });
-    }
-  };
+      this.input.keyboard.on("keydown-SPACE", () => this.fire(true));
+      this.input.keyboard.on("keydown-SHIFT", () => this.castSkill());
+      this.input.keyboard.on("keydown-R", () => {
+        if (this.state.gameOver || this.state.missionComplete) this.scene.restart();
+      });
 
-  const spawnEnemy = () => {
-    const size = 20 + Math.random() * 18;
-    game.enemies.push({
-      x: 42 + Math.random() * Math.max(40, game.width - 84),
-      y: -size * 2,
-      r: size,
-      vy: 92 + Math.random() * 72 + Math.min(90, game.score * 0.012),
-      vx: (Math.random() - 0.5) * 45,
-      phase: Math.random() * Math.PI * 2
-    });
-  };
-
-  const spawnAsteroid = () => {
-    const radius = 18 + Math.random() * 38;
-    game.asteroids.push({
-      x: 34 + Math.random() * Math.max(40, game.width - 68),
-      y: -radius * 2,
-      r: radius,
-      vy: 72 + Math.random() * 86,
-      vx: (Math.random() - 0.5) * 36,
-      spin: (Math.random() - 0.5) * 2,
-      angle: Math.random() * Math.PI * 2
-    });
-  };
-
-  const shoot = () => {
-    if (!game.running || game.cooldown > 0) return;
-    game.cooldown = 0.16;
-    game.bullets.push(
-      { x: game.player.x - 14, y: game.player.y - 26, vy: -680, life: 1.1 },
-      { x: game.player.x + 14, y: game.player.y - 26, vy: -680, life: 1.1 }
-    );
-    playSound("laser");
-  };
-
-  const collide = (a, b, padding = 0) => {
-    const dx = a.x - b.x;
-    const dy = a.y - b.y;
-    const radius = a.r + b.r + padding;
-    return dx * dx + dy * dy < radius * radius;
-  };
-
-  const update = (dt) => {
-    game.cooldown = Math.max(0, game.cooldown - dt);
-    game.spawnTimer -= dt;
-    game.asteroidTimer -= dt;
-    if (game.spawnTimer <= 0) {
-      spawnEnemy();
-      game.spawnTimer = Math.max(0.34, 0.92 - game.score * 0.0008);
-    }
-    if (game.asteroidTimer <= 0) {
-      spawnAsteroid();
-      game.asteroidTimer = 1.05 + Math.random() * 0.9;
+      this.fireTimer = this.time.addEvent({ delay: 150, callback: () => this.fire(false), loop: true });
+      this.spawnTimer = this.time.addEvent({ delay: WAVE_CONFIGS[0].spawn, callback: () => this.spawnEnemy(), loop: true });
+      this.asteroidTimer = this.time.addEvent({ delay: 980, callback: () => this.spawnAsteroid(), loop: true });
+      this.bossTimer = null;
+      this.waveBanner = this.add.text(this.width / 2, this.height * 0.23, "", {
+        fontFamily: "Noto Serif SC, serif",
+        fontSize: "42px",
+        color: "#fff8df",
+        align: "center",
+        stroke: "#06131f",
+        strokeThickness: 5
+      }).setOrigin(0.5).setDepth(30).setAlpha(0);
+      this.startWave(0);
+      updateHud(this.state);
     }
 
-    if (game.keys.has("ArrowLeft") || game.keys.has("KeyA")) game.player.targetX -= 520 * dt;
-    if (game.keys.has("ArrowRight") || game.keys.has("KeyD")) game.player.targetX += 520 * dt;
-    if (game.keys.has("ArrowUp") || game.keys.has("KeyW")) game.player.targetY -= 420 * dt;
-    if (game.keys.has("ArrowDown") || game.keys.has("KeyS")) game.player.targetY += 420 * dt;
-    game.player.targetX = Math.max(34, Math.min(game.width - 34, game.player.targetX));
-    game.player.targetY = Math.max(game.height * 0.36, Math.min(game.height - 44, game.player.targetY));
-    game.player.x += (game.player.targetX - game.player.x) * 0.2;
-    game.player.y += (game.player.targetY - game.player.y) * 0.2;
-    game.player.shield = Math.max(0, game.player.shield - dt);
+    createTextures() {
+      const g = this.add.graphics();
+      g.clear();
+      g.fillStyle(0xeaf8ff, 1);
+      g.fillTriangle(32, 4, 56, 66, 32, 52);
+      g.fillTriangle(32, 4, 8, 66, 32, 52);
+      g.fillStyle(0x75f5ff, 1);
+      g.fillRoundedRect(27, 22, 10, 36, 4);
+      g.fillStyle(0xf5d287, 1);
+      g.fillEllipse(21, 68, 9, 20);
+      g.fillEllipse(43, 68, 9, 20);
+      g.generateTexture("ship", 64, 82);
+      g.clear();
+      g.fillStyle(0x75f5ff, 0.44);
+      g.fillCircle(42, 42, 38);
+      g.generateTexture("shipGlow", 84, 84);
+      g.clear();
+      g.fillStyle(0x75f5ff, 1);
+      g.fillRoundedRect(6, 0, 8, 34, 5);
+      g.generateTexture("laser", 20, 36);
+      g.clear();
+      g.fillStyle(0xb99cff, 1);
+      g.fillTriangle(0, 18, 42, 2, 42, 34);
+      g.fillTriangle(84, 18, 42, 2, 42, 34);
+      g.fillStyle(0x0b1724, 1);
+      g.fillCircle(42, 18, 14);
+      g.lineStyle(3, 0x75f5ff, 1);
+      g.strokeCircle(42, 18, 14);
+      g.generateTexture("enemy", 84, 36);
+      g.clear();
+      g.fillStyle(0xdec182, 1);
+      g.fillCircle(28, 28, 26);
+      g.fillStyle(0x7a5a38, 0.82);
+      g.fillCircle(18, 18, 7);
+      g.fillCircle(38, 33, 9);
+      g.lineStyle(2, 0xf5d287, 0.62);
+      g.strokeCircle(28, 28, 25);
+      g.generateTexture("asteroid", 56, 56);
+      g.clear();
+      g.fillStyle(0xff8fa8, 1);
+      g.fillCircle(8, 8, 7);
+      g.generateTexture("enemyBullet", 16, 16);
+      g.clear();
+      g.fillStyle(0x89f2c1, 1);
+      g.fillCircle(17, 17, 15);
+      g.lineStyle(3, 0xfff8df, 1);
+      g.strokeCircle(17, 17, 10);
+      g.generateTexture("powerup", 34, 34);
+      g.clear();
+      g.fillStyle(0x15192d, 1);
+      g.fillRoundedRect(0, 0, 240, 96, 22);
+      g.lineStyle(4, 0xf5d287, 0.9);
+      g.strokeRoundedRect(3, 3, 234, 90, 20);
+      g.lineStyle(2, 0x75f5ff, 0.42);
+      g.strokeRoundedRect(13, 13, 214, 70, 15);
+      g.generateTexture("boss", 240, 96);
+      g.destroy();
+    }
 
-    game.stars.forEach((star) => {
-      star.y += (18 + star.z * 42) * dt;
-      star.x += Math.sin((star.y + star.z * 30) * 0.01) * star.z * 0.24;
-      if (star.y > game.height + 8) {
-        star.y = -8;
-        star.x = Math.random() * game.width;
+    createBackdrop() {
+      this.starLayers = [];
+      for (let layer = 0; layer < 3; layer += 1) {
+        const graphics = this.add.graphics().setDepth(layer);
+        const stars = Array.from({ length: layer === 0 ? 80 : 55 }, () => ({
+          x: Phaser.Math.Between(0, this.width),
+          y: Phaser.Math.Between(0, this.height),
+          r: Phaser.Math.FloatBetween(0.7, 1.8 + layer),
+          c: layer === 2 && Math.random() > 0.65 ? 0x75f5ff : 0xffffff
+        }));
+        this.starLayers.push({ graphics, stars, speed: 14 + layer * 34 });
       }
-    });
+      this.orbits = this.add.graphics().setDepth(1).setAlpha(0.52);
+      this.nebula = this.add.graphics().setDepth(0);
+    }
 
-    game.bullets.forEach((bullet) => {
-      bullet.y += bullet.vy * dt;
-      bullet.life -= dt;
-    });
-    game.enemies.forEach((enemy) => {
-      enemy.y += enemy.vy * dt;
-      enemy.x += (enemy.vx + Math.sin(performance.now() / 360 + enemy.phase) * 34) * dt;
-    });
-    game.asteroids.forEach((asteroid) => {
-      asteroid.y += asteroid.vy * dt;
-      asteroid.x += asteroid.vx * dt;
-      asteroid.angle += asteroid.spin * dt;
-    });
-    game.bursts.forEach((burst) => {
-      burst.x += burst.vx * dt;
-      burst.y += burst.vy * dt;
-      burst.life -= dt;
-    });
-
-    game.bullets.forEach((bullet) => {
-      const bulletHit = { x: bullet.x, y: bullet.y, r: 5 };
-      game.enemies.forEach((enemy) => {
-        if (!enemy.dead && bullet.life > 0 && collide(bulletHit, enemy, -4)) {
-          enemy.dead = true;
-          bullet.life = 0;
-          game.score += 120;
-          addBurst(enemy.x, enemy.y, "#75f5ff", 22);
-          playSound("blast");
-        }
-      });
-      game.asteroids.forEach((asteroid) => {
-        if (!asteroid.dead && bullet.life > 0 && collide(bulletHit, asteroid, -6)) {
-          asteroid.r *= 0.62;
-          bullet.life = 0;
-          game.score += 35;
-          addBurst(bullet.x, bullet.y, "#f5d287", 10);
-          if (asteroid.r < 17) asteroid.dead = true;
-        }
-      });
-    });
-
-    const playerHit = { x: game.player.x, y: game.player.y, r: 24 };
-    [...game.enemies, ...game.asteroids].forEach((hazard) => {
-      if (!hazard.dead && game.player.shield <= 0 && collide(playerHit, hazard, -2)) {
-        hazard.dead = true;
-        game.lives -= 1;
-        game.player.shield = 1.35;
-        addBurst(game.player.x, game.player.y, "#ff8fa8", 30);
-        playSound("blast");
-        statusText.textContent = game.lives > 0 ? `护盾重启 · ${game.lives}` : "航道重启中";
-        if (game.lives <= 0) {
-          game.score = Math.max(0, Math.floor(game.score * 0.42));
-          game.lives = 3;
-        }
+    startWave(index) {
+      this.state.wave = index;
+      this.state.kills = 0;
+      const config = WAVE_CONFIGS[index];
+      this.spawnTimer.delay = config.spawn;
+      this.asteroidTimer.paused = false;
+      if (config.boss) {
+        this.spawnTimer.paused = true;
+        this.asteroidTimer.delay = 760;
+        this.time.delayedCall(900, () => this.spawnBoss());
+      } else {
+        this.spawnTimer.paused = false;
+        this.asteroidTimer.delay = index === 0 ? 1120 : 720;
       }
-    });
-
-    game.bullets = game.bullets.filter((bullet) => bullet.life > 0 && bullet.y > -20);
-    game.enemies = game.enemies.filter((enemy) => !enemy.dead && enemy.y < game.height + 70);
-    game.asteroids = game.asteroids.filter((asteroid) => !asteroid.dead && asteroid.y < game.height + 90);
-    game.bursts = game.bursts.filter((burst) => burst.life > 0);
-    scoreText.textContent = String(Math.floor(game.score)).padStart(4, "0");
-  };
-
-  const drawShip = () => {
-    const { x, y, shield } = game.player;
-    context.save();
-    context.translate(x, y);
-    context.shadowBlur = 24;
-    context.shadowColor = "rgba(117,245,255,.75)";
-    context.fillStyle = "#eaf8ff";
-    context.beginPath();
-    context.moveTo(0, -32);
-    context.lineTo(24, 28);
-    context.lineTo(0, 14);
-    context.lineTo(-24, 28);
-    context.closePath();
-    context.fill();
-    context.fillStyle = "#75f5ff";
-    context.fillRect(-4, -12, 8, 26);
-    context.fillStyle = "rgba(245,210,135,.88)";
-    context.beginPath();
-    context.ellipse(-13, 31, 5, 13, 0, 0, Math.PI * 2);
-    context.ellipse(13, 31, 5, 13, 0, 0, Math.PI * 2);
-    context.fill();
-    if (shield > 0) {
-      context.strokeStyle = `rgba(117,245,255,${Math.min(0.72, shield * 0.52)})`;
-      context.lineWidth = 2;
-      context.beginPath();
-      context.arc(0, 0, 42, 0, Math.PI * 2);
-      context.stroke();
+      this.waveBanner.setText(`${config.label}\n${config.objective}`);
+      this.tweens.add({ targets: this.waveBanner, alpha: 1, y: this.height * 0.2, duration: 420, yoyo: true, hold: 1350, ease: "Sine.easeInOut" });
+      setStatus(`任务 ${index + 1}: ${config.objective}`);
+      updateHud(this.state);
     }
-    context.restore();
-  };
 
-  const drawEnemy = (enemy) => {
-    context.save();
-    context.translate(enemy.x, enemy.y);
-    context.rotate(Math.sin(performance.now() / 520 + enemy.phase) * 0.08);
-    context.shadowBlur = 18;
-    context.shadowColor = "rgba(185,156,255,.55)";
-    context.fillStyle = "rgba(185,156,255,.85)";
-    context.beginPath();
-    context.moveTo(-enemy.r * 1.35, -enemy.r * 0.54);
-    context.lineTo(-enemy.r * 0.44, 0);
-    context.lineTo(-enemy.r * 1.35, enemy.r * 0.54);
-    context.closePath();
-    context.fill();
-    context.beginPath();
-    context.moveTo(enemy.r * 1.35, -enemy.r * 0.54);
-    context.lineTo(enemy.r * 0.44, 0);
-    context.lineTo(enemy.r * 1.35, enemy.r * 0.54);
-    context.closePath();
-    context.fill();
-    context.fillStyle = "#101827";
-    context.strokeStyle = "rgba(117,245,255,.7)";
-    context.lineWidth = 2;
-    context.beginPath();
-    context.arc(0, 0, enemy.r * 0.44, 0, Math.PI * 2);
-    context.fill();
-    context.stroke();
-    context.restore();
-  };
-
-  const drawAsteroid = (asteroid) => {
-    context.save();
-    context.translate(asteroid.x, asteroid.y);
-    context.rotate(asteroid.angle);
-    context.fillStyle = "rgba(180,145,105,.82)";
-    context.strokeStyle = "rgba(245,210,135,.52)";
-    context.lineWidth = 1.5;
-    context.shadowBlur = 12;
-    context.shadowColor = "rgba(245,210,135,.32)";
-    context.beginPath();
-    for (let i = 0; i < 9; i += 1) {
-      const angle = i / 9 * Math.PI * 2;
-      const radius = asteroid.r * (0.72 + Math.sin(i * 2.1 + asteroid.angle) * 0.14 + (i % 2) * 0.08);
-      const x = Math.cos(angle) * radius;
-      const y = Math.sin(angle) * radius;
-      if (i === 0) context.moveTo(x, y);
-      else context.lineTo(x, y);
+    spawnEnemy() {
+      if (this.state.gameOver || this.state.missionComplete) return;
+      const config = WAVE_CONFIGS[this.state.wave];
+      const x = Phaser.Math.Between(60, this.width - 60);
+      const enemy = this.enemies.create(x, -40, "enemy");
+      enemy.setCircle(18, 24, 0);
+      enemy.hp = this.state.wave === 0 ? 1 : 2;
+      enemy.score = 120 + this.state.wave * 45;
+      enemy.kind = "fighter";
+      enemy.pattern = Math.random() > 0.5 ? "sine" : "dive";
+      enemy.phase = Math.random() * Math.PI * 2;
+      enemy.setVelocity(Phaser.Math.Between(-50, 50), (118 + this.state.wave * 32) * config.speed);
+      enemy.setDepth(8);
+      if (this.state.wave > 0 && Math.random() > 0.56) {
+        this.time.delayedCall(700, () => this.fireEnemy(enemy));
+      }
     }
-    context.closePath();
-    context.fill();
-    context.stroke();
-    context.restore();
-  };
 
-  const draw = () => {
-    context.clearRect(0, 0, game.width, game.height);
-    const gradient = context.createRadialGradient(game.width * 0.5, game.height * 0.68, 0, game.width * 0.5, game.height * 0.68, game.height * 0.72);
-    gradient.addColorStop(0, "rgba(18,44,70,.28)");
-    gradient.addColorStop(0.5, "rgba(4,9,20,.45)");
-    gradient.addColorStop(1, "rgba(1,2,8,.96)");
-    context.fillStyle = gradient;
-    context.fillRect(0, 0, game.width, game.height);
-
-    game.stars.forEach((star) => {
-      context.fillStyle = star.hue;
-      context.globalAlpha = Math.min(1, 0.26 + star.z * 0.26);
-      context.fillRect(star.x, star.y, star.z * 1.4, star.z * 1.4);
-    });
-    context.globalAlpha = 1;
-
-    context.save();
-    context.strokeStyle = "rgba(117,245,255,.14)";
-    context.lineWidth = 1;
-    for (let i = 0; i < 6; i += 1) {
-      context.beginPath();
-      context.ellipse(game.width * 0.5, game.height * 0.78, game.width * (0.26 + i * 0.075), game.height * (0.07 + i * 0.018), -0.22, 0, Math.PI * 2);
-      context.stroke();
+    spawnBoss() {
+      if (this.boss || this.state.gameOver) return;
+      this.boss = this.enemies.create(this.width / 2, -80, "boss");
+      this.boss.setSize(210, 72, true);
+      this.boss.hp = 90;
+      this.boss.score = 2600;
+      this.boss.isBoss = true;
+      this.boss.kind = "boss";
+      this.boss.setDepth(9);
+      this.tweens.add({ targets: this.boss, y: this.height * 0.2, duration: 900, ease: "Power2" });
+      this.bossTimer = this.time.addEvent({ delay: 620, callback: () => this.fireBoss(), loop: true });
+      setStatus("母舰核心已进入轨道。使用 Shift 星环技能清理弹幕并击穿护盾。");
     }
-    context.restore();
 
-    game.bullets.forEach((bullet) => {
-      context.strokeStyle = "rgba(117,245,255,.96)";
-      context.lineWidth = 3;
-      context.shadowBlur = 18;
-      context.shadowColor = "#75f5ff";
-      context.beginPath();
-      context.moveTo(bullet.x, bullet.y + 14);
-      context.lineTo(bullet.x, bullet.y - 14);
-      context.stroke();
-      context.shadowBlur = 0;
-    });
-    game.enemies.forEach(drawEnemy);
-    game.asteroids.forEach(drawAsteroid);
-    game.bursts.forEach((burst) => {
-      context.globalAlpha = Math.max(0, burst.life / burst.maxLife);
-      context.fillStyle = burst.color;
-      context.shadowBlur = 12;
-      context.shadowColor = burst.color;
-      context.beginPath();
-      context.arc(burst.x, burst.y, 2.4 + burst.life * 5, 0, Math.PI * 2);
-      context.fill();
-    });
-    context.globalAlpha = 1;
-    context.shadowBlur = 0;
-    drawShip();
-  };
+    spawnAsteroid() {
+      if (this.state.gameOver || this.state.missionComplete) return;
+      const asteroid = this.asteroids.create(Phaser.Math.Between(40, this.width - 40), -40, "asteroid");
+      const scale = Phaser.Math.FloatBetween(0.62, 1.28);
+      asteroid.setScale(scale);
+      asteroid.setCircle(24, 4, 4);
+      asteroid.hp = Math.ceil(scale * 2);
+      asteroid.score = 35;
+      asteroid.kind = "asteroid";
+      asteroid.setVelocity(Phaser.Math.Between(-45, 45), Phaser.Math.Between(92, 180) + this.state.wave * 18);
+      asteroid.setAngularVelocity(Phaser.Math.Between(-70, 70));
+      asteroid.setDepth(5);
+    }
 
-  const loop = (now) => {
-    if (!game.running) return;
-    const dt = Math.min(0.034, (now - game.last) / 1000 || 0.016);
-    game.last = now;
-    update(dt);
-    draw();
-    game.raf = requestAnimationFrame(loop);
-  };
+    fire(manual) {
+      if (this.state.gameOver || this.state.missionComplete) return;
+      if (!manual && !this.input.activePointer.isDown && !this.keys.SPACE.isDown) return;
+      const count = this.state.weapon >= 3 ? 3 : (this.state.weapon >= 2 ? 2 : 1);
+      const offsets = count === 3 ? [-22, 0, 22] : (count === 2 ? [-14, 14] : [0]);
+      offsets.forEach((offset, index) => {
+        const bullet = this.bullets.get(this.player.x + offset, this.player.y - 34, "laser");
+        if (!bullet) return;
+        bullet.setActive(true).setVisible(true).setDepth(10);
+        bullet.body.enable = true;
+        bullet.setVelocity((index - (offsets.length - 1) / 2) * 42, -720);
+        bullet.damage = this.state.overdrive > 0 ? 2 : 1;
+        bullet.setBlendMode(Phaser.BlendModes.ADD);
+      });
+      if (manual) playSound("laser");
+    }
+
+    fireEnemy(enemy) {
+      if (!enemy?.active || this.state.gameOver) return;
+      const bullet = this.enemyBullets.get(enemy.x, enemy.y + 24, "enemyBullet");
+      if (!bullet) return;
+      bullet.setActive(true).setVisible(true).setDepth(7);
+      bullet.body.enable = true;
+      this.physics.moveToObject(bullet, this.player, 240 + this.state.wave * 32);
+    }
+
+    fireBoss() {
+      if (!this.boss?.active || this.state.gameOver) return;
+      for (let i = 0; i < 10; i += 1) {
+        const angle = -160 + i * 20 + Math.sin(this.time.now / 380) * 9;
+        const bullet = this.enemyBullets.get(this.boss.x, this.boss.y + 38, "enemyBullet");
+        if (!bullet) continue;
+        bullet.setActive(true).setVisible(true).setDepth(7);
+        bullet.body.enable = true;
+        this.physics.velocityFromAngle(angle, 210, bullet.body.velocity);
+      }
+    }
+
+    hitEnemy(bullet, enemy) {
+      bullet.disableBody(true, true);
+      enemy.hp -= bullet.damage || 1;
+      this.flashAt(enemy.x, enemy.y, enemy.isBoss ? "#f5d287" : "#75f5ff", enemy.isBoss ? 22 : 12);
+      if (enemy.hp > 0) return;
+      const wasBoss = enemy.isBoss;
+      const score = enemy.score || 100;
+      enemy.disableBody(true, true);
+      this.state.score += score;
+      this.state.kills += 1;
+      if (Math.random() > (wasBoss ? 0.1 : 0.72)) this.dropPowerup(enemy.x, enemy.y);
+      playSound(wasBoss ? "success" : "blast");
+      if (wasBoss) this.completeMission();
+      else this.checkWaveProgress();
+      updateHud(this.state);
+    }
+
+    hitAsteroid(bullet, asteroid) {
+      bullet.disableBody(true, true);
+      asteroid.hp -= bullet.damage || 1;
+      this.flashAt(bullet.x, bullet.y, "#f5d287", 8);
+      if (asteroid.hp > 0) return;
+      asteroid.disableBody(true, true);
+      this.state.score += asteroid.score;
+      if (Math.random() > 0.82) this.dropPowerup(asteroid.x, asteroid.y);
+      updateHud(this.state);
+    }
+
+    damagePlayer(player, hazard) {
+      if (!hazard.active || this.state.shield > 0 || this.state.gameOver || this.state.missionComplete) return;
+      hazard.disableBody(true, true);
+      this.state.hull -= hazard.isBoss ? 35 : 18;
+      this.state.shield = 850;
+      this.flashAt(player.x, player.y, "#ff8fa8", 26);
+      this.cameras.main.shake(170, 0.007);
+      playSound("blast");
+      if (this.state.hull <= 0) this.endGame(false);
+      updateHud(this.state);
+    }
+
+    collectPowerup(player, powerup) {
+      const type = powerup.kind;
+      powerup.disableBody(true, true);
+      if (type === "weapon") {
+        this.state.weapon = Math.min(3, this.state.weapon + 1);
+        setStatus("武器升级：书页激光已扩展。");
+      } else if (type === "repair") {
+        this.state.hull = Math.min(100, this.state.hull + 24);
+        setStatus("修复完成：舰体装甲恢复。");
+      } else {
+        this.state.overdrive = 8000;
+        setStatus("过载启动：短时间双倍伤害。");
+      }
+      playSound("success");
+      updateHud(this.state);
+    }
+
+    dropPowerup(x, y) {
+      const types = ["weapon", "repair", "overdrive"];
+      const powerup = this.powerups.create(x, y, "powerup");
+      powerup.kind = types[Phaser.Math.Between(0, types.length - 1)];
+      powerup.setCircle(15, 2, 2);
+      powerup.setVelocity(Phaser.Math.Between(-30, 30), 92);
+      powerup.setDepth(9);
+      powerup.setTint(powerup.kind === "repair" ? 0x89f2c1 : (powerup.kind === "weapon" ? 0x75f5ff : 0xf5d287));
+    }
+
+    castSkill() {
+      if (!this.state.skillReady || this.state.gameOver || this.state.missionComplete) return;
+      this.state.skillReady = false;
+      this.state.skillCooldown = 9000;
+      this.state.shield = 1100;
+      const ring = this.add.circle(this.player.x, this.player.y, 28, 0x75f5ff, 0.18).setStrokeStyle(3, 0xf5d287, 0.92).setDepth(20);
+      this.tweens.add({ targets: ring, radius: 340, alpha: 0, duration: 520, ease: "Expo.easeOut", onComplete: () => ring.destroy() });
+      [...this.enemies.getChildren(), ...this.asteroids.getChildren()].forEach((target) => {
+        if (!target.active) return;
+        const distance = Phaser.Math.Distance.Between(this.player.x, this.player.y, target.x, target.y);
+        if (distance < 345) {
+          target.hp -= target.isBoss ? 8 : 5;
+          this.flashAt(target.x, target.y, "#fff8df", 12);
+          if (target.hp <= 0) {
+            if (target.kind === "asteroid") {
+              target.disableBody(true, true);
+              this.state.score += target.score || 35;
+              if (Math.random() > 0.86) this.dropPowerup(target.x, target.y);
+            } else {
+              this.hitEnemy({ disableBody: () => {} }, target);
+            }
+          }
+        }
+      });
+      this.enemyBullets.clear(true, true);
+      setStatus("星环技能释放：清空弹幕并击穿近距离目标。");
+      playSound("success");
+      updateHud(this.state);
+    }
+
+    checkWaveProgress() {
+      const config = WAVE_CONFIGS[this.state.wave];
+      if (config.boss || this.state.kills < config.target) return;
+      const nextWave = this.state.wave + 1;
+      if (nextWave < WAVE_CONFIGS.length) {
+        this.spawnTimer.paused = true;
+        this.time.delayedCall(1100, () => this.startWave(nextWave));
+      }
+    }
+
+    completeMission() {
+      if (this.state.missionComplete) return;
+      this.state.missionComplete = true;
+      this.spawnTimer.paused = true;
+      this.asteroidTimer.paused = true;
+      this.bossTimer?.remove(false);
+      this.enemyBullets.clear(true, true);
+      this.enemies.clear(true, true);
+      this.asteroids.clear(true, true);
+      setStatus("通关完成：月球远征舰队已守住文学星图航道。按 R 可重新挑战。");
+      this.waveBanner.setText("MISSION COMPLETE\n月球航道已净空").setAlpha(1).setY(this.height * 0.32);
+      this.tweens.add({ targets: this.waveBanner, scale: 1.06, yoyo: true, repeat: -1, duration: 820, ease: "Sine.easeInOut" });
+      playSound("success");
+    }
+
+    endGame() {
+      if (this.state.gameOver) return;
+      this.state.gameOver = true;
+      this.spawnTimer.paused = true;
+      this.asteroidTimer.paused = true;
+      this.bossTimer?.remove(false);
+      setStatus("舰体失守。按 R 重新部署，或返回星图。");
+      this.waveBanner.setText("MISSION FAILED\n按 R 重新挑战").setAlpha(1).setY(this.height * 0.32);
+      this.cameras.main.shake(320, 0.012);
+      playSound("close");
+    }
+
+    flashAt(x, y, color, size) {
+      const flash = this.add.circle(x, y, size, Phaser.Display.Color.HexStringToColor(color).color, 0.72).setBlendMode(Phaser.BlendModes.ADD).setDepth(22);
+      this.tweens.add({ targets: flash, scale: 3.2, alpha: 0, duration: 360, ease: "Power2", onComplete: () => flash.destroy() });
+    }
+
+    update(time, delta) {
+      const dt = delta / 1000;
+      this.drawBackdrop(dt, time);
+      if (this.state.gameOver || this.state.missionComplete) return;
+
+      const move = new Phaser.Math.Vector2(0, 0);
+      if (this.keys.A.isDown || this.keys.LEFT.isDown) move.x -= 1;
+      if (this.keys.D.isDown || this.keys.RIGHT.isDown) move.x += 1;
+      if (this.keys.W.isDown || this.keys.UP.isDown) move.y -= 1;
+      if (this.keys.S.isDown || this.keys.DOWN.isDown) move.y += 1;
+      if (move.lengthSq() > 0) {
+        move.normalize().scale(520);
+        this.player.setAcceleration(move.x, move.y);
+      } else {
+        const pointer = this.input.activePointer;
+        if (pointer.isDown || pointer.x !== 0 || pointer.y !== 0) {
+          this.player.target.set(pointer.x, pointer.y);
+        }
+        const dx = Phaser.Math.Clamp(this.player.target.x - this.player.x, -1, 1);
+        const dy = Phaser.Math.Clamp(this.player.target.y - this.player.y, -1, 1);
+        this.player.setAcceleration(dx * 480, dy * 480);
+      }
+      this.player.x = Phaser.Math.Clamp(this.player.x, 34, this.width - 34);
+      this.player.y = Phaser.Math.Clamp(this.player.y, this.height * 0.34, this.height - 46);
+      this.playerGlow.setPosition(this.player.x, this.player.y).setAlpha(this.state.shield > 0 ? 0.9 : 0.42);
+      this.state.shield = Math.max(0, this.state.shield - delta);
+      this.state.skillCooldown = Math.max(0, this.state.skillCooldown - delta);
+      this.state.skillReady = this.state.skillCooldown <= 0;
+      this.state.overdrive = Math.max(0, this.state.overdrive - delta);
+      this.cleanupOffscreen();
+      updateHud(this.state);
+    }
+
+    drawBackdrop(dt, time) {
+      this.nebula.clear();
+      this.nebula.fillStyle(0x01030a, 1);
+      this.nebula.fillRect(0, 0, this.width, this.height);
+      this.nebula.fillStyle(0x061120, 0.58);
+      this.nebula.fillCircle(this.width * 0.5, this.height * 0.7, Math.min(this.width, this.height) * 0.46);
+      this.nebula.fillStyle(0x2a1738, 0.18);
+      this.nebula.fillEllipse(this.width * 0.25, this.height * 0.22, this.width * 0.62, this.height * 0.34);
+      this.nebula.lineStyle(1, 0x75f5ff, 0.1);
+      for (let i = 0; i < 7; i += 1) {
+        this.nebula.strokeEllipse(this.width * 0.52, this.height * 0.78, this.width * (0.36 + i * 0.1), this.height * (0.12 + i * 0.035));
+      }
+      this.orbits.clear();
+      this.orbits.lineStyle(1, 0xf5d287, 0.12);
+      this.orbits.strokeCircle(this.width * 0.52, this.height * 0.55, Math.min(this.width, this.height) * 0.28);
+      this.starLayers.forEach((layer) => {
+        layer.graphics.clear();
+        layer.stars.forEach((star) => {
+          star.y += layer.speed * dt;
+          if (star.y > this.height + 8) {
+            star.y = -8;
+            star.x = Phaser.Math.Between(0, this.width);
+          }
+          layer.graphics.fillStyle(star.c, 0.38 + star.r * 0.18);
+          layer.graphics.fillCircle(star.x, star.y, star.r);
+        });
+      });
+    }
+
+    cleanupOffscreen() {
+      const kill = (child) => {
+        if (child.active && (child.y < -120 || child.y > this.height + 130 || child.x < -160 || child.x > this.width + 160)) {
+          child.disableBody(true, true);
+        }
+      };
+      this.bullets.children.each(kill);
+      this.enemyBullets.children.each(kill);
+      this.enemies.children.each((enemy) => {
+        if (!enemy.isBoss) kill(enemy);
+        if (enemy.active && !enemy.isBoss && this.state.wave > 0 && Math.random() < 0.004) this.fireEnemy(enemy);
+      });
+      this.asteroids.children.each(kill);
+      this.powerups.children.each(kill);
+    }
+  }
 
   const open = () => {
-    if (game.running) return;
+    if (phaserGame) return;
     overlay.classList.add("is-open");
     overlay.setAttribute("aria-hidden", "false");
     document.body.classList.add("game-open");
-    resize();
-    reset();
-    game.running = true;
-    game.last = performance.now();
-    game.raf = requestAnimationFrame(loop);
+    mount.innerHTML = "";
+    setStatus("舰队启动：月球航道正在校准。");
+    updateHud({ score: 0, wave: 0, hull: 100, skillReady: true, skillCooldown: 0 });
+    phaserGame = new Phaser.Game({
+      type: Phaser.AUTO,
+      parent: mount,
+      width: Math.max(360, mount.clientWidth),
+      height: Math.max(360, mount.clientHeight),
+      backgroundColor: "#01040a",
+      physics: {
+        default: "arcade",
+        arcade: { debug: false }
+      },
+      scale: {
+        mode: Phaser.Scale.RESIZE,
+        autoCenter: Phaser.Scale.CENTER_BOTH
+      },
+      scene: LunarSquadronScene
+    });
     playSound("moon");
     if (window.gsap) {
       gsap.killTweensOf(overlay);
@@ -3139,8 +3391,12 @@ function initSpaceGame() {
   };
 
   const close = () => {
-    game.running = false;
-    cancelAnimationFrame(game.raf);
+    activeScene = null;
+    if (phaserGame) {
+      phaserGame.destroy(true);
+      phaserGame = null;
+    }
+    mount.innerHTML = "";
     document.body.classList.remove("game-open");
     playSound("close");
     const finalize = () => {
@@ -3156,31 +3412,9 @@ function initSpaceGame() {
     }
   };
 
-  canvas.addEventListener("pointermove", (event) => {
-    const rect = canvas.getBoundingClientRect();
-    game.player.targetX = event.clientX - rect.left;
-    game.player.targetY = event.clientY - rect.top;
-  });
-  canvas.addEventListener("pointerdown", shoot);
   closeButton.addEventListener("click", close);
   window.addEventListener("resize", () => {
-    if (overlay.classList.contains("is-open")) resize();
-  });
-  document.addEventListener("keydown", (event) => {
-    if (!overlay.classList.contains("is-open")) return;
-    if (event.code === "Escape") {
-      close();
-      return;
-    }
-    if (event.code === "Space") {
-      event.preventDefault();
-      shoot();
-      return;
-    }
-    game.keys.add(event.code);
-  });
-  document.addEventListener("keyup", (event) => {
-    game.keys.delete(event.code);
+    if (phaserGame) phaserGame.scale.resize(Math.max(360, mount.clientWidth), Math.max(360, mount.clientHeight));
   });
 
   spaceGameController = { open, close };

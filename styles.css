@@ -2127,12 +2127,19 @@ main {
     radial-gradient(ellipse at 50% 50%, transparent 0 58%, rgba(0, 0, 0, 0.64) 100%);
 }
 
-#spaceGameCanvas {
+.space-game__mount {
   position: relative;
   z-index: 1;
   width: 100%;
   height: 100%;
-  cursor: crosshair;
+  overflow: hidden;
+  cursor: none;
+}
+
+.space-game__mount canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
 }
 
 .space-game__hud {
@@ -2174,13 +2181,23 @@ main {
 .space-game__stats {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 10px;
+  padding: 9px 10px 9px 16px;
+  border: 1px solid rgba(117, 245, 255, 0.28);
+  border-radius: 999px;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.08), transparent 44%),
+    rgba(4, 10, 20, 0.48);
+  box-shadow:
+    inset 0 0 22px rgba(117, 245, 255, 0.07),
+    0 18px 42px rgba(0, 0, 0, 0.32);
+  backdrop-filter: blur(18px);
 }
 
 .space-game__stats strong {
-  min-width: 5ch;
+  min-width: 4ch;
   color: #fff8df;
-  font-size: clamp(1.05rem, 1.6vw, 1.58rem);
+  font-size: clamp(0.88rem, 1.2vw, 1.18rem);
   text-align: right;
   text-shadow: 0 0 16px rgba(245, 210, 135, 0.46);
 }
@@ -2216,14 +2233,21 @@ main {
   left: 50%;
   bottom: clamp(22px, 4vw, 54px);
   z-index: 4;
-  padding: 10px 16px;
-  border: 1px solid rgba(117, 245, 255, 0.22);
-  border-radius: 999px;
+  min-width: min(780px, calc(100% - 32px));
+  padding: 12px 18px;
+  border: 1px solid rgba(117, 245, 255, 0.26);
+  border-radius: 14px;
   color: rgba(234, 248, 255, 0.82);
-  background: rgba(2, 5, 12, 0.46);
-  box-shadow: inset 0 0 18px rgba(117, 245, 255, 0.06);
+  background:
+    linear-gradient(90deg, rgba(117, 245, 255, 0.12), transparent 28%, rgba(245, 210, 135, 0.1)),
+    rgba(2, 5, 12, 0.52);
+  box-shadow:
+    inset 0 0 18px rgba(117, 245, 255, 0.06),
+    0 16px 44px rgba(0, 0, 0, 0.36);
   font-family: "Noto Sans SC", sans-serif;
   font-size: 0.86rem;
+  line-height: 1.6;
+  text-align: center;
   transform: translateX(-50%);
   backdrop-filter: blur(12px);
 }
@@ -2950,23 +2974,29 @@ body.has-entered .site-header:not(.is-compact) {
   overflow: hidden;
   isolation: isolate;
   background:
-    radial-gradient(ellipse at 48% 50%, rgba(2, 6, 12, 0.2) 0 26%, rgba(2, 6, 12, 0.52) 38%, rgba(2, 5, 11, 0.12) 64%),
-    url("./assets/hero-cosmos-library-reference.png") center / cover no-repeat #02050b;
+    radial-gradient(circle at 51% 46%, rgba(20, 75, 112, 0.42) 0 15%, rgba(8, 22, 43, 0.22) 28%, transparent 45%),
+    radial-gradient(circle at 82% 23%, rgba(122, 189, 255, 0.16) 0 1px, transparent 2px),
+    radial-gradient(circle at 62% 18%, rgba(255, 255, 255, 0.7) 0 1px, transparent 2px),
+    radial-gradient(circle at 34% 18%, rgba(245, 210, 135, 0.4) 0 1px, transparent 2px),
+    repeating-radial-gradient(circle at 54% 52%, rgba(194, 155, 88, 0.12) 0 1px, transparent 2px 56px),
+    linear-gradient(115deg, rgba(3, 6, 11, 0.98), rgba(8, 16, 31, 0.92) 38%, rgba(2, 5, 12, 0.98) 100%);
 }
 
 .hero__stage::before {
   inset: 0;
   z-index: 1;
   border-radius: 0;
-  opacity: 0.8;
+  opacity: 0.92;
   background:
-    radial-gradient(ellipse at 47% 50%, rgba(0, 0, 0, 0.48) 0 25%, rgba(3, 8, 18, 0.26) 41%, transparent 62%),
-    linear-gradient(90deg, rgba(0, 0, 0, 0.58), transparent 21%, transparent 76%, rgba(0, 0, 0, 0.38)),
-    radial-gradient(ellipse at 50% 105%, rgba(0, 0, 0, 0.66), transparent 48%);
+    linear-gradient(90deg, rgba(0, 0, 0, 0.72), transparent 24%, transparent 78%, rgba(0, 0, 0, 0.36)),
+    linear-gradient(90deg, rgba(52, 34, 19, 0.28) 0 1px, transparent 1px 13px),
+    repeating-linear-gradient(90deg, rgba(118, 74, 38, 0.23) 0 14px, rgba(16, 11, 9, 0.42) 14px 20px, rgba(91, 58, 31, 0.24) 20px 37px, rgba(5, 5, 8, 0.2) 37px 42px),
+    radial-gradient(ellipse at 15% 47%, rgba(134, 88, 38, 0.46), transparent 24%),
+    radial-gradient(ellipse at 48% 102%, rgba(34, 20, 10, 0.92) 0 22%, rgba(5, 5, 8, 0.52) 43%, transparent 68%);
   mask-image: none;
   transform: none;
   animation: none;
-  mix-blend-mode: multiply;
+  mix-blend-mode: normal;
 }
 
 .hero__stage::after {
@@ -2978,11 +3008,13 @@ body.has-entered .site-header:not(.is-compact) {
   border-radius: 0;
   opacity: 0.55;
   background:
-    radial-gradient(circle at 54% 47%, rgba(117, 245, 255, 0.18), transparent 0 2px, transparent 3px),
-    repeating-conic-gradient(from 18deg at 52% 50%, rgba(245, 210, 135, 0.13) 0 0.24deg, transparent 0.24deg 9deg),
-    conic-gradient(from 116deg at 52% 50%, transparent 0 11%, rgba(117, 245, 255, 0.12) 12%, transparent 14% 45%, rgba(245, 210, 135, 0.1) 47%, transparent 51% 100%);
+    radial-gradient(circle at 54% 47%, rgba(117, 245, 255, 0.26), transparent 0 2px, transparent 3px),
+    radial-gradient(circle at 84% 22%, rgba(255, 255, 255, 0.66) 0 1px, transparent 2px),
+    radial-gradient(circle at 91% 79%, rgba(245, 210, 135, 0.75) 0 1px, transparent 2px),
+    repeating-conic-gradient(from 18deg at 55% 51%, rgba(245, 210, 135, 0.16) 0 0.22deg, transparent 0.22deg 8deg),
+    conic-gradient(from 116deg at 55% 51%, transparent 0 11%, rgba(117, 245, 255, 0.12) 12%, transparent 14% 45%, rgba(245, 210, 135, 0.11) 47%, transparent 51% 100%);
   box-shadow: inset 0 0 120px rgba(0, 0, 0, 0.44);
-  mask-image: radial-gradient(ellipse at 52% 50%, transparent 0 17%, black 18% 61%, transparent 72% 100%);
+  mask-image: radial-gradient(ellipse at 55% 51%, transparent 0 15%, black 16% 68%, transparent 77% 100%);
   transform: none;
   mix-blend-mode: screen;
   animation: chrono-map-turn 88s linear infinite;
@@ -3016,6 +3048,170 @@ body.has-entered .site-header:not(.is-compact) {
   visibility: visible;
   pointer-events: auto;
   mix-blend-mode: screen;
+}
+
+/* Final art direction: rebuilt objects, no full-scene bitmap background. */
+.hero__stage {
+  background:
+    radial-gradient(circle at 51% 45%, rgba(31, 112, 170, 0.42) 0 14%, rgba(10, 26, 48, 0.28) 31%, transparent 48%),
+    radial-gradient(circle at 82% 23%, rgba(118, 204, 216, 0.2) 0 1px, transparent 2px),
+    radial-gradient(circle at 64% 16%, rgba(255, 255, 255, 0.76) 0 1px, transparent 2px),
+    radial-gradient(circle at 30% 14%, rgba(244, 206, 122, 0.42) 0 1px, transparent 2px),
+    repeating-radial-gradient(circle at 55% 50%, rgba(194, 155, 88, 0.13) 0 1px, transparent 2px 54px),
+    linear-gradient(112deg, #02050c 0%, #071425 42%, #02040b 100%);
+}
+
+.hero__stage::before {
+  background:
+    linear-gradient(90deg, rgba(0, 0, 0, 0.82), transparent 21%, transparent 78%, rgba(0, 0, 0, 0.38)),
+    linear-gradient(90deg, rgba(144, 91, 40, 0.32) 0 2px, transparent 2px 18px),
+    repeating-linear-gradient(90deg, rgba(120, 78, 40, 0.34) 0 16px, rgba(13, 10, 9, 0.62) 16px 23px, rgba(76, 48, 26, 0.34) 23px 42px, rgba(5, 5, 8, 0.22) 42px 48px),
+    radial-gradient(ellipse at 13% 51%, rgba(160, 99, 43, 0.52), transparent 25%),
+    radial-gradient(ellipse at 48% 104%, rgba(42, 25, 13, 0.94) 0 23%, rgba(5, 5, 8, 0.54) 46%, transparent 70%);
+  opacity: 0.88;
+}
+
+.hero__stage::after {
+  background:
+    radial-gradient(circle at 54% 47%, rgba(117, 245, 255, 0.26), transparent 0 2px, transparent 3px),
+    radial-gradient(circle at 84% 22%, rgba(255, 255, 255, 0.68) 0 1px, transparent 2px),
+    radial-gradient(circle at 91% 79%, rgba(245, 210, 135, 0.75) 0 1px, transparent 2px),
+    repeating-conic-gradient(from 18deg at 55% 51%, rgba(245, 210, 135, 0.18) 0 0.22deg, transparent 0.22deg 8deg),
+    conic-gradient(from 116deg at 55% 51%, transparent 0 11%, rgba(117, 245, 255, 0.12) 12%, transparent 14% 45%, rgba(245, 210, 135, 0.13) 47%, transparent 51% 100%);
+  opacity: 0.62;
+}
+
+.hero .timepiece {
+  --clock-scale: 1.58;
+  right: clamp(60px, 7vw, 118px);
+  bottom: clamp(48px, 5.7vw, 92px);
+  width: 164px;
+  height: 164px;
+  opacity: 0.95;
+  mix-blend-mode: normal;
+  filter:
+    drop-shadow(0 30px 42px rgba(0, 0, 0, 0.7))
+    drop-shadow(0 0 calc(14px + var(--chrono-glow) * 18px) rgba(116, 204, 216, calc(0.11 + var(--chrono-glow) * 0.18)));
+}
+
+.hero .timepiece::before {
+  width: 374px;
+  height: 374px;
+  background:
+    radial-gradient(circle, transparent 0 35%, rgba(118, 204, 216, 0.2) 36% 36.45%, transparent 37% 50%, rgba(193, 173, 123, 0.18) 51% 51.5%, transparent 52% 100%),
+    repeating-conic-gradient(from 2deg, rgba(220, 218, 190, 0.18) 0 0.45deg, transparent 0.45deg 7deg),
+    conic-gradient(from 128deg, transparent, rgba(118, 204, 216, 0.2), transparent 32%, rgba(159, 140, 255, 0.14), transparent 72%);
+  opacity: 0.52;
+}
+
+.hero .timepiece__dial {
+  width: 128px;
+  background:
+    radial-gradient(circle at 51% 50%, rgba(224, 210, 154, 0.96) 0 3px, transparent 4px),
+    radial-gradient(circle at 35% 27%, rgba(117, 245, 255, 0.18), transparent 19%),
+    radial-gradient(circle at 66% 66%, rgba(244, 206, 122, 0.12), transparent 24%),
+    repeating-conic-gradient(from 0deg, rgba(117, 245, 255, 0.15) 0 0.65deg, transparent 0.65deg 7.5deg),
+    radial-gradient(circle at 50% 53%, rgba(9, 20, 31, 0.86) 0 38%, rgba(5, 8, 15, 0.96) 66%, #010309 100%);
+  box-shadow:
+    0 2px 0 rgba(220, 218, 190, 0.24),
+    0 10px 0 #15100c,
+    0 24px 30px rgba(0, 0, 0, 0.56),
+    inset 0 0 0 7px rgba(42, 34, 26, 0.62),
+    inset 0 0 0 11px rgba(116, 204, 216, 0.04),
+    inset 0 0 34px rgba(0, 0, 0, 0.92);
+}
+
+.hero .timepiece__dial::before {
+  background:
+    radial-gradient(circle at 33% 18%, rgba(230, 218, 178, 0.24), transparent 15%),
+    conic-gradient(from -34deg, #141315, #635333 11%, #060912 23%, #3d3323 36%, #03060e 50%, #73623a 66%, #08090e 78%, #2f261b 91%, #141315);
+  box-shadow:
+    inset 0 0 0 2px rgba(118, 204, 216, 0.12),
+    inset 0 -18px 28px rgba(0, 0, 0, 0.68),
+    0 0 0 1px rgba(118, 204, 216, 0.12),
+    0 18px 36px rgba(0, 0, 0, 0.54);
+}
+
+.hero .timepiece__bezel {
+  opacity: 0.5;
+  filter: saturate(0.88);
+}
+
+.hero .timepiece__gear {
+  opacity: 0.58;
+}
+
+.hero .timepiece__orbit--outer {
+  width: 180px;
+}
+
+.hero .timepiece__orbit--inner {
+  width: 148px;
+}
+
+.hero .timepiece__tick {
+  color: rgba(230, 218, 178, 0.8);
+}
+
+.space-game {
+  background:
+    radial-gradient(circle at 50% 80%, rgba(48, 92, 148, 0.28), transparent 24%),
+    radial-gradient(circle at 76% 16%, rgba(117, 245, 255, 0.18), transparent 17%),
+    radial-gradient(circle at 16% 20%, rgba(159, 140, 255, 0.16), transparent 16%),
+    linear-gradient(180deg, #010309, #07101f 48%, #010207);
+}
+
+.space-game::after {
+  background:
+    linear-gradient(90deg, rgba(0, 0, 0, 0.72), transparent 18%, transparent 82%, rgba(0, 0, 0, 0.72)),
+    radial-gradient(ellipse at 50% 50%, transparent 0 58%, rgba(0, 0, 0, 0.64) 100%),
+    linear-gradient(145deg, transparent 0 58%, rgba(117, 245, 255, 0.08) 58.2%, transparent 59%),
+    linear-gradient(35deg, transparent 0 58%, rgba(245, 210, 135, 0.07) 58.2%, transparent 59%);
+}
+
+.space-game__stats {
+  border-radius: 10px;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.08), transparent 44%),
+    linear-gradient(180deg, rgba(8, 19, 36, 0.78), rgba(3, 6, 13, 0.68));
+}
+
+.space-game__status {
+  border-radius: 8px;
+  color: rgba(234, 248, 255, 0.86);
+}
+
+.hero__stage::before {
+  background:
+    linear-gradient(90deg, rgba(0, 0, 0, 0.9) 0 16%, rgba(0, 0, 0, 0.34) 25%, transparent 36%, transparent 76%, rgba(0, 0, 0, 0.36) 100%) center / 100% 100% no-repeat,
+    radial-gradient(ellipse at 14% 48%, rgba(154, 96, 42, 0.46), rgba(37, 22, 13, 0.36) 28%, transparent 58%) left center / 33% 100% no-repeat,
+    repeating-linear-gradient(0deg, rgba(169, 102, 45, 0.22) 0 1px, rgba(9, 7, 8, 0.28) 1px 31px, rgba(206, 149, 77, 0.12) 31px 33px, rgba(4, 4, 8, 0.38) 33px 58px) left center / 26% 82% no-repeat,
+    repeating-linear-gradient(90deg, rgba(106, 69, 36, 0.28) 0 16px, rgba(9, 7, 8, 0.6) 16px 22px, rgba(72, 44, 24, 0.34) 22px 40px, rgba(5, 5, 8, 0.1) 40px 48px) left center / 26% 82% no-repeat,
+    radial-gradient(ellipse at 48% 104%, rgba(42, 25, 13, 0.95) 0 23%, rgba(5, 5, 8, 0.52) 46%, transparent 72%) center bottom / 100% 48% no-repeat;
+  opacity: 0.78;
+}
+
+.hero .timepiece__gear {
+  opacity: 0.74;
+  background:
+    radial-gradient(circle, #070b10 0 13%, transparent 14% 23%, rgba(194, 155, 88, 0.36) 24% 31%, transparent 32%),
+    repeating-conic-gradient(#8a7644 0 5deg, #272018 5deg 10deg, #090c10 10deg 14deg);
+}
+
+.hero .timepiece__jewel {
+  opacity: 0.98;
+}
+
+.hero .timepiece__hand {
+  background: rgba(232, 216, 160, 0.95);
+}
+
+.hero .timepiece__hand--second {
+  background: rgba(118, 204, 216, 0.95);
+}
+
+.hero .timepiece__pin {
+  background: #c7ab66;
 }
 
 .hero-hotspots {

@@ -154,19 +154,21 @@
     </main>
 
     <aside class="space-game" id="spaceGame" aria-hidden="true" aria-label="月球星战模拟舱">
-      <canvas id="spaceGameCanvas" aria-label="可游玩的月球星战小游戏"></canvas>
+      <div id="spaceGameMount" class="space-game__mount" aria-label="可游玩的月球星战小游戏"></div>
       <div class="space-game__hud">
         <div class="space-game__title">
-          <strong>月球星战模拟舱</strong>
-          <span>LUNAR BATTLE ORBIT</span>
+          <strong>月球远征舰队</strong>
+          <span>LUNAR SQUADRON · THREE WAVE CAMPAIGN</span>
         </div>
         <div class="space-game__stats">
-          <span>Score</span>
-          <strong id="gameScore">0000</strong>
+          <span>Score</span><strong id="gameScore">0000</strong>
+          <span>Wave</span><strong id="gameWave">1/3</strong>
+          <span>Hull</span><strong id="gameHull">100</strong>
+          <span>Skill</span><strong id="gameSkill">Ready</strong>
           <button class="space-game__button" id="closeSpaceGame" type="button">返回星图</button>
         </div>
       </div>
-      <div class="space-game__status" id="gameStatus">月面航道待命</div>
+      <div class="space-game__status" id="gameStatus">舰队启动：月球航道正在校准</div>
     </aside>
 
     <aside class="world" id="world" aria-hidden="true" aria-label="理论世界详情">
@@ -183,6 +185,7 @@
     <script src="./vendor/ScrollTrigger.min.js"></script>
     <script src="./vendor/anime.min.js"></script>
     <script src="./vendor/three.min.js"></script>
+    <script src="./vendor/phaser.min.js"></script>
     <script src="./app.js"></script>
   </body>
 </html>
