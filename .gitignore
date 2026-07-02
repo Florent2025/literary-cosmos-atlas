@@ -1,7 +1,10 @@
-.DS_Store
-Thumbs.db
-node_modules/
-.vercel/
-.netlify/
-.env*
-*.log
+.vercel
+
+# Local Netlify folder
+.netlify
+
+# Local reference and backup artifacts
+The Athenaeum.dc.html
+The Literary Cosmos.dc.backup-*.html
+新建文件夹/
+validation-*.png

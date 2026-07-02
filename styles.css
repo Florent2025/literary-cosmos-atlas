@@ -216,7 +216,7 @@ body::before {
 }
 
 .library-gate::after {
-  content: "SCROLL TO OPEN THE LIBRARY";
+  content: var(--gate-scroll-copy, "SCROLL TO OPEN THE LIBRARY");
   position: absolute;
   left: 50%;
   bottom: calc(10% + 16px);
@@ -419,6 +419,21 @@ body::before {
   color: #06101b;
   background: linear-gradient(135deg, #eaf8ff, #75f5ff);
   box-shadow: 0 0 18px rgba(117, 245, 255, 0.22);
+}
+
+.language-switcher--gate {
+  position: absolute;
+  right: clamp(18px, 4vw, 54px);
+  top: clamp(18px, 4vw, 44px);
+  z-index: 4;
+  border-color: rgba(244, 206, 122, 0.34);
+  background:
+    linear-gradient(135deg, rgba(244, 206, 122, 0.12), transparent 45%),
+    rgba(3, 7, 16, 0.62);
+  box-shadow:
+    inset 0 0 18px rgba(117, 245, 255, 0.08),
+    0 16px 38px rgba(0, 0, 0, 0.34);
+  backdrop-filter: blur(12px);
 }
 
 .icon-button {
@@ -2476,6 +2491,150 @@ main {
   backdrop-filter: blur(12px);
 }
 
+.space-game__briefing {
+  position: absolute;
+  left: clamp(18px, 3.2vw, 54px);
+  top: clamp(182px, 21vh, 230px);
+  z-index: 4;
+  display: grid;
+  width: min(270px, calc(100% - 36px));
+  gap: 8px;
+  padding: 14px 16px;
+  border: 1px solid rgba(245, 210, 135, 0.24);
+  border-radius: 16px;
+  color: rgba(234, 248, 255, 0.82);
+  background:
+    linear-gradient(145deg, rgba(245, 210, 135, 0.12), transparent 42%),
+    linear-gradient(0deg, rgba(117, 245, 255, 0.07), transparent 58%),
+    rgba(2, 6, 14, 0.5);
+  box-shadow:
+    inset 0 0 18px rgba(117, 245, 255, 0.06),
+    0 20px 46px rgba(0, 0, 0, 0.34);
+  font-family: "Space Grotesk", "Noto Sans SC", sans-serif;
+  pointer-events: none;
+  backdrop-filter: blur(13px);
+}
+
+.space-game__briefing strong {
+  color: #fff8df;
+  font-family: "Noto Serif SC", serif;
+  font-size: 0.95rem;
+  letter-spacing: 0.04em;
+}
+
+.space-game__briefing span {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  min-height: 24px;
+  color: rgba(213, 232, 244, 0.74);
+  font-size: 0.72rem;
+}
+
+.space-game__briefing kbd {
+  display: inline-grid;
+  place-items: center;
+  min-width: 26px;
+  min-height: 20px;
+  padding: 2px 6px;
+  border: 1px solid rgba(117, 245, 255, 0.28);
+  border-radius: 5px;
+  color: #fff8df;
+  background: rgba(5, 13, 26, 0.72);
+  box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.32);
+  font: 700 0.64rem/1 "Space Grotesk", sans-serif;
+}
+
+.space-game__briefing em {
+  font-style: normal;
+  text-align: right;
+}
+
+.space-game__radar {
+  position: absolute;
+  right: clamp(20px, 4vw, 58px);
+  top: clamp(112px, 14vh, 164px);
+  z-index: 4;
+  width: clamp(104px, 11vw, 156px);
+  aspect-ratio: 1;
+  border: 1px solid rgba(117, 245, 255, 0.3);
+  border-radius: 50%;
+  background:
+    radial-gradient(circle, rgba(117, 245, 255, 0.42) 0 2px, transparent 3px),
+    repeating-radial-gradient(circle, transparent 0 19%, rgba(117, 245, 255, 0.16) 20% 20.8%, transparent 21% 39%),
+    conic-gradient(from 20deg, rgba(117, 245, 255, 0.24), transparent 28%, rgba(245, 210, 135, 0.12), transparent 62%, rgba(159, 140, 255, 0.18), transparent);
+  box-shadow:
+    inset 0 0 26px rgba(117, 245, 255, 0.1),
+    0 0 30px rgba(117, 245, 255, 0.14);
+  pointer-events: none;
+  opacity: 0.82;
+}
+
+.space-game__radar::before,
+.space-game__radar::after,
+.space-game__radar span,
+.space-game__radar i,
+.space-game__radar b {
+  content: "";
+  position: absolute;
+  pointer-events: none;
+}
+
+.space-game__radar::before {
+  inset: 13%;
+  border: 1px dashed rgba(245, 210, 135, 0.2);
+  border-radius: inherit;
+}
+
+.space-game__radar::after {
+  left: 50%;
+  top: 50%;
+  width: 45%;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(117, 245, 255, 0.9), transparent);
+  transform-origin: 0 50%;
+  animation: radar-sweep 3.8s linear infinite;
+}
+
+.space-game__radar span {
+  left: 45%;
+  top: 22%;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #ff8fa8;
+  box-shadow: 0 0 12px rgba(255, 143, 168, 0.8);
+}
+
+.space-game__radar i {
+  right: 24%;
+  bottom: 28%;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #f5d287;
+  box-shadow: 0 0 12px rgba(245, 210, 135, 0.82);
+}
+
+.space-game__radar b {
+  left: 50%;
+  bottom: 18%;
+  width: 0;
+  height: 0;
+  border-right: 5px solid transparent;
+  border-left: 5px solid transparent;
+  border-bottom: 13px solid #75f5ff;
+  filter: drop-shadow(0 0 10px rgba(117, 245, 255, 0.8));
+  transform: translateX(-50%);
+}
+
+@keyframes radar-sweep {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 .space-game__meter i,
 .space-game__boss i {
   position: absolute;
@@ -2612,6 +2771,21 @@ main {
   backdrop-filter: blur(14px);
 }
 
+.space-game__touch-button span {
+  position: absolute;
+  left: 50%;
+  bottom: -24px;
+  min-width: 3.4em;
+  color: rgba(234, 248, 255, 0.78);
+  font-family: "Space Grotesk", "Noto Sans SC", sans-serif;
+  font-size: 0.66rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-align: center;
+  text-shadow: 0 0 10px rgba(0, 0, 0, 0.75);
+  transform: translateX(-50%);
+}
+
 .space-game__touch-button::before,
 .space-game__touch-button::after {
   content: "";
@@ -2640,11 +2814,45 @@ main {
   border-color: rgba(245, 210, 135, 0.3);
 }
 
-.space-game__touch-button--skill::after {
+.space-game__touch-button--lance {
+  color: rgba(117, 245, 255, 0.96);
+  border-color: rgba(117, 245, 255, 0.32);
+}
+
+.space-game__touch-button--rift {
+  color: rgba(185, 156, 255, 0.95);
+  border-color: rgba(185, 156, 255, 0.34);
+}
+
+.space-game__touch-button--skill::after,
+.space-game__touch-button--lance::after,
+.space-game__touch-button--rift::after {
   width: 30px;
   height: 30px;
-  clip-path: polygon(50% 0, 63% 34%, 100% 38%, 70% 60%, 80% 100%, 50% 74%, 20% 100%, 30% 60%, 0 38%, 37% 34%);
   background: currentColor;
+}
+
+.space-game__touch-button--skill::after {
+  clip-path: polygon(50% 0, 63% 34%, 100% 38%, 70% 60%, 80% 100%, 50% 74%, 20% 100%, 30% 60%, 0 38%, 37% 34%);
+}
+
+.space-game__touch-button--lance::after {
+  width: 9px;
+  height: 34px;
+  border-radius: 999px;
+  box-shadow:
+    -8px 8px 0 -3px currentColor,
+    8px 8px 0 -3px currentColor;
+}
+
+.space-game__touch-button--rift::after {
+  width: 34px;
+  height: 34px;
+  border: 3px solid currentColor;
+  border-radius: 50%;
+  background: transparent;
+  clip-path: none;
+  box-shadow: inset 0 0 12px currentColor;
 }
 
 .space-game__touch-button.is-active,
@@ -2915,6 +3123,97 @@ main {
 
   .world-book-cover h2 {
     font-size: 2.35rem;
+  }
+
+  .space-game__hud {
+    left: 12px;
+    right: 12px;
+    top: 12px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: start;
+    gap: 10px;
+    justify-content: stretch;
+  }
+
+  .space-game__title strong {
+    font-size: 1rem;
+  }
+
+  .space-game__title span {
+    display: none;
+  }
+
+  .space-game__stats {
+    display: grid;
+    grid-template-columns: repeat(2, auto);
+    gap: 4px 8px;
+    justify-self: end;
+    width: auto;
+    max-width: 184px;
+    padding: 8px;
+    border-radius: 14px;
+    font-size: 0.68rem;
+  }
+
+  .space-game__stats span:nth-of-type(n + 4),
+  .space-game__stats strong:nth-of-type(n + 4) {
+    display: none;
+  }
+
+  .space-game__button {
+    grid-column: 1 / -1;
+    padding: 8px 10px;
+    font-size: 0.76rem;
+  }
+
+  .space-game__meters {
+    left: 14px;
+    top: 128px;
+    width: min(232px, calc(100% - 128px));
+  }
+
+  .space-game__briefing {
+    display: none;
+  }
+
+  .space-game__radar {
+    right: 14px;
+    top: 116px;
+    width: 92px;
+  }
+
+  .space-game__touch {
+    right: 14px;
+    bottom: 110px;
+    display: grid;
+    grid-template-columns: repeat(2, 58px);
+    gap: 24px 12px;
+  }
+
+  .space-game__touch-button {
+    width: 58px;
+    height: 58px;
+  }
+
+  .space-game__touch-button::before {
+    inset: 9px;
+  }
+
+  .space-game__touch-button span {
+    bottom: -18px;
+    font-size: 0.56rem;
+  }
+
+  .space-game__status {
+    bottom: 16px;
+    left: 14px;
+    right: 14px;
+    min-width: 0;
+    padding: 10px 12px;
+    font-size: 0.72rem;
+    text-align: center;
+    transform: none;
   }
 }
 

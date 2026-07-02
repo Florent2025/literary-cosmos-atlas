@@ -666,8 +666,30 @@ const state = {
   audioContext: null
 };
 
+let cosmosController = null;
+
 const UI_COPY = {
   zh: {
+    documentTitle: "文学理论宇宙 | The Literary Cosmos",
+    documentDescription: "以书本、星图和滚动叙事构成的全球文学理论交互档案。",
+    gateAria: "欧洲古典图书馆入口",
+    gateCanvasAria: "可滚动开启的古典图书馆大门",
+    gateTitle: "文学理论宇宙",
+    gateLead: "滑动鼠标，推开古典图书馆的宏伟大门。",
+    gateButton: "推开大门",
+    gateScrollHint: "滑动开启图书馆",
+    languageAria: "网页语言",
+    brandAria: "回到开场",
+    navAria: "页面导航",
+    soundAria: "切换界面声效",
+    cosmosAria: "旋转的文学星仪",
+    clockAria: "星盘实时时钟",
+    hotspotsAria: "图中理论书籍入口",
+    hotspotClassical: "打开古典诗学",
+    hotspotRealism: "打开现实主义",
+    hotspotRomanticism: "打开浪漫主义",
+    hotspotModernism: "打开现代主义",
+    hotspotPoststructuralism: "打开后结构主义",
     brandTitle: "文学理论宇宙",
     brandSubtitle: "The Literary Cosmos",
     navLibrary: "书架轨道",
@@ -678,6 +700,15 @@ const UI_COPY = {
     heroLead: "你已进入一座会呼吸的文学图书馆。真实地球缓慢旋转，十六本理论之书沿轨道漂移：近处的书脊放大成入口，远处的书影退入星尘。",
     heroPrimary: "进入书架轨道",
     heroSecondary: "打开今日之书",
+    libraryOverline: "SCROLLING BOOKSHELF",
+    libraryTitle: "滚动书架：每本书都是一个理论世界",
+    atlasOverline: "CONSTELLATION INDEX",
+    atlasTitle: "星图索引：理论如何彼此牵引",
+    archiveOverline: "KNOWLEDGE ARCHIVE",
+    archiveTitle: "思想档案：主要命题、读法与文本案例",
+    railAria: "书架浏览状态",
+    railPrev: "上一本文学理论书",
+    railNext: "下一本文学理论书",
     theoryEntry: "理论入口",
     coreIdeas: "核心命题",
     method: "如何用它读文本",
@@ -693,9 +724,115 @@ const UI_COPY = {
     sourceDossier: "研究档案与开放资源",
     readRoute: "深读路线",
     fieldQuestions: "可追问的问题",
-    sourceTrail: "开放来源"
+    sourceTrail: "开放来源",
+    genealogy: "谱系位置",
+    analysisFocus: "分析焦点",
+    caseAdvance: "案例推进",
+    relationPath: "关联路径",
+    portraitAlt: "肖像",
+    graphLegend: "理论关系图例",
+    tooltipMoonTitle: "月球星战模拟舱",
+    tooltipMoonSubtitle: "公转轨道上的隐藏游戏入口",
+    tooltipMoonHint: "点击进入可玩战斗航道",
+    tooltipLocationHint: "点击从地理现场进入理论世界",
+    worldAria: "理论世界详情",
+    worldClose: "关闭",
+    worldCloseAria: "关闭理论世界",
+    quizUnanswered: "这一题还没有作答。",
+    quizCorrect: "答对了",
+    quizReview: "需要再看一遍",
+    quizPartial: "已答 {answered}/{total}，还差 {left} 题。",
+    quizComplete: "核对完成：{correct}/{total} 题正确。{message}",
+    quizPerfect: "你已经掌握这本书的主航道。",
+    quizRetry: "建议回到核心命题和文本案例再扫一遍。",
+    quizCoreQuestion: "{title}最核心的理论入口是什么？",
+    quizMethodQuestion: "使用{title}读一部作品时，第一步更接近哪种做法？",
+    quizCaseQuestion: "下列哪一项最适合作为{title}的文本案例？",
+    quizRelationQuestion: "{title}在星图中最直接牵引到哪一类相邻理论？",
+    quizWrongBio: "把作品意义完全还原为作者生平轶事。",
+    quizWrongDate: "只比较作品出版年代，暂时不看文本内部。",
+    quizWrongTransparent: "把文学作品当作没有历史和语言差异的透明故事。",
+    quizWrongScore: "先为作品打分，再寻找支持分数的证据。",
+    quizWrongTheme: "跳过语言细节，只提炼一个抽象主题。",
+    quizWrongMetadata: "只查作者国籍和书名，避免进入段落结构。",
+    quizWrongMarket: "把所有文学作品都简化为市场销量排行榜。",
+    quizWrongCover: "只讨论封面颜色，不进入叙事和语言。",
+    quizWrongContext: "完全删除时代语境，只保留人物姓名。",
+    quizWrongNoRelation: "与任何理论都没有关系。",
+    quizWrongScience: "只与自然科学实验方法相连。",
+    quizRelationExplain: "{title}与{related}相连，可以帮助比较概念迁移、方法差异和历史连续性。",
+    gameAria: "月球星战模拟舱",
+    gameMountAria: "可游玩的月球星战小游戏",
+    gameTitle: "月球远征舰队",
+    gameSubtitle: "LUNAR SQUADRON · THREE WAVE CAMPAIGN",
+    gameScoreLabel: "得分",
+    gameWaveLabel: "波次",
+    gameHullLabel: "舰体",
+    gameEnergyLabel: "能量",
+    gameComboLabel: "连击",
+    gameSkillLabel: "技能",
+    gameReady: "就绪",
+    gameBack: "返回星图",
+    gameBriefingTitle: "驾驶舱指令",
+    gameKeyMove: "移动",
+    gameKeyFire: "开火",
+    gameKeyNova: "星环爆发",
+    gameKeyLance: "离子光矛",
+    gameKeyRift: "时间裂隙",
+    gameKeyFocus: "精密闪避",
+    gameBossCore: "核心",
+    gameTouchAria: "移动端战机控制",
+    touchFireAria: "开火",
+    touchNovaAria: "释放星环爆发",
+    touchLanceAria: "释放离子光矛",
+    touchRiftAria: "释放时间裂隙",
+    touchFire: "开火",
+    touchNova: "星环",
+    touchLance: "光矛",
+    touchRift: "裂隙",
+    gameStatusBoot: "舰队启动：月球航道正在校准。",
+    gameWave1Label: "月面巡逻圈",
+    gameWave1Objective: "击落 18 架侦察机，收集任意升级。",
+    gameWave2Label: "碎星带突围",
+    gameWave2Objective: "击落 26 架护卫机，避开陨石潮。",
+    gameWave3Label: "轨道母舰决战",
+    gameWave3Objective: "摧毁母舰核心，完成通关。",
+    gameMissionPrefix: "任务 {wave}: {objective}",
+    gameBossStatus: "母舰核心已进入轨道。Shift 星环清弹，E 离子光矛破盾，Q 时间裂隙减速弹幕。",
+    gameWeaponStatus: "武器升级：书页激光已扩展。",
+    gameRepairStatus: "修复完成：舰体装甲恢复。",
+    gameOverdriveStatus: "过载启动：短时间双倍伤害。",
+    gameNovaStatus: "星环爆发：清空弹幕并击穿近距离目标。",
+    gameLanceStatus: "离子光矛：贯穿前方航道并削弱母舰核心。",
+    gameRiftStatus: "时间裂隙：敌机和弹幕进入慢速区。",
+    gameSkillNoEnergy: "能量不足，继续击落目标或收集升级。",
+    gameSkillCooling: "技能仍在冷却。",
+    gameMissionCompleteStatus: "通关完成：月球远征舰队已守住文学星图航道。按 R 可重新挑战。",
+    gameMissionCompleteBanner: "MISSION COMPLETE\n月球航道已净空",
+    gameFailedStatus: "舰体失守。按 R 重新部署，或返回星图。",
+    gameFailedBanner: "MISSION FAILED\n按 R 重新挑战"
   },
   en: {
+    documentTitle: "Literary Theory Cosmos | The Literary Cosmos",
+    documentDescription: "An interactive global archive of literary theory built from books, star maps and scroll-driven storytelling.",
+    gateAria: "European classical library entrance",
+    gateCanvasAria: "Classical library gate opened by scrolling",
+    gateTitle: "Literary Theory Cosmos",
+    gateLead: "Scroll or swipe to open the monumental doors of the old library.",
+    gateButton: "Open The Gate",
+    gateScrollHint: "SCROLL TO OPEN THE LIBRARY",
+    languageAria: "Website language",
+    brandAria: "Return to opening scene",
+    navAria: "Page navigation",
+    soundAria: "Toggle interface sound",
+    cosmosAria: "Rotating literary astrolabe",
+    clockAria: "Real-time astrolabe chronometer",
+    hotspotsAria: "Theory book entrances in the scene",
+    hotspotClassical: "Open Classical Poetics",
+    hotspotRealism: "Open Realism",
+    hotspotRomanticism: "Open Romanticism",
+    hotspotModernism: "Open Modernism",
+    hotspotPoststructuralism: "Open Poststructuralism",
     brandTitle: "Literary Theory Cosmos",
     brandSubtitle: "The Literary Cosmos",
     navLibrary: "Book Orbit",
@@ -706,6 +843,15 @@ const UI_COPY = {
     heroLead: "Enter a breathing literary observatory. The real Earth turns slowly while sixteen theory volumes drift in orbit: near books swell into portals, distant spines recede into stardust.",
     heroPrimary: "Enter Book Orbit",
     heroSecondary: "Open Today’s Book",
+    libraryOverline: "SCROLLING BOOKSHELF",
+    libraryTitle: "Scrolling Bookshelf: Every Volume Is A Theory World",
+    atlasOverline: "CONSTELLATION INDEX",
+    atlasTitle: "Constellation Index: How Theories Pull On One Another",
+    archiveOverline: "KNOWLEDGE ARCHIVE",
+    archiveTitle: "Knowledge Archive: Claims, Methods And Textual Cases",
+    railAria: "Bookshelf browsing status",
+    railPrev: "Previous theory book",
+    railNext: "Next theory book",
     theoryEntry: "Theory Gateway",
     coreIdeas: "Core Claims",
     method: "How To Read With It",
@@ -721,9 +867,115 @@ const UI_COPY = {
     sourceDossier: "Research Dossier And Open Sources",
     readRoute: "Reading Route",
     fieldQuestions: "Questions To Pursue",
-    sourceTrail: "Open Sources"
+    sourceTrail: "Open Sources",
+    genealogy: "Genealogical Position",
+    analysisFocus: "Analytical Focus",
+    caseAdvance: "Case Work",
+    relationPath: "Linked Pathways",
+    portraitAlt: "portrait",
+    graphLegend: "Theory relation legend",
+    tooltipMoonTitle: "Lunar Squadron Simulator",
+    tooltipMoonSubtitle: "Hidden game entrance on the lunar orbit",
+    tooltipMoonHint: "Click to enter the playable battle route",
+    tooltipLocationHint: "Click to enter the theory world from its geographic scene",
+    worldAria: "Theory world details",
+    worldClose: "Close",
+    worldCloseAria: "Close theory world",
+    quizUnanswered: "This question has not been answered yet.",
+    quizCorrect: "Correct",
+    quizReview: "Review this",
+    quizPartial: "{answered}/{total} answered; {left} remaining.",
+    quizComplete: "Checked: {correct}/{total} correct. {message}",
+    quizPerfect: "You have mastered the main route through this book.",
+    quizRetry: "Return to the core claims and cases, then try again.",
+    quizCoreQuestion: "What is the central gateway into {title}?",
+    quizMethodQuestion: "When reading a work through {title}, which first move is strongest?",
+    quizCaseQuestion: "Which option best works as a textual case for {title}?",
+    quizRelationQuestion: "Which neighboring theory does {title} most directly pull toward?",
+    quizWrongBio: "Reduce the work’s meaning entirely to biographical anecdotes.",
+    quizWrongDate: "Compare only publication dates and avoid the text itself.",
+    quizWrongTransparent: "Treat literary works as transparent stories without linguistic or historical difference.",
+    quizWrongScore: "Score the work first, then hunt for evidence to justify the score.",
+    quizWrongTheme: "Skip linguistic detail and extract a single abstract theme.",
+    quizWrongMetadata: "Check only nationality and title, avoiding paragraph structure.",
+    quizWrongMarket: "Reduce all literary works to a sales ranking.",
+    quizWrongCover: "Discuss only the cover color without entering narration or language.",
+    quizWrongContext: "Erase historical context and keep only character names.",
+    quizWrongNoRelation: "It has no relation to any other theory.",
+    quizWrongScience: "It connects only to natural-science experiment.",
+    quizRelationExplain: "{title} links with {related}, helping compare conceptual migration, method difference and historical continuity.",
+    gameAria: "Lunar squadron battle simulator",
+    gameMountAria: "Playable lunar squadron mini-game",
+    gameTitle: "Lunar Expedition Squadron",
+    gameSubtitle: "LUNAR SQUADRON · THREE WAVE CAMPAIGN",
+    gameScoreLabel: "Score",
+    gameWaveLabel: "Wave",
+    gameHullLabel: "Hull",
+    gameEnergyLabel: "Energy",
+    gameComboLabel: "Combo",
+    gameSkillLabel: "Skills",
+    gameReady: "Ready",
+    gameBack: "Back To Star Map",
+    gameBriefingTitle: "Cockpit Commands",
+    gameKeyMove: "Move",
+    gameKeyFire: "Fire",
+    gameKeyNova: "Nova Ring",
+    gameKeyLance: "Ion Lance",
+    gameKeyRift: "Time Rift",
+    gameKeyFocus: "Precision Dodge",
+    gameBossCore: "CORE",
+    gameTouchAria: "Mobile starfighter controls",
+    touchFireAria: "Fire",
+    touchNovaAria: "Cast Nova Ring",
+    touchLanceAria: "Cast Ion Lance",
+    touchRiftAria: "Cast Time Rift",
+    touchFire: "Fire",
+    touchNova: "Nova",
+    touchLance: "Lance",
+    touchRift: "Rift",
+    gameStatusBoot: "Squadron launch: lunar route calibration in progress.",
+    gameWave1Label: "Moon Patrol Ring",
+    gameWave1Objective: "Destroy 18 scouts and collect any upgrade.",
+    gameWave2Label: "Asteroid Belt Breakout",
+    gameWave2Objective: "Destroy 26 escorts and survive the asteroid tide.",
+    gameWave3Label: "Orbital Dreadnought Duel",
+    gameWave3Objective: "Destroy the mothership core and clear the campaign.",
+    gameMissionPrefix: "Mission {wave}: {objective}",
+    gameBossStatus: "Mothership core entering orbit. Shift clears barrages, E pierces shields, Q slows bullets.",
+    gameWeaponStatus: "Weapon upgrade: page lasers expanded.",
+    gameRepairStatus: "Repair complete: hull armor restored.",
+    gameOverdriveStatus: "Overdrive engaged: temporary double damage.",
+    gameNovaStatus: "Nova Ring released: bullets cleared and nearby targets fractured.",
+    gameLanceStatus: "Ion Lance fired: forward lane pierced and boss core weakened.",
+    gameRiftStatus: "Time Rift opened: enemy craft and bullets slowed.",
+    gameSkillNoEnergy: "Energy is low. Destroy targets or collect upgrades.",
+    gameSkillCooling: "Skill still cooling down.",
+    gameMissionCompleteStatus: "Campaign complete: the lunar squadron has secured the literary star map. Press R to replay.",
+    gameMissionCompleteBanner: "MISSION COMPLETE\nLunar route cleared",
+    gameFailedStatus: "Hull breached. Press R to redeploy, or return to the star map.",
+    gameFailedBanner: "MISSION FAILED\nPress R to retry"
   },
   fr: {
+    documentTitle: "Cosmos de la théorie littéraire | The Literary Cosmos",
+    documentDescription: "Archive interactive mondiale de la théorie littéraire, composée de livres, de cartes stellaires et de récit au défilement.",
+    gateAria: "Entrée de bibliothèque classique européenne",
+    gateCanvasAria: "Grande porte de bibliothèque ouverte par le défilement",
+    gateTitle: "Cosmos de la théorie littéraire",
+    gateLead: "Faites défiler ou glissez pour ouvrir les grandes portes de l’ancienne bibliothèque.",
+    gateButton: "Ouvrir la porte",
+    gateScrollHint: "FAITES DÉFILER POUR OUVRIR",
+    languageAria: "Langue du site",
+    brandAria: "Revenir à la scène d’ouverture",
+    navAria: "Navigation de page",
+    soundAria: "Activer ou couper les sons",
+    cosmosAria: "Astrolabe littéraire en rotation",
+    clockAria: "Chronomètre astrolabe en temps réel",
+    hotspotsAria: "Entrées des livres théoriques dans la scène",
+    hotspotClassical: "Ouvrir la poétique classique",
+    hotspotRealism: "Ouvrir le réalisme",
+    hotspotRomanticism: "Ouvrir le romantisme",
+    hotspotModernism: "Ouvrir le modernisme",
+    hotspotPoststructuralism: "Ouvrir le poststructuralisme",
     brandTitle: "Cosmos de la théorie littéraire",
     brandSubtitle: "The Literary Cosmos",
     navLibrary: "Orbite des livres",
@@ -734,6 +986,15 @@ const UI_COPY = {
     heroLead: "Entrez dans un observatoire littéraire vivant. La Terre réelle tourne lentement tandis que seize volumes théoriques dérivent en orbite: les livres proches deviennent des portails, les dos lointains se retirent dans la poussière d’étoiles.",
     heroPrimary: "Entrer dans l’orbite",
     heroSecondary: "Ouvrir le livre du jour",
+    libraryOverline: "BIBLIOTHÈQUE DÉFILANTE",
+    libraryTitle: "Bibliothèque défilante: chaque volume est un monde théorique",
+    atlasOverline: "INDEX CONSTELLÉ",
+    atlasTitle: "Index constellé: comment les théories s’attirent",
+    archiveOverline: "ARCHIVE DU SAVOIR",
+    archiveTitle: "Archive du savoir: thèses, méthodes et cas textuels",
+    railAria: "État de navigation dans la bibliothèque",
+    railPrev: "Livre théorique précédent",
+    railNext: "Livre théorique suivant",
     theoryEntry: "Porte théorique",
     coreIdeas: "Thèses essentielles",
     method: "Lire avec cette théorie",
@@ -749,7 +1010,93 @@ const UI_COPY = {
     sourceDossier: "Dossier de recherche et sources ouvertes",
     readRoute: "Parcours de lecture",
     fieldQuestions: "Questions à poursuivre",
-    sourceTrail: "Sources ouvertes"
+    sourceTrail: "Sources ouvertes",
+    genealogy: "Position généalogique",
+    analysisFocus: "Foyer d’analyse",
+    caseAdvance: "Travail sur les cas",
+    relationPath: "Passages liés",
+    portraitAlt: "portrait",
+    graphLegend: "Légende des relations théoriques",
+    tooltipMoonTitle: "Simulateur d’escadron lunaire",
+    tooltipMoonSubtitle: "Entrée de jeu cachée sur l’orbite lunaire",
+    tooltipMoonHint: "Cliquez pour entrer dans la route de bataille jouable",
+    tooltipLocationHint: "Cliquez pour entrer dans le monde théorique depuis son lieu",
+    worldAria: "Détails du monde théorique",
+    worldClose: "Fermer",
+    worldCloseAria: "Fermer le monde théorique",
+    quizUnanswered: "Cette question n’a pas encore de réponse.",
+    quizCorrect: "Correct",
+    quizReview: "À revoir",
+    quizPartial: "{answered}/{total} réponses; {left} restantes.",
+    quizComplete: "Correction terminée: {correct}/{total} correctes. {message}",
+    quizPerfect: "Vous maîtrisez la route principale de ce livre.",
+    quizRetry: "Revenez aux thèses et aux cas, puis réessayez.",
+    quizCoreQuestion: "Quelle est la porte d’entrée centrale de {title}?",
+    quizMethodQuestion: "Pour lire une œuvre avec {title}, quel premier geste est le plus juste?",
+    quizCaseQuestion: "Quelle option constitue le meilleur cas textuel pour {title}?",
+    quizRelationQuestion: "Vers quelle théorie voisine {title} attire-t-il le plus directement?",
+    quizWrongBio: "Réduire le sens de l’œuvre à des anecdotes biographiques.",
+    quizWrongDate: "Comparer seulement les dates de publication en évitant le texte.",
+    quizWrongTransparent: "Traiter les œuvres comme des récits transparents sans différence linguistique ou historique.",
+    quizWrongScore: "Noter l’œuvre d’abord, puis chercher des preuves pour justifier la note.",
+    quizWrongTheme: "Sauter les détails linguistiques pour extraire un thème abstrait unique.",
+    quizWrongMetadata: "Vérifier seulement la nationalité et le titre, sans entrer dans les paragraphes.",
+    quizWrongMarket: "Réduire toutes les œuvres littéraires à un classement des ventes.",
+    quizWrongCover: "Discuter seulement la couleur de couverture sans lire récit ni langue.",
+    quizWrongContext: "Effacer le contexte historique et garder seulement les noms.",
+    quizWrongNoRelation: "Il n’a aucun lien avec une autre théorie.",
+    quizWrongScience: "Il ne se relie qu’à l’expérimentation scientifique.",
+    quizRelationExplain: "{title} se relie à {related}, ce qui aide à comparer migration des concepts, différences de méthode et continuité historique.",
+    gameAria: "Simulateur de bataille d’escadron lunaire",
+    gameMountAria: "Mini-jeu jouable d’escadron lunaire",
+    gameTitle: "Escadron d’expédition lunaire",
+    gameSubtitle: "ESCADRON LUNAIRE · CAMPAGNE EN TROIS VAGUES",
+    gameScoreLabel: "Score",
+    gameWaveLabel: "Vague",
+    gameHullLabel: "Coque",
+    gameEnergyLabel: "Énergie",
+    gameComboLabel: "Combo",
+    gameSkillLabel: "Compétences",
+    gameReady: "Prêt",
+    gameBack: "Retour à la carte",
+    gameBriefingTitle: "Commandes du cockpit",
+    gameKeyMove: "Déplacer",
+    gameKeyFire: "Tirer",
+    gameKeyNova: "Anneau nova",
+    gameKeyLance: "Lance ionique",
+    gameKeyRift: "Faille temporelle",
+    gameKeyFocus: "Esquive précise",
+    gameBossCore: "CŒUR",
+    gameTouchAria: "Contrôles mobiles du chasseur",
+    touchFireAria: "Tirer",
+    touchNovaAria: "Lancer l’anneau nova",
+    touchLanceAria: "Lancer la lance ionique",
+    touchRiftAria: "Ouvrir la faille temporelle",
+    touchFire: "Tir",
+    touchNova: "Nova",
+    touchLance: "Lance",
+    touchRift: "Faille",
+    gameStatusBoot: "Lancement de l’escadron: calibration de la route lunaire.",
+    gameWave1Label: "Anneau de patrouille lunaire",
+    gameWave1Objective: "Détruisez 18 éclaireurs et collectez une amélioration.",
+    gameWave2Label: "Percée de la ceinture d’astéroïdes",
+    gameWave2Objective: "Détruisez 26 escortes et survivez à la marée d’astéroïdes.",
+    gameWave3Label: "Duel du cuirassé orbital",
+    gameWave3Objective: "Détruisez le cœur du vaisseau-mère et terminez la campagne.",
+    gameMissionPrefix: "Mission {wave}: {objective}",
+    gameBossStatus: "Le cœur du vaisseau-mère entre en orbite. Shift nettoie, E perce les boucliers, Q ralentit les tirs.",
+    gameWeaponStatus: "Amélioration d’arme: lasers de pages étendus.",
+    gameRepairStatus: "Réparation terminée: blindage restauré.",
+    gameOverdriveStatus: "Surpuissance engagée: dégâts doublés temporairement.",
+    gameNovaStatus: "Anneau nova libéré: tirs effacés et cibles proches fracturées.",
+    gameLanceStatus: "Lance ionique tirée: couloir percé et cœur affaibli.",
+    gameRiftStatus: "Faille temporelle ouverte: ennemis et projectiles ralentis.",
+    gameSkillNoEnergy: "Énergie faible. Détruisez des cibles ou collectez des améliorations.",
+    gameSkillCooling: "Compétence encore en recharge.",
+    gameMissionCompleteStatus: "Campagne terminée: l’escadron lunaire sécurise la carte littéraire. Appuyez sur R pour rejouer.",
+    gameMissionCompleteBanner: "MISSION ACCOMPLIE\nRoute lunaire nettoyée",
+    gameFailedStatus: "Coque percée. Appuyez sur R pour redéployer, ou revenez à la carte.",
+    gameFailedBanner: "MISSION ÉCHOUÉE\nAppuyez sur R"
   }
 };
 
@@ -887,6 +1234,194 @@ const MOVEMENT_TRANSLATIONS = {
   }
 };
 
+const PERSON_TRANSLATIONS = {
+  "亚里士多德": { en: "Aristotle", fr: "Aristote" },
+  "贺拉斯": { en: "Horace", fr: "Horace" },
+  "索福克勒斯": { en: "Sophocles", fr: "Sophocle" },
+  "刘勰": { en: "Liu Xie", fr: "Liu Xie" },
+  "王国维": { en: "Wang Guowei", fr: "Wang Guowei" },
+  "鲁迅": { en: "Lu Xun", fr: "Lu Xun" },
+  "华兹华斯": { en: "William Wordsworth", fr: "William Wordsworth" },
+  "柯尔律治": { en: "Samuel Taylor Coleridge", fr: "Samuel Taylor Coleridge" },
+  "玛丽·雪莱": { en: "Mary Shelley", fr: "Mary Shelley" },
+  "巴尔扎克": { en: "Honoré de Balzac", fr: "Honoré de Balzac" },
+  "左拉": { en: "Émile Zola", fr: "Émile Zola" },
+  "托尔斯泰": { en: "Leo Tolstoy", fr: "Léon Tolstoï" },
+  "弗吉尼亚·伍尔夫": { en: "Virginia Woolf", fr: "Virginia Woolf" },
+  "卡夫卡": { en: "Franz Kafka", fr: "Franz Kafka" },
+  "博尔赫斯": { en: "Jorge Luis Borges", fr: "Jorge Luis Borges" },
+  "维克托·什克洛夫斯基": { en: "Viktor Shklovsky", fr: "Viktor Chklovski" },
+  "罗曼·雅各布森": { en: "Roman Jakobson", fr: "Roman Jakobson" },
+  "米哈伊尔·巴赫金": { en: "Mikhail Bakhtin", fr: "Mikhaïl Bakhtine" },
+  "西格蒙德·弗洛伊德": { en: "Sigmund Freud", fr: "Sigmund Freud" },
+  "雅克·拉康": { en: "Jacques Lacan", fr: "Jacques Lacan" },
+  "朱莉娅·克里斯蒂娃": { en: "Julia Kristeva", fr: "Julia Kristeva" },
+  "卡尔·马克思": { en: "Karl Marx", fr: "Karl Marx" },
+  "格奥尔格·卢卡奇": { en: "Georg Lukács", fr: "Georg Lukács" },
+  "弗雷德里克·詹明信": { en: "Fredric Jameson", fr: "Fredric Jameson" },
+  "费迪南·德·索绪尔": { en: "Ferdinand de Saussure", fr: "Ferdinand de Saussure" },
+  "罗兰·巴特": { en: "Roland Barthes", fr: "Roland Barthes" },
+  "热拉尔·热奈特": { en: "Gérard Genette", fr: "Gérard Genette" },
+  "雅克·德里达": { en: "Jacques Derrida", fr: "Jacques Derrida" },
+  "米歇尔·福柯": { en: "Michel Foucault", fr: "Michel Foucault" },
+  "汉斯·罗伯特·姚斯": { en: "Hans Robert Jauss", fr: "Hans Robert Jauss" },
+  "沃尔夫冈·伊瑟": { en: "Wolfgang Iser", fr: "Wolfgang Iser" },
+  "斯坦利·费什": { en: "Stanley Fish", fr: "Stanley Fish" },
+  "西蒙娜·德·波伏瓦": { en: "Simone de Beauvoir", fr: "Simone de Beauvoir" },
+  "朱迪斯·巴特勒": { en: "Judith Butler", fr: "Judith Butler" },
+  "托妮·莫里森": { en: "Toni Morrison", fr: "Toni Morrison" },
+  "爱德华·赛义德": { en: "Edward Said", fr: "Edward Said" },
+  "霍米·巴巴": { en: "Homi K. Bhabha", fr: "Homi K. Bhabha" },
+  "奇努阿·阿切贝": { en: "Chinua Achebe", fr: "Chinua Achebe" },
+  "斯蒂芬·格林布拉特": { en: "Stephen Greenblatt", fr: "Stephen Greenblatt" },
+  "雷蒙德·威廉斯": { en: "Raymond Williams", fr: "Raymond Williams" },
+  "让-弗朗索瓦·利奥塔": { en: "Jean-François Lyotard", fr: "Jean-François Lyotard" },
+  "让·鲍德里亚": { en: "Jean Baudrillard", fr: "Jean Baudrillard" },
+  "蕾切尔·卡森": { en: "Rachel Carson", fr: "Rachel Carson" },
+  "劳伦斯·布尔": { en: "Lawrence Buell", fr: "Lawrence Buell" },
+  "蒂莫西·莫顿": { en: "Timothy Morton", fr: "Timothy Morton" },
+  "柏拉图": { en: "Plato", fr: "Platon" },
+  "杜甫": { en: "Du Fu", fr: "Du Fu" },
+  "李清照": { en: "Li Qingzhao", fr: "Li Qingzhao" },
+  "拜伦": { en: "Lord Byron", fr: "Lord Byron" },
+  "狄更斯": { en: "Charles Dickens", fr: "Charles Dickens" },
+  "艾略特": { en: "T. S. Eliot", fr: "T. S. Eliot" },
+  "乔伊斯": { en: "James Joyce", fr: "James Joyce" },
+  "本雅明": { en: "Walter Benjamin", fr: "Walter Benjamin" },
+  "列维-斯特劳斯": { en: "Claude Lévi-Strauss", fr: "Claude Lévi-Strauss" },
+  "沃尔特·惠特曼": { en: "Walt Whitman", fr: "Walt Whitman" },
+  "斯皮瓦克": { en: "Gayatri Spivak", fr: "Gayatri Spivak" },
+  "琳达·哈琴": { en: "Linda Hutcheon", fr: "Linda Hutcheon" },
+  "梭罗": { en: "Henry David Thoreau", fr: "Henry David Thoreau" },
+  "华兹华斯/柯尔律治": { en: "Wordsworth / Coleridge", fr: "Wordsworth / Coleridge" },
+  "伍尔夫": { en: "Virginia Woolf", fr: "Virginia Woolf" },
+  "什克洛夫斯基": { en: "Viktor Shklovsky", fr: "Viktor Chklovski" },
+  "埃亨鲍姆等": { en: "Eichenbaum et al.", fr: "Eichenbaum et al." },
+  "巴赫金": { en: "Mikhail Bakhtin", fr: "Mikhaïl Bakhtine" },
+  "弗洛伊德": { en: "Sigmund Freud", fr: "Sigmund Freud" },
+  "拉康": { en: "Jacques Lacan", fr: "Jacques Lacan" },
+  "莎士比亚": { en: "William Shakespeare", fr: "William Shakespeare" },
+  "詹明信": { en: "Fredric Jameson", fr: "Fredric Jameson" },
+  "卢卡奇": { en: "Georg Lukács", fr: "Georg Lukács" },
+  "马克思/恩格斯": { en: "Marx / Engels", fr: "Marx / Engels" },
+  "索绪尔": { en: "Ferdinand de Saussure", fr: "Ferdinand de Saussure" },
+  "巴特": { en: "Roland Barthes", fr: "Roland Barthes" },
+  "热奈特": { en: "Gérard Genette", fr: "Gérard Genette" },
+  "德里达": { en: "Jacques Derrida", fr: "Jacques Derrida" },
+  "福柯": { en: "Michel Foucault", fr: "Michel Foucault" },
+  "姚斯": { en: "Hans Robert Jauss", fr: "Hans Robert Jauss" },
+  "伊瑟": { en: "Wolfgang Iser", fr: "Wolfgang Iser" },
+  "费什": { en: "Stanley Fish", fr: "Stanley Fish" },
+  "波伏瓦": { en: "Simone de Beauvoir", fr: "Simone de Beauvoir" },
+  "巴特勒": { en: "Judith Butler", fr: "Judith Butler" },
+  "莫里森": { en: "Toni Morrison", fr: "Toni Morrison" },
+  "赛义德": { en: "Edward Said", fr: "Edward Said" },
+  "阿切贝": { en: "Chinua Achebe", fr: "Chinua Achebe" },
+  "格林布拉特": { en: "Stephen Greenblatt", fr: "Stephen Greenblatt" },
+  "威廉斯": { en: "Raymond Williams", fr: "Raymond Williams" },
+  "利奥塔": { en: "Jean-François Lyotard", fr: "Jean-François Lyotard" },
+  "鲍德里亚": { en: "Jean Baudrillard", fr: "Jean Baudrillard" },
+  "罗布·尼克松": { en: "Rob Nixon", fr: "Rob Nixon" }
+};
+
+const WORK_TRANSLATIONS = {
+  "《诗学》": { en: "Poetics", fr: "Poétique" },
+  "《诗艺》": { en: "Ars Poetica", fr: "Art poétique" },
+  "《俄狄浦斯王》": { en: "Oedipus Rex", fr: "Œdipe roi" },
+  "《文心雕龙》": { en: "The Literary Mind and the Carving of Dragons", fr: "L’Esprit littéraire et la sculpture des dragons" },
+  "《人间词话》": { en: "Poetic Remarks in the Human World", fr: "Notes poétiques du monde humain" },
+  "《呐喊》": { en: "Call to Arms", fr: "Cris" },
+  "《抒情歌谣集》": { en: "Lyrical Ballads", fr: "Ballades lyriques" },
+  "《弗兰肯斯坦》": { en: "Frankenstein", fr: "Frankenstein" },
+  "《唐璜》": { en: "Don Juan", fr: "Don Juan" },
+  "《高老头》": { en: "Le Père Goriot", fr: "Le Père Goriot" },
+  "《安娜·卡列尼娜》": { en: "Anna Karenina", fr: "Anna Karénine" },
+  "《萌芽》": { en: "Germinal", fr: "Germinal" },
+  "《到灯塔去》": { en: "To the Lighthouse", fr: "Vers le phare" },
+  "《荒原》": { en: "The Waste Land", fr: "La Terre vaine" },
+  "《变形记》": { en: "The Metamorphosis", fr: "La Métamorphose" },
+  "《作为手法的艺术》": { en: "Art as Technique", fr: "L’art comme procédé" },
+  "《文学理论》": { en: "Theory of Literature", fr: "Théorie de la littérature" },
+  "《陀思妥耶夫斯基诗学问题》": { en: "Problems of Dostoevsky’s Poetics", fr: "Problèmes de la poétique de Dostoïevski" },
+  "《梦的解析》": { en: "The Interpretation of Dreams", fr: "L’Interprétation du rêve" },
+  "《精神分析四个基本概念》": { en: "The Four Fundamental Concepts of Psychoanalysis", fr: "Les quatre concepts fondamentaux de la psychanalyse" },
+  "《哈姆雷特》": { en: "Hamlet", fr: "Hamlet" },
+  "《政治无意识》": { en: "The Political Unconscious", fr: "L’Inconscient politique" },
+  "《历史与阶级意识》": { en: "History and Class Consciousness", fr: "Histoire et conscience de classe" },
+  "《共产党宣言》": { en: "The Communist Manifesto", fr: "Le Manifeste du parti communiste" },
+  "《普通语言学教程》": { en: "Course in General Linguistics", fr: "Cours de linguistique générale" },
+  "《神话学》": { en: "Mythologies", fr: "Mythologies" },
+  "《叙事话语》": { en: "Narrative Discourse", fr: "Discours du récit" },
+  "《论文字学》": { en: "Of Grammatology", fr: "De la grammatologie" },
+  "《规训与惩罚》": { en: "Discipline and Punish", fr: "Surveiller et punir" },
+  "《作者之死》": { en: "The Death of the Author", fr: "La mort de l’auteur" },
+  "《走向接受美学》": { en: "Toward an Aesthetic of Reception", fr: "Pour une esthétique de la réception" },
+  "《阅读行为》": { en: "The Act of Reading", fr: "L’acte de lecture" },
+  "《这班里有文本吗》": { en: "Is There a Text in This Class?", fr: "Y a-t-il un texte dans cette classe?" },
+  "《第二性》": { en: "The Second Sex", fr: "Le Deuxième Sexe" },
+  "《性别麻烦》": { en: "Gender Trouble", fr: "Trouble dans le genre" },
+  "《宠儿》": { en: "Beloved", fr: "Beloved" },
+  "《东方学》": { en: "Orientalism", fr: "L’Orientalisme" },
+  "《底层能说话吗？》": { en: "Can the Subaltern Speak?", fr: "Les subalternes peuvent-elles parler?" },
+  "《瓦解》": { en: "Things Fall Apart", fr: "Le Monde s’effondre" },
+  "《文艺复兴自我塑造》": { en: "Renaissance Self-Fashioning", fr: "Renaissance Self-Fashioning" },
+  "《莎士比亚的协商》": { en: "Shakespearean Negotiations", fr: "Shakespearean Negotiations" },
+  "《文化与社会》": { en: "Culture and Society", fr: "Culture and Society" },
+  "《后现代状况》": { en: "The Postmodern Condition", fr: "La Condition postmoderne" },
+  "《拟像与仿真》": { en: "Simulacra and Simulation", fr: "Simulacres et simulation" },
+  "《小径分岔的花园》": { en: "The Garden of Forking Paths", fr: "Le Jardin aux sentiers qui bifurquent" },
+  "《寂静的春天》": { en: "Silent Spring", fr: "Printemps silencieux" },
+  "《环境想象》": { en: "The Environmental Imagination", fr: "L’imagination environnementale" },
+  "《缓慢的暴力》": { en: "Slow Violence", fr: "La violence lente" }
+};
+
+const KEYWORD_TRANSLATIONS = {
+  "诗言志": { en: "poetry expresses intent", fr: "la poésie exprime l’intention" },
+  "兴观群怨": { en: "affect, observation and critique", fr: "émotion, observation et critique" },
+  "风骨": { en: "force and bone", fr: "force et ossature" },
+  "意境": { en: "yijing", fr: "yijing" },
+  "神韵": { en: "spiritual resonance", fr: "résonance spirituelle" }
+};
+
+const CONTENT_PROFILES = {
+  en: {
+    "classical-poetics": { scene: "the first theatre of genre, action and rhetorical judgment", focus: "mimesis, plot causality and cathartic effect", exemplar: "Oedipus Rex", caseNote: "the search for knowledge becomes self-recognition, so reversal and discovery fuse into tragic necessity", stakes: "why literary form can educate emotion without becoming simple moral instruction" },
+    "chinese-poetics": { scene: "a corridor of poetry, painting, history and self-cultivation", focus: "intent, scene, resonance and the moral pressure of poetic language", exemplar: "Du Fu’s Spring View", caseNote: "private grief and national rupture are compressed into dense images rather than abstract statement", stakes: "how yijing turns landscape into an ethical and affective field" },
+    "romanticism": { scene: "storms, ruins, mountains and self-conscious imagination", focus: "creative imagination, sublime experience and rebellious subjectivity", exemplar: "Frankenstein", caseNote: "scientific creation becomes a fable of responsibility, loneliness and modern alienation", stakes: "how personal feeling becomes a public form of historical dissent" },
+    "realism-naturalism": { scene: "cities, markets, households and desire mapped as social anatomy", focus: "social totality, typical characters and environmental pressure", exemplar: "Le Père Goriot", caseNote: "a boarding house condenses Parisian class hierarchy and the invasion of money into family feeling", stakes: "how details of space, object and profession expose invisible social structures" },
+    "modernism-symbolism": { scene: "broken time, interior monologue and hidden symbolic systems", focus: "formal rupture, stream of consciousness and mythic ordering", exemplar: "The Waste Land", caseNote: "fragments of quotation convert civilizational crisis into textual montage", stakes: "why difficult form can be an ethical answer to modern dislocation" },
+    "russian-formalism": { scene: "a workshop of devices, estrangement and narrative mechanics", focus: "literariness, defamiliarization and the autonomy of form", exemplar: "Art as Technique", caseNote: "habitual perception is interrupted so objects become newly visible", stakes: "how technique changes perception before it communicates doctrine" },
+    "psychoanalysis": { scene: "dream chambers, symptoms and divided voices", focus: "unconscious desire, repression and symbolic substitution", exemplar: "Hamlet", caseNote: "delay, mourning and speech acts become symptoms rather than mere plot devices", stakes: "how literature stages what a culture cannot directly say" },
+    "marxism": { scene: "factory, market, class conflict and ideological theatre", focus: "class struggle, ideology and historical totality", exemplar: "The Political Unconscious", caseNote: "narrative form becomes a socially symbolic act that resolves contradictions in imaginary form", stakes: "how texts register material history even when they appear private or aesthetic" },
+    "structuralism": { scene: "a language observatory of signs, codes and narrative grammar", focus: "systems of difference, signification and structural relation", exemplar: "Course in General Linguistics", caseNote: "meaning arises from difference inside a system rather than from isolated words", stakes: "how hidden codes make individual texts intelligible" },
+    "poststructuralism": { scene: "a shifting archive where authorship, power and language destabilize one another", focus: "différance, discourse, power and textual instability", exemplar: "Of Grammatology", caseNote: "writing reveals that presence is already mediated by traces and substitutions", stakes: "how interpretation becomes alert to exclusions, margins and unstable authority" },
+    "reader-response": { scene: "a reading room where meaning happens between page and horizon", focus: "readerly activity, interpretive communities and expectation", exemplar: "The Act of Reading", caseNote: "gaps in the text invite readers to assemble continuity and test assumptions", stakes: "why meaning is produced in use, not stored unchanged inside the work" },
+    "feminism-queer": { scene: "a public forum of bodies, voices, gender norms and counter-memory", focus: "gendered power, embodied narration and performativity", exemplar: "Gender Trouble", caseNote: "gender appears as repeated performance rather than a natural essence", stakes: "how literature can reveal, resist and remake social scripts of identity" },
+    "postcolonial": { scene: "ports, colonies, archives and diasporic languages", focus: "empire, subaltern voice, hybridity and cultural translation", exemplar: "Things Fall Apart", caseNote: "colonial encounter is read through both local narrative worlds and imperial disruption", stakes: "who gets to speak, translate and define the world in literary history" },
+    "new-historicism": { scene: "a cabinet of anecdotes, rituals, documents and staged power", focus: "cultural poetics, circulation of power and archival detail", exemplar: "Renaissance Self-Fashioning", caseNote: "identity is shaped through courtly, religious and theatrical systems rather than pure interiority", stakes: "how literary texts exchange energy with non-literary practices" },
+    "postmodernism": { scene: "mirrors, media loops, pastiche and labyrinthine fictions", focus: "simulation, metafiction, parody and the collapse of grand narratives", exemplar: "The Garden of Forking Paths", caseNote: "plot becomes a model of branching time, textual games and unstable reality", stakes: "how late media culture changes truth, memory and historical narration" },
+    "ecocriticism-world": { scene: "planetary weather, forests, toxins and nonhuman agencies", focus: "Anthropocene scale, environmental justice and more-than-human worlds", exemplar: "Silent Spring", caseNote: "scientific evidence is shaped into public narrative that changes environmental consciousness", stakes: "how literature teaches readers to sense slow violence and planetary interdependence" }
+  },
+  fr: {
+    "classical-poetics": { scene: "le premier théâtre du genre, de l’action et du jugement rhétorique", focus: "la mimèsis, la causalité de l’intrigue et l’effet cathartique", exemplar: "Œdipe roi", caseNote: "la quête du savoir devient reconnaissance de soi, faisant fusionner péripétie et découverte", stakes: "pourquoi la forme littéraire peut éduquer l’émotion sans devenir simple morale" },
+    "chinese-poetics": { scene: "un couloir de poésie, peinture, histoire et cultivation de soi", focus: "l’intention, la scène, la résonance et la pression morale du langage poétique", exemplar: "Vue de printemps de Du Fu", caseNote: "deuil privé et ruine nationale se condensent dans des images denses", stakes: "comment le yijing transforme le paysage en champ éthique et affectif" },
+    "romanticism": { scene: "tempêtes, ruines, montagnes et imagination de soi", focus: "l’imagination créatrice, le sublime et la subjectivité rebelle", exemplar: "Frankenstein", caseNote: "la création scientifique devient fable de responsabilité, solitude et aliénation moderne", stakes: "comment le sentiment individuel devient forme publique de dissidence historique" },
+    "realism-naturalism": { scene: "villes, marchés, familles et désirs comme anatomie sociale", focus: "la totalité sociale, les personnages typiques et la pression du milieu", exemplar: "Le Père Goriot", caseNote: "la pension condense la hiérarchie parisienne et l’invasion de l’argent dans l’affect familial", stakes: "comment objets, espaces et métiers exposent des structures sociales invisibles" },
+    "modernism-symbolism": { scene: "temps brisé, monologue intérieur et systèmes symboliques cachés", focus: "la rupture formelle, le flux de conscience et l’ordre mythique", exemplar: "La Terre vaine", caseNote: "les fragments de citation transforment la crise de civilisation en montage textuel", stakes: "pourquoi la difficulté formelle peut répondre éthiquement à la dislocation moderne" },
+    "russian-formalism": { scene: "un atelier de procédés, d’étrangeté et de mécanique narrative", focus: "la littérarité, la défamiliarisation et l’autonomie de la forme", exemplar: "L’art comme procédé", caseNote: "la perception habituelle est interrompue afin que les objets redeviennent visibles", stakes: "comment la technique modifie la perception avant de transmettre une doctrine" },
+    "psychoanalysis": { scene: "chambres de rêves, symptômes et voix divisées", focus: "le désir inconscient, le refoulement et la substitution symbolique", exemplar: "Hamlet", caseNote: "retard, deuil et parole deviennent symptômes plutôt que simples moteurs d’intrigue", stakes: "comment la littérature met en scène ce qu’une culture ne peut dire directement" },
+    "marxism": { scene: "usine, marché, conflit de classes et théâtre idéologique", focus: "lutte de classes, idéologie et totalité historique", exemplar: "L’Inconscient politique", caseNote: "la forme narrative agit comme acte symbolique social résolvant imaginairement des contradictions", stakes: "comment les textes enregistrent l’histoire matérielle sous l’apparence de l’intime ou de l’esthétique" },
+    "structuralism": { scene: "un observatoire des signes, codes et grammaires narratives", focus: "les systèmes de différence, la signification et la relation structurale", exemplar: "Cours de linguistique générale", caseNote: "le sens naît des différences dans un système plutôt que des mots isolés", stakes: "comment les codes cachés rendent les textes singuliers intelligibles" },
+    "poststructuralism": { scene: "une archive mouvante où auteur, pouvoir et langue se déstabilisent", focus: "différance, discours, pouvoir et instabilité textuelle", exemplar: "De la grammatologie", caseNote: "l’écriture montre que la présence est déjà médiatisée par traces et substitutions", stakes: "comment l’interprétation devient attentive aux exclusions, marges et autorités instables" },
+    "reader-response": { scene: "une salle de lecture où le sens advient entre page et horizon", focus: "l’activité du lecteur, les communautés interprétatives et l’attente", exemplar: "L’acte de lecture", caseNote: "les blancs du texte invitent le lecteur à construire continuité et hypothèses", stakes: "pourquoi le sens se produit dans l’usage, et non comme contenu immobile" },
+    "feminism-queer": { scene: "un forum de corps, voix, normes de genre et contre-mémoires", focus: "le pouvoir genré, le récit incarné et la performativité", exemplar: "Trouble dans le genre", caseNote: "le genre apparaît comme performance répétée plutôt que comme essence naturelle", stakes: "comment la littérature révèle, conteste et refait les scripts sociaux de l’identité" },
+    "postcolonial": { scene: "ports, colonies, archives et langues diasporiques", focus: "empire, voix subalterne, hybridité et traduction culturelle", exemplar: "Le Monde s’effondre", caseNote: "la rencontre coloniale se lit à travers un monde narratif local et sa rupture impériale", stakes: "qui peut parler, traduire et définir le monde dans l’histoire littéraire" },
+    "new-historicism": { scene: "un cabinet d’anecdotes, rituels, documents et pouvoir mis en scène", focus: "poétique culturelle, circulation du pouvoir et détail d’archive", exemplar: "Renaissance Self-Fashioning", caseNote: "l’identité se façonne par les systèmes de cour, religion et théâtre", stakes: "comment les textes échangent de l’énergie avec des pratiques non littéraires" },
+    "postmodernism": { scene: "miroirs, boucles médiatiques, pastiche et fictions labyrinthiques", focus: "simulation, métafiction, parodie et effondrement des grands récits", exemplar: "Le Jardin aux sentiers qui bifurquent", caseNote: "l’intrigue devient modèle de temps ramifié, jeu textuel et réalité instable", stakes: "comment la culture médiatique tardive transforme vérité, mémoire et récit historique" },
+    "ecocriticism-world": { scene: "météo planétaire, forêts, toxines et agents non humains", focus: "l’échelle de l’Anthropocène, la justice environnementale et les mondes plus-qu’humains", exemplar: "Printemps silencieux", caseNote: "la preuve scientifique devient récit public capable de transformer la conscience écologique", stakes: "comment la littérature apprend à sentir la violence lente et l’interdépendance planétaire" }
+  }
+};
+
 const MOVEMENT_LOCATIONS = {
   "classical-poetics": { lat: 37.98, lon: 23.72, label: "雅典 / 地中海诗学源头" },
   "chinese-poetics": { lat: 34.34, lon: 108.94, label: "长安 / 中国诗学传统" },
@@ -904,6 +1439,45 @@ const MOVEMENT_LOCATIONS = {
   "new-historicism": { lat: 37.87, lon: -122.27, label: "伯克利 / 新历史主义" },
   "postmodernism": { lat: 40.71, lon: -74.01, label: "纽约-巴黎 / 后现代文化" },
   "ecocriticism-world": { lat: 42.44, lon: -71.34, label: "瓦尔登湖 / 生态批评源流" }
+};
+
+const LOCATION_TRANSLATIONS = {
+  en: {
+    "classical-poetics": "Athens / Mediterranean poetics",
+    "chinese-poetics": "Chang’an / Chinese poetic tradition",
+    "romanticism": "English Lake District / Romantic nature",
+    "realism-naturalism": "Paris / Realist city",
+    "modernism-symbolism": "London-Paris / Modernist axis",
+    "russian-formalism": "Petrograd / Formalist circles",
+    "psychoanalysis": "Vienna / Psychoanalytic scene",
+    "marxism": "London / Historical-materialist context",
+    "structuralism": "Geneva-Paris / Structural linguistics",
+    "poststructuralism": "Paris / Poststructuralist debates",
+    "reader-response": "Konstanz / Reception aesthetics",
+    "feminism-queer": "New York / Public scene of gender theory",
+    "postcolonial": "Kolkata / Postcolonial knowledge site",
+    "new-historicism": "Berkeley / New Historicism",
+    "postmodernism": "New York-Paris / Postmodern culture",
+    "ecocriticism-world": "Walden Pond / Ecocritical lineage"
+  },
+  fr: {
+    "classical-poetics": "Athènes / poétique méditerranéenne",
+    "chinese-poetics": "Chang’an / tradition poétique chinoise",
+    "romanticism": "Lake District anglais / nature romantique",
+    "realism-naturalism": "Paris / ville réaliste",
+    "modernism-symbolism": "Londres-Paris / axe moderniste",
+    "russian-formalism": "Petrograd / cercles formalistes",
+    "psychoanalysis": "Vienne / scène psychanalytique",
+    "marxism": "Londres / contexte matérialiste historique",
+    "structuralism": "Genève-Paris / linguistique structurale",
+    "poststructuralism": "Paris / débats poststructuralistes",
+    "reader-response": "Constance / esthétique de la réception",
+    "feminism-queer": "New York / scène publique des théories du genre",
+    "postcolonial": "Calcutta / site du savoir postcolonial",
+    "new-historicism": "Berkeley / nouveau historicisme",
+    "postmodernism": "New York-Paris / culture postmoderne",
+    "ecocriticism-world": "Walden Pond / lignée écocritique"
+  }
 };
 
 const SOURCE_READING_LIBRARY = {
@@ -1003,6 +1577,23 @@ const GRAPH_GROUPS = [
   { key: "world", label: "世界与生态", x: 70, y: 69, color: "#f2d88f" }
 ];
 
+const GRAPH_GROUP_TRANSLATIONS = {
+  en: {
+    poetics: "Poetic Lineages",
+    form: "Form And Language",
+    subject: "Subject And Desire",
+    history: "History And Power",
+    world: "World And Ecology"
+  },
+  fr: {
+    poetics: "Lignées poétiques",
+    form: "Forme et langue",
+    subject: "Sujet et désir",
+    history: "Histoire et pouvoir",
+    world: "Monde et écologie"
+  }
+};
+
 const GRAPH_POSITIONS = {
   "classical-poetics": { x: 16, y: 33, group: "poetics" },
   "chinese-poetics": { x: 28, y: 28, group: "poetics" },
@@ -1030,6 +1621,23 @@ const GRAPH_EDGE_TYPES = {
   world: { label: "世界生态", color: "#f2d88f" }
 };
 
+const GRAPH_EDGE_TRANSLATIONS = {
+  en: {
+    poetics: "poetic lineage",
+    form: "formal language",
+    subject: "subject and desire",
+    history: "history and power",
+    world: "world ecology"
+  },
+  fr: {
+    poetics: "lignée poétique",
+    form: "langage formel",
+    subject: "sujet et désir",
+    history: "histoire et pouvoir",
+    world: "écologie du monde"
+  }
+};
+
 function graphEdgeType(source, target) {
   const ids = [source.id, target.id];
   if (ids.some((id) => ["marxism", "new-historicism", "postcolonial"].includes(id))) return "history";
@@ -1046,8 +1654,190 @@ function t(key) {
   return UI_COPY[state.language]?.[key] || UI_COPY.zh[key] || key;
 }
 
+function fmt(template, values = {}) {
+  return String(template).replace(/\{(\w+)\}/g, (_, key) => values[key] ?? "");
+}
+
+function baseMovementText(movement, key, language = state.language) {
+  return MOVEMENT_TRANSLATIONS[language]?.[movement.id]?.[key] || movement[key];
+}
+
+function translatePerson(name) {
+  return PERSON_TRANSLATIONS[name]?.[state.language] || name;
+}
+
+function translateWorkTitle(title) {
+  return WORK_TRANSLATIONS[title]?.[state.language] || title;
+}
+
+function translateKeywords(movement) {
+  if (state.language === "zh") return movement.keywords;
+  return movement.keywords.map((keyword) => KEYWORD_TRANSLATIONS[keyword]?.[state.language] || keyword);
+}
+
+function localizedLocationLabel(movement) {
+  return LOCATION_TRANSLATIONS[state.language]?.[movement.id] || MOVEMENT_LOCATIONS[movement.id]?.label || baseMovementText(movement, "region");
+}
+
+function localizedGraphGroup(group) {
+  return GRAPH_GROUP_TRANSLATIONS[state.language]?.[group.key] || group.label;
+}
+
+function graphEdgeMeta(type) {
+  const meta = GRAPH_EDGE_TYPES[type] || GRAPH_EDGE_TYPES.poetics;
+  return {
+    ...meta,
+    label: GRAPH_EDGE_TRANSLATIONS[state.language]?.[type] || meta.label
+  };
+}
+
+function zhExpandedContent(movement) {
+  const title = baseMovementText(movement, "title", "zh");
+  const relationNames = movement.relations.slice(0, 3).map((id) => baseMovementText(movementById(id), "title", "zh")).join("、");
+  const keywords = movement.keywords.slice(0, 4).join("、");
+  return {
+    intro: movement.intro,
+    door: movement.door,
+    deepDive: [
+      ...movement.deepDive,
+      `进一步阅读${title}时，最好把它看成一组问题工具，而不是一个固定答案：它会要求读者反复追问文本怎样组织感知、历史、身份和权力。`,
+      `高级运用时，可以把${keywords}作为观察线索，和${relationNames}交叉比较：这样能看到同一部作品在不同理论镜头下呈现出的层次差异。`
+    ],
+    coreIdeas: [
+      ...movement.coreIdeas,
+      "理论的价值不在替文本贴标签，而在把看似自然的叙事、语言和阅读习惯重新变得可分析。",
+      "任何理论都有盲区：它强调的维度越清晰，越需要与相邻理论互相校正。"
+    ],
+    method: [
+      ...movement.method,
+      "把关键段落拆成叙述位置、语言形式、历史压力、读者预期四个层面分别标注。",
+      "最后写一个反例：找出这套理论解释力不足的文本瞬间，反而能更准确理解它的边界。"
+    ],
+    cases: [
+      ...movement.cases,
+      `对比阅读：把${movement.works[0]?.title || "核心作品"}与${movement.works[1]?.title || "另一部作品"}并置，观察同一概念在不同文体中的变形。`,
+      "课堂/研究案例：选取一个短段落，先做无理论细读，再引入本理论重读，比较新增的证据和删减的盲点。"
+    ]
+  };
+}
+
+function localizedMovement(movement) {
+  if (state.language === "zh") {
+    const expanded = zhExpandedContent(movement);
+    return {
+      ...movement,
+      ...expanded,
+      title: baseMovementText(movement, "title", "zh"),
+      era: baseMovementText(movement, "era", "zh"),
+      region: baseMovementText(movement, "region", "zh"),
+      lens: baseMovementText(movement, "lens", "zh"),
+      keywords: translateKeywords(movement),
+      figures: movement.figures.map((figure) => ({ ...figure })),
+      works: movement.works.map((work) => ({ ...work }))
+    };
+  }
+
+  const language = state.language;
+  const profile = CONTENT_PROFILES[language]?.[movement.id] || CONTENT_PROFILES.en[movement.id];
+  const title = baseMovementText(movement, "title", language);
+  const era = baseMovementText(movement, "era", language);
+  const region = baseMovementText(movement, "region", language);
+  const lens = baseMovementText(movement, "lens", language);
+  const keywords = translateKeywords(movement);
+  const related = movement.relations.slice(0, 3).map((id) => baseMovementText(movementById(id), "title", language)).join(language === "fr" ? " / " : " / ");
+  const works = movement.works.map((work, index) => ({
+    ...work,
+    title: translateWorkTitle(work.title),
+    author: translatePerson(work.author),
+    why: language === "fr"
+      ? `${index === 0 ? "Point d’entrée canonique" : "Contrepoint utile"} pour observer ${profile.focus}.`
+      : `${index === 0 ? "Canonical entry point" : "Useful counterpoint"} for observing ${profile.focus}.`
+  }));
+  const figures = movement.figures.map((figure) => ({
+    ...figure,
+    name: translatePerson(figure.name),
+    role: language === "fr"
+      ? `Figure clé pour ${title}: ${profile.focus}.`
+      : `Key figure for ${title}: ${profile.focus}.`
+  }));
+
+  if (language === "fr") {
+    return {
+      ...movement,
+      title,
+      era,
+      region,
+      lens,
+      keywords,
+      intro: `${title} étudie ${profile.focus}. Né dans ${era}, ce courant transforme ${region} en méthode de lecture capable d’entrer dans les formes, les voix, les archives et les conflits du texte.`,
+      door: `Ouvrir ce livre, c’est entrer dans ${profile.scene}.`,
+      deepDive: [
+        `${title} ne fonctionne pas comme une étiquette décorative. Il propose un protocole: repérer les opérations textuelles, les replacer dans leurs conditions historiques, puis vérifier ce que cette lecture rend visible ou laisse dans l’ombre.`,
+        `Son exemple d’entrée est ${profile.exemplar}: ${profile.caseNote}. Le cas permet de passer de la notion abstraite à une preuve lisible dans la scène, l’image, la voix ou le montage.`,
+        `L’enjeu est ${profile.stakes}. Une lecture avancée compare ensuite ${title} avec ${related}, afin de mesurer ce que chaque théorie gagne et perd.`
+      ],
+      coreIdeas: [
+        `${lens.split("·")[0].trim()} devient une opération textuelle observable, et non un simple thème.`,
+        `La méthode demande de suivre ensemble forme, histoire, sujet et lecteur.`,
+        `Le texte est lu comme une machine de relations: scènes, voix, genres, institutions et affects y circulent.`,
+        `La force de ${title} apparaît surtout lorsqu’on teste aussi ses limites par un contre-exemple.`
+      ],
+      method: [
+        `Choisir une scène dense et y marquer les indices de ${keywords.slice(0, 3).join(", ")}.`,
+        "Distinguer ce qui relève de la forme, de l’histoire, de l’idéologie, du corps, de la voix et de l’espace.",
+        `Comparer le résultat avec ${related}; les écarts révèlent la portée réelle de la méthode.`,
+        "Formuler ensuite une interprétation courte qui cite des preuves textuelles précises plutôt que des slogans théoriques."
+      ],
+      cases: [
+        `${profile.exemplar}: ${profile.caseNote}.`,
+        `${works[0]?.title || title}: lire une scène comme laboratoire de ${profile.focus}.`,
+        `Contre-exemple conseillé: utiliser ${works[1]?.title || "une œuvre voisine"} pour tester les zones d’ombre de la théorie.`,
+        "Exercice: refaire la lecture en changeant de narrateur, de lecteur ou d’archive; noter ce qui devient visible."
+      ],
+      figures,
+      works
+    };
+  }
+
+  return {
+    ...movement,
+    title,
+    era,
+    region,
+    lens,
+    keywords,
+    intro: `${title} studies ${profile.focus}. Emerging across ${era}, it turns the literary practices of ${region} into a reading method for entering form, voice, archive and conflict.`,
+    door: `Open this volume to enter ${profile.scene}.`,
+    deepDive: [
+      `${title} is not a decorative label. It is a protocol: identify textual operations, place them inside historical conditions, then ask what the reading newly reveals or obscures.`,
+      `A strong entry case is ${profile.exemplar}: ${profile.caseNote}. The example moves theory from abstraction into evidence visible in scene, image, voice or montage.`,
+      `The stakes are ${profile.stakes}. Advanced reading compares ${title} with ${related}, because neighboring theories expose both the power and the blind spots of the method.`
+    ],
+    coreIdeas: [
+      `${lens.split("·")[0].trim()} is treated as an observable textual operation, not merely a theme.`,
+      "The method reads form, history, subject and reader together instead of isolating one layer.",
+      "The text becomes a machine of relations: scenes, voices, genres, institutions and affects circulate through it.",
+      `${title} becomes strongest when its limits are tested through counter-examples.`
+    ],
+    method: [
+      `Choose a dense scene and mark traces of ${keywords.slice(0, 3).join(", ")}.`,
+      "Separate evidence into form, history, ideology, body, voice and space.",
+      `Compare the result with ${related}; the differences reveal the method’s real range.`,
+      "Write a concise interpretation that cites specific textual evidence rather than theoretical slogans."
+    ],
+    cases: [
+      `${profile.exemplar}: ${profile.caseNote}.`,
+      `${works[0]?.title || title}: read one scene as a laboratory for ${profile.focus}.`,
+      `Counter-example: use ${works[1]?.title || "a neighboring work"} to test where the theory stops explaining.`,
+      "Exercise: rerun the reading by changing narrator, reader or archive; note what becomes newly visible."
+    ],
+    figures,
+    works
+  };
+}
+
 function movementText(movement, key) {
-  return MOVEMENT_TRANSLATIONS[state.language]?.[movement.id]?.[key] || movement[key];
+  return localizedMovement(movement)[key] ?? baseMovementText(movement, key);
 }
 
 function cssVarsFor(movement) {
@@ -1060,23 +1850,26 @@ function movementById(id) {
 
 function renderBooks() {
   const track = $("#bookTrack");
-  track.innerHTML = MOVEMENTS.map((movement, index) => `
+  track.innerHTML = MOVEMENTS.map((movement, index) => {
+    const local = localizedMovement(movement);
+    return `
     <button class="book tilt-target${index === 0 ? " is-active" : ""}" type="button" data-open="${movement.id}" style="${cssVarsFor(movement)}">
-      <p class="book__kicker">${String(index + 1).padStart(2, "0")} · ${movementText(movement, "era")}</p>
-      <h3>${movementText(movement, "title")}</h3>
+      <p class="book__kicker">${String(index + 1).padStart(2, "0")} · ${local.era}</p>
+      <h3>${local.title}</h3>
       <div class="book__footer">
-        ${movement.keywords.slice(0, 3).map((keyword) => `<span>${keyword}</span>`).join("")}
+        ${local.keywords.slice(0, 3).map((keyword) => `<span>${keyword}</span>`).join("")}
       </div>
     </button>
-  `).join("");
+  `;
+  }).join("");
 }
 
 function renderArchive() {
   $("#archiveGrid").innerHTML = MOVEMENTS.map((movement) => `
     <button class="archive-card magnetic" type="button" data-open="${movement.id}" style="${cssVarsFor(movement)}">
-      <span class="archive-card__meta">${movementText(movement, "era")} · ${movementText(movement, "region")}</span>
-      <h3>${movementText(movement, "title")}</h3>
-      <p>${movement.intro}</p>
+      <span class="archive-card__meta">${localizedMovement(movement).era} · ${localizedMovement(movement).region}</span>
+      <h3>${localizedMovement(movement).title}</h3>
+      <p>${localizedMovement(movement).intro}</p>
     </button>
   `).join("");
 }
@@ -1106,7 +1899,7 @@ function renderOrbitMap() {
   });
 
   const edgeMarkup = edges.map((edge) => {
-    const meta = GRAPH_EDGE_TYPES[edge.type];
+    const meta = graphEdgeMeta(edge.type);
     const midX = (edge.from.x + edge.to.x) / 2;
     const midY = (edge.from.y + edge.to.y) / 2;
     return `
@@ -1119,21 +1912,24 @@ function renderOrbitMap() {
 
   const groupMarkup = GRAPH_GROUPS.map((group) => `
     <span class="graph-cluster graph-cluster--${group.key}" style="left:${group.x}%;top:${group.y}%;--cluster-color:${group.color}">
-      ${group.label}
+      ${localizedGraphGroup(group)}
     </span>
   `).join("");
 
-  const nodeMarkup = nodes.map(({ movement, x, y, group }) => `
+  const nodeMarkup = nodes.map(({ movement, x, y, group }) => {
+    const local = localizedMovement(movement);
+    return `
     <button class="orbit-node magnetic orbit-node--${group}" type="button" data-open="${movement.id}" style="left:${x}%;top:${y}%;${cssVarsFor(movement)}">
-      <span>${movementText(movement, "title")}</span>
-      <em>${movementText(movement, "lens").split("·")[0].trim()}</em>
+      <span>${local.title}</span>
+      <em>${local.lens.split("·")[0].trim()}</em>
     </button>
-  `).join("");
+  `;
+  }).join("");
 
   const legendMarkup = `
-    <div class="graph-legend" aria-label="理论关系图例">
+    <div class="graph-legend" aria-label="${t("graphLegend")}">
       ${Object.entries(GRAPH_EDGE_TYPES).map(([key, meta]) => `
-        <span style="--edge-color:${meta.color}"><i></i>${meta.label}</span>
+        <span style="--edge-color:${meta.color}"><i></i>${graphEdgeMeta(key).label}</span>
       `).join("")}
     </div>
   `;
@@ -1212,8 +2008,14 @@ function setupBookRail() {
 function applyLanguage(language) {
   state.language = UI_COPY[language] ? language : "zh";
   document.documentElement.lang = state.language === "zh" ? "zh-CN" : (state.language === "fr" ? "fr" : "en");
+  document.title = t("documentTitle");
+  document.querySelector("meta[name='description']")?.setAttribute("content", t("documentDescription"));
+  document.documentElement.style.setProperty("--gate-scroll-copy", `"${t("gateScrollHint")}"`);
   $$("[data-i18n]").forEach((node) => {
     node.textContent = t(node.dataset.i18n);
+  });
+  $$("[data-i18n-aria]").forEach((node) => {
+    node.setAttribute("aria-label", t(node.dataset.i18nAria));
   });
   $$("[data-lang]").forEach((button) => {
     button.classList.toggle("is-active", button.dataset.lang === state.language);
@@ -1224,13 +2026,15 @@ function applyLanguage(language) {
   setActiveBook(state.activeIndex);
   setupTilt();
   setupMagnetic();
+  cosmosController?.refreshLabels?.();
+  spaceGameController?.refreshCopy?.();
   if (state.worldOpen && state.currentWorldId) openWorld(state.currentWorldId);
 }
 
 function setupLanguageSwitcher() {
-  const switcher = $(".language-switcher");
-  if (!switcher) return;
-  switcher.addEventListener("click", (event) => {
+  if (setupLanguageSwitcher.bound) return;
+  setupLanguageSwitcher.bound = true;
+  document.addEventListener("click", (event) => {
     const button = event.target.closest("[data-lang]");
     if (!button || button.dataset.lang === state.language) return;
     applyLanguage(button.dataset.lang);
@@ -1242,7 +2046,7 @@ function setupLanguageSwitcher() {
 function figureMarkup(figure) {
   const initial = figure.name.slice(0, 1);
   const image = figure.image
-    ? `<img src="${figure.image}" alt="${figure.name} 肖像" loading="lazy" onerror="this.parentElement.classList.add('portrait-card--noimage');this.remove()">`
+    ? `<img src="${figure.image}" alt="${figure.name} ${t("portraitAlt")}" loading="lazy" onerror="this.parentElement.classList.add('portrait-card--noimage');this.remove()">`
     : "";
   return `
     <div class="portrait-card tilt-target${figure.image ? "" : " portrait-card--noimage"}" data-initial="${initial}">
@@ -1335,42 +2139,51 @@ function escapeAttribute(value) {
 }
 
 function researchMarkup(movement) {
-  const title = movementText(movement, "title");
-  const lens = movementText(movement, "lens");
-  const era = movementText(movement, "era");
-  const region = movementText(movement, "region");
-  const relations = movement.relations.map((id) => movementText(movementById(id), "title")).join("、");
+  const local = localizedMovement(movement);
+  const title = local.title;
+  const lens = local.lens;
+  const era = local.era;
+  const region = local.region;
+  const relations = movement.relations.map((id) => movementText(movementById(id), "title")).join(state.language === "zh" ? "、" : " / ");
+  const focusText = local.keywords.slice(0, 3).join(state.language === "zh" ? "、" : ", ");
+  const caseText = local.cases[0];
+  const cards = state.language === "zh"
+    ? [
+      { label: t("genealogy"), body: `${title}位于“${lens}”这条问题链中：它从${era}的历史经验出发，把${region}的文学实践转化为可迁移的阅读方法。` },
+      { label: t("analysisFocus"), body: `进入文本时，优先观察${focusText}如何改变叙事、语言、主体或历史关系，而不是只把理论当作概念标签。` },
+      { label: t("caseAdvance"), body: `${caseText} 这个案例适合当作入门样本，再与作品的文类、时代制度和读者接受互相参照。` },
+      { label: t("relationPath"), body: `它与${relations}形成可连续阅读的理论通道：一条通道追问形式，一条通道追问权力，另一条通道追问主体经验如何被文本组织。` }
+    ]
+    : (state.language === "fr"
+      ? [
+        { label: t("genealogy"), body: `${title} se situe dans la chaîne de problèmes « ${lens} »: il part de ${era} et convertit les pratiques de ${region} en méthode de lecture transférable.` },
+        { label: t("analysisFocus"), body: `Dans le texte, observez d’abord comment ${focusText} transforme narration, langue, sujet ou rapports historiques.` },
+        { label: t("caseAdvance"), body: `${caseText} Ce cas sert d’entrée avant de le comparer aux genres, institutions et réceptions.` },
+        { label: t("relationPath"), body: `Il dialogue avec ${relations}: une voie suit la forme, une autre le pouvoir, une troisième l’expérience subjective organisée par le texte.` }
+      ]
+      : [
+        { label: t("genealogy"), body: `${title} sits inside the problem chain of “${lens}”: it begins from ${era} and turns the literary practice of ${region} into a transferable reading method.` },
+        { label: t("analysisFocus"), body: `When entering a text, first observe how ${focusText} changes narration, language, subject position or historical relation.` },
+        { label: t("caseAdvance"), body: `${caseText} This case works as an entry sample before comparison with genre, institutions and reception.` },
+        { label: t("relationPath"), body: `It forms continuous pathways with ${relations}: one follows form, another power, and another the ways subject experience is organized by text.` }
+      ]);
   return `
     <section class="world-section world-section--deep">
       <h3>${t("researchDepth")}</h3>
       <div class="insight-grid">
-        <article>
-          <span>谱系位置</span>
-          <p>${title}位于“${lens}”这条问题链中：它从${era}的历史经验出发，把${region}的文学实践转化为可迁移的阅读方法。</p>
-        </article>
-        <article>
-          <span>分析焦点</span>
-          <p>进入文本时，优先观察${movement.keywords.slice(0, 3).join("、")}如何改变叙事、语言、主体或历史关系，而不是只把理论当作概念标签。</p>
-        </article>
-        <article>
-          <span>案例推进</span>
-          <p>${movement.cases[0]} 这个案例适合当作入门样本，再与作品的文类、时代制度和读者接受互相参照。</p>
-        </article>
-        <article>
-          <span>关联路径</span>
-          <p>它与${relations}形成可连续阅读的理论通道：一条通道追问形式，一条通道追问权力，另一条通道追问主体经验如何被文本组织。</p>
-        </article>
+        ${cards.map((card) => `<article><span>${card.label}</span><p>${card.body}</p></article>`).join("")}
       </div>
     </section>
   `;
 }
 
 function dossierLines(movement) {
-  const title = movementText(movement, "title");
-  const firstWork = movement.works[0];
-  const secondWork = movement.works[1] || movement.works[0];
+  const local = localizedMovement(movement);
+  const title = local.title;
+  const firstWork = local.works[0];
+  const secondWork = local.works[1] || local.works[0];
   const related = movement.relations.slice(0, 2).map((id) => movementText(movementById(id), "title")).join(" / ");
-  const keyTerms = movement.keywords.slice(0, 4).join(" · ");
+  const keyTerms = local.keywords.slice(0, 4).join(" · ");
 
   if (state.language === "en") {
     return {
@@ -1452,52 +2265,55 @@ function sourceDossierMarkup(movement) {
 }
 
 function buildQuiz(movement) {
+  const local = localizedMovement(movement);
   const related = movementById(movement.relations[0]);
   const unrelated = MOVEMENTS.find((item) => item.id !== movement.id && !movement.relations.includes(item.id)) || MOVEMENTS[0];
+  const relatedLocal = localizedMovement(related);
+  const unrelatedLocal = localizedMovement(unrelated);
   const raw = [
     {
-      question: `${movement.title}最核心的理论入口是什么？`,
+      question: fmt(t("quizCoreQuestion"), { title: local.title }),
       options: [
-        movement.coreIdeas[0],
-        "把作品意义完全还原为作者生平轶事。",
-        "只比较作品出版年代，暂时不看文本内部。",
-        "把文学作品当作没有历史和语言差异的透明故事。"
+        local.coreIdeas[0],
+        t("quizWrongBio"),
+        t("quizWrongDate"),
+        t("quizWrongTransparent")
       ],
       answer: 0,
-      explain: movement.coreIdeas[0]
+      explain: local.coreIdeas[0]
     },
     {
-      question: `使用${movement.title}读一部作品时，第一步更接近哪种做法？`,
+      question: fmt(t("quizMethodQuestion"), { title: local.title }),
       options: [
-        movement.method[0],
-        "先为作品打分，再寻找支持分数的证据。",
-        "跳过语言细节，只提炼一个抽象主题。",
-        "只查作者国籍和书名，避免进入段落结构。"
+        local.method[0],
+        t("quizWrongScore"),
+        t("quizWrongTheme"),
+        t("quizWrongMetadata")
       ],
       answer: 0,
-      explain: movement.method[0]
+      explain: local.method[0]
     },
     {
-      question: `下列哪一项最适合作为${movement.title}的文本案例？`,
+      question: fmt(t("quizCaseQuestion"), { title: local.title }),
       options: [
-        movement.cases[0],
-        "把所有文学作品都简化为市场销量排行榜。",
-        "只讨论封面颜色，不进入叙事和语言。",
-        "完全删除时代语境，只保留人物姓名。"
+        local.cases[0],
+        t("quizWrongMarket"),
+        t("quizWrongCover"),
+        t("quizWrongContext")
       ],
       answer: 0,
-      explain: movement.cases[0]
+      explain: local.cases[0]
     },
     {
-      question: `${movement.title}在星图中最直接牵引到哪一类相邻理论？`,
+      question: fmt(t("quizRelationQuestion"), { title: local.title }),
       options: [
-        related.title,
-        unrelated.title,
-        "与任何理论都没有关系。",
-        "只与自然科学实验方法相连。"
+        relatedLocal.title,
+        unrelatedLocal.title,
+        t("quizWrongNoRelation"),
+        t("quizWrongScience")
       ],
       answer: 0,
-      explain: `${movement.title}与${related.title}相连，可以帮助比较概念迁移、方法差异和历史连续性。`
+      explain: fmt(t("quizRelationExplain"), { title: local.title, related: relatedLocal.title })
     }
   ];
 
@@ -1558,7 +2374,7 @@ function setupQuiz(root) {
       const selected = $("input:checked", question);
       $$(".quiz-option", question).forEach((option) => option.classList.remove("is-correct", "is-wrong"));
       if (!selected) {
-        $(".quiz-feedback", question).textContent = "这一题还没有作答。";
+        $(".quiz-feedback", question).textContent = t("quizUnanswered");
         return;
       }
       answered += 1;
@@ -1568,16 +2384,20 @@ function setupQuiz(root) {
       selectedOption.classList.add(isCorrect ? "is-correct" : "is-wrong");
       const rightOption = $(`input[value="${answer}"]`, question)?.closest(".quiz-option");
       if (rightOption) rightOption.classList.add("is-correct");
-      $(".quiz-feedback", question).textContent = `${isCorrect ? "答对了" : "需要再看一遍"}：${question.dataset.explain}`;
+      $(".quiz-feedback", question).textContent = `${isCorrect ? t("quizCorrect") : t("quizReview")}: ${question.dataset.explain}`;
     });
 
     if (answered < questions.length) {
-      result.textContent = `已答 ${answered}/${questions.length}，还差 ${questions.length - answered} 题。`;
+      result.textContent = fmt(t("quizPartial"), { answered, total: questions.length, left: questions.length - answered });
       playSound("select");
       return;
     }
 
-    result.textContent = `核对完成：${correct}/${questions.length} 题正确。${correct === questions.length ? "你已经掌握这本书的主航道。" : "建议回到核心命题和文本案例再扫一遍。"}`;
+    result.textContent = fmt(t("quizComplete"), {
+      correct,
+      total: questions.length,
+      message: correct === questions.length ? t("quizPerfect") : t("quizRetry")
+    });
     playSound(correct === questions.length ? "success" : "book");
   };
 
@@ -1593,6 +2413,7 @@ function setupQuiz(root) {
 
 function openWorld(id) {
   const movement = movementById(id);
+  const local = localizedMovement(movement);
   state.currentWorldId = movement.id;
   const world = $("#world");
   const content = $("#worldContent");
@@ -1602,41 +2423,41 @@ function openWorld(id) {
   content.innerHTML = `
     <div class="world-hero">
       <div class="world-book-cover tilt-target" style="${cssVarsFor(movement)}">
-        <p class="world-kicker">${movementText(movement, "era")} · ${movementText(movement, "region")}</p>
-        <h2 id="worldTitle">${movementText(movement, "title")}</h2>
-        <p>${movement.door}</p>
+        <p class="world-kicker">${local.era} · ${local.region}</p>
+        <h2 id="worldTitle">${local.title}</h2>
+        <p>${local.door}</p>
         <div class="world-tag-row">
-          ${movement.keywords.map((keyword) => `<span>${keyword}</span>`).join("")}
+          ${local.keywords.map((keyword) => `<span>${keyword}</span>`).join("")}
         </div>
       </div>
       <div class="world-pages">
         <section class="world-section">
           <h3>${t("theoryEntry")}</h3>
-          <p>${movement.intro}</p>
-          ${movement.deepDive.map((paragraph) => `<p>${paragraph}</p>`).join("")}
+          <p>${local.intro}</p>
+          ${local.deepDive.map((paragraph) => `<p>${paragraph}</p>`).join("")}
         </section>
         <section class="world-section">
           <h3>${t("coreIdeas")}</h3>
-          <ul class="idea-list">${movement.coreIdeas.map((item) => `<li>${item}</li>`).join("")}</ul>
+          <ul class="idea-list">${local.coreIdeas.map((item) => `<li>${item}</li>`).join("")}</ul>
         </section>
         <section class="world-section">
           <h3>${t("method")}</h3>
-          <ol class="method-list">${movement.method.map((item) => `<li>${item}</li>`).join("")}</ol>
+          <ol class="method-list">${local.method.map((item) => `<li>${item}</li>`).join("")}</ol>
         </section>
         <section class="world-section">
           <h3>${t("cases")}</h3>
-          <ul class="case-list">${movement.cases.map((item) => `<li>${item}</li>`).join("")}</ul>
+          <ul class="case-list">${local.cases.map((item) => `<li>${item}</li>`).join("")}</ul>
         </section>
         ${researchMarkup(movement)}
         ${sourceDossierMarkup(movement)}
         <section class="world-section">
           <h3>${t("figures")}</h3>
-          <div class="portrait-grid">${movement.figures.map(figureMarkup).join("")}</div>
+          <div class="portrait-grid">${local.figures.map(figureMarkup).join("")}</div>
         </section>
         <section class="world-section">
           <h3>${t("works")}</h3>
           <div class="works-grid">
-            ${movement.works.map((work) => `
+            ${local.works.map((work) => `
               <div class="work-cover tilt-target" style="${cssVarsFor(movement)}">
                 <small>${work.author}</small>
                 <strong>${work.title}</strong>
@@ -1651,7 +2472,7 @@ function openWorld(id) {
           <div class="relation-row">
             ${movement.relations.map((relation) => {
               const target = movementById(relation);
-              return `<button type="button" data-open="${target.id}">${movementText(target, "title")}</button>`;
+              return `<button type="button" data-open="${target.id}">${localizedMovement(target).title}</button>`;
             }).join("")}
           </div>
         </section>
@@ -2131,6 +2952,7 @@ function paintCompassMedallion(ctx, x, y, radius, color) {
 }
 
 function makeBookTexture(movement, index) {
+  const local = localizedMovement(movement);
   const canvas = document.createElement("canvas");
   canvas.width = 420;
   canvas.height = 596;
@@ -2258,14 +3080,14 @@ function makeBookTexture(movement, index) {
   ctx.shadowBlur = 10;
   ctx.shadowOffsetY = 3;
   ctx.font = `900 ${Math.max(34, width * 0.118)}px 'Noto Serif SC', Cinzel, serif`;
-  wrapCanvasText(ctx, movement.title, width / 2, height * 0.47, width * 0.68, width * 0.128, 3);
+  wrapCanvasText(ctx, local.title, width / 2, height * 0.47, width * 0.68, width * 0.128, 3);
   ctx.shadowColor = "transparent";
   ctx.shadowBlur = 0;
   ctx.shadowOffsetY = 0;
 
   ctx.fillStyle = "rgba(246, 234, 200, 0.86)";
   ctx.font = `800 ${Math.max(13, width * 0.04)}px 'Noto Sans SC', sans-serif`;
-  wrapCanvasText(ctx, movement.era, width / 2, height * 0.79, width * 0.68, width * 0.054, 2);
+  wrapCanvasText(ctx, local.era, width / 2, height * 0.79, width * 0.68, width * 0.054, 2);
 
   paintCompassMedallion(ctx, width / 2, height * 0.87, width * 0.07, "rgba(226,183,101,0.86)");
 
@@ -2273,6 +3095,7 @@ function makeBookTexture(movement, index) {
 }
 
 function makeBookSpineTexture(movement, index = movementIndex(movement)) {
+  const local = localizedMovement(movement);
   const canvas = document.createElement("canvas");
   canvas.width = 84;
   canvas.height = 430;
@@ -2309,7 +3132,7 @@ function makeBookSpineTexture(movement, index = movementIndex(movement)) {
   ctx.fillStyle = "#F6EAC8";
   ctx.font = "900 19px 'Noto Serif SC', Cinzel, serif";
   ctx.textAlign = "left";
-  ctx.fillText(movement.title, 0, 0);
+  ctx.fillText(local.title, 0, 0);
   ctx.restore();
   return finishCanvasTexture(new THREE.CanvasTexture(canvas));
 }
@@ -2569,11 +3392,12 @@ function initThreeCosmos() {
     plume.scale.set(0.22, 0.32, 1);
     plume.position.set(0, 0, 0.075);
     marker.add(plume, halo, dot);
+    const local = localizedMovement(movement);
     dot.userData = {
       type: "location",
       movementId: movement.id,
-      title: movement.title,
-      location: loc.label
+      title: local.title,
+      location: localizedLocationLabel(movement)
     };
     halo.userData = dot.userData;
     locationPickers.push(dot, halo);
@@ -2640,7 +3464,7 @@ function initThreeCosmos() {
     const angle = (slotIndex / laneSlots) * Math.PI * 2 + lane.phase;
     book.userData = {
       movementId: movement.id,
-      title: movement.title,
+      title: localizedMovement(movement).title,
       movement,
       angle,
       laneIndex,
@@ -2676,6 +3500,30 @@ function initThreeCosmos() {
   );
   scene.add(starPoints);
 
+  const refreshLabels = () => {
+    satellites.children.forEach((book, index) => {
+      const data = book.userData;
+      if (!data?.movement || data.opening) return;
+      const kit = makeBookMaterials(data.movement, index);
+      data.materials?.forEach((material) => {
+        if (material?.map) material.map.dispose?.();
+        material?.dispose?.();
+      });
+      data.glowTexture?.dispose?.();
+      book.material = kit.materials;
+      data.materials = kit.materials;
+      data.coverTexture = kit.coverTexture;
+      data.glowTexture = kit.glowTexture;
+      data.title = localizedMovement(data.movement).title;
+    });
+    locationPickers.forEach((picker) => {
+      const movement = movementById(picker.userData.movementId);
+      picker.userData.title = localizedMovement(movement).title;
+      picker.userData.location = localizedLocationLabel(movement);
+    });
+  };
+  cosmosController = { refreshLabels };
+
   let lit = false;
   let hoveredBook = null;
   let hoveredMarker = null;
@@ -2701,11 +3549,12 @@ function initThreeCosmos() {
     tooltip.style.left = `${event.clientX - rect.left}px`;
     tooltip.style.top = `${event.clientY - rect.top}px`;
     if (target.type === "book") {
-      tooltip.innerHTML = `<strong>${target.book.userData.title}</strong><span>${target.book.userData.movement.lens}</span><em>${MOVEMENT_LOCATIONS[target.book.userData.movementId]?.label || target.book.userData.movement.region}</em>`;
+      const local = localizedMovement(target.book.userData.movement);
+      tooltip.innerHTML = `<strong>${local.title}</strong><span>${local.lens}</span><em>${localizedLocationLabel(target.book.userData.movement)}</em>`;
     } else if (target.type === "moon") {
-      tooltip.innerHTML = "<strong>月球星战模拟舱</strong><span>公转轨道上的隐藏游戏入口</span><em>点击进入可玩战斗航道</em>";
+      tooltip.innerHTML = `<strong>${t("tooltipMoonTitle")}</strong><span>${t("tooltipMoonSubtitle")}</span><em>${t("tooltipMoonHint")}</em>`;
     } else {
-      tooltip.innerHTML = `<strong>${target.marker.userData.title}</strong><span>${target.marker.userData.location}</span><em>点击从地理现场进入理论世界</em>`;
+      tooltip.innerHTML = `<strong>${target.marker.userData.title}</strong><span>${target.marker.userData.location}</span><em>${t("tooltipLocationHint")}</em>`;
     }
     tooltip.classList.add("is-visible");
     tooltip.setAttribute("aria-hidden", "false");
@@ -3229,11 +4078,12 @@ function initClock() {
   const moonPhase = $("#clockMoonPhase");
   if (!hourHand || !minuteHand || !secondHand || !timeText || !dateText) return;
 
-  const formatDate = new Intl.DateTimeFormat("zh-CN", {
+  const clockLocale = () => state.language === "zh" ? "zh-CN" : (state.language === "fr" ? "fr-FR" : "en-US");
+  const formatDate = (date) => new Intl.DateTimeFormat(clockLocale(), {
     month: "long",
     day: "numeric",
     weekday: "short"
-  });
+  }).format(date);
   const newMoonEpoch = Date.UTC(2000, 0, 6, 18, 14, 0);
   const lunarCycleMs = 29.530588853 * 24 * 60 * 60 * 1000;
   let networkOffsetMs = 0;
@@ -3286,8 +4136,8 @@ function initClock() {
     hourHand.style.transform = `translateX(-50%) rotate(${hours * 30}deg)`;
     minuteHand.style.transform = `translateX(-50%) rotate(${minutes * 6}deg)`;
     secondHand.style.transform = `translateX(-50%) rotate(${seconds * 6}deg)`;
-    timeText.textContent = now.toLocaleTimeString("zh-CN", { hour12: false });
-    dateText.textContent = formatDate.format(now);
+    timeText.textContent = now.toLocaleTimeString(clockLocale(), { hour12: false });
+    dateText.textContent = formatDate(now);
     if (timepiece && moonPhase) {
       const phase = (((now.getTime() - newMoonEpoch) % lunarCycleMs) + lunarCycleMs) % lunarCycleMs / lunarCycleMs;
       timepiece.style.setProperty("--moon-angle", `${Math.round(phase * 360)}deg`);
@@ -3373,13 +4223,17 @@ function initSpaceGame() {
   const statusText = $("#gameStatus");
   const touchFire = $("#touchFire");
   const touchSkill = $("#touchSkill");
+  const touchLance = $("#touchLance");
+  const touchRift = $("#touchRift");
   if (!overlay || !mount || !closeButton || !scoreText || !waveText || !hullText || !energyText || !comboText || !skillText || !statusText) return;
 
   const WAVE_CONFIGS = [
-    { label: "月面巡逻圈", objective: "击落 18 架侦察机，收集任意升级。", target: 18, spawn: 760, speed: 1, boss: false },
-    { label: "碎星带突围", objective: "击落 26 架护卫机，避开陨石潮。", target: 26, spawn: 560, speed: 1.22, boss: false },
-    { label: "轨道母舰决战", objective: "摧毁母舰核心，完成通关。", target: 1, spawn: 720, speed: 1.34, boss: true }
+    { labelKey: "gameWave1Label", objectiveKey: "gameWave1Objective", target: 18, spawn: 760, speed: 1, boss: false },
+    { labelKey: "gameWave2Label", objectiveKey: "gameWave2Objective", target: 26, spawn: 560, speed: 1.22, boss: false },
+    { labelKey: "gameWave3Label", objectiveKey: "gameWave3Objective", target: 1, spawn: 720, speed: 1.34, boss: true }
   ];
+  const SKILL_COSTS = { nova: 100, lance: 64, rift: 78 };
+  const SKILL_COOLDOWNS = { nova: 9000, lance: 5600, rift: 7800 };
 
   let phaserGame = null;
   let activeScene = null;
@@ -3394,8 +4248,12 @@ function initSpaceGame() {
     hullText.textContent = String(Math.max(0, Math.ceil(state.hull)));
     energyText.textContent = String(Math.max(0, Math.floor(state.energy ?? 0)));
     comboText.textContent = `x${Math.max(1, Math.floor(state.combo || 1))}`;
-    const hasSkill = state.skillReady && (state.energy ?? 0) >= 100;
-    skillText.textContent = hasSkill ? "Ready" : ((state.energy ?? 0) < 100 ? `${Math.floor(state.energy ?? 0)}%` : `${Math.ceil(state.skillCooldown / 1000)}s`);
+    const cooldowns = state.cooldowns || { nova: 0, lance: 0, rift: 0 };
+    const readyKeys = Object.keys(SKILL_COSTS).filter((key) => cooldowns[key] <= 0 && (state.energy ?? 0) >= SKILL_COSTS[key]);
+    const waiting = Object.keys(SKILL_COSTS)
+      .map((key) => cooldowns[key] > 0 ? cooldowns[key] : ((state.energy ?? 0) < SKILL_COSTS[key] ? (SKILL_COSTS[key] - (state.energy ?? 0)) * 85 : 0))
+      .filter(Boolean);
+    skillText.textContent = readyKeys.length ? `${readyKeys.length}/3 ${t("gameReady")}` : (waiting.length ? `${Math.ceil(Math.min(...waiting) / 1000)}s` : `${Math.floor(state.energy ?? 0)}%`);
     if (hullFill) hullFill.style.width = `${Math.max(0, Math.min(100, state.hull))}%`;
     if (energyFill) energyFill.style.width = `${Math.max(0, Math.min(100, state.energy ?? 0))}%`;
     if (bossMeter && bossFill) {
@@ -3403,7 +4261,9 @@ function initSpaceGame() {
       bossMeter.classList.toggle("is-visible", bossRatio > 0 && !state.missionComplete && !state.gameOver);
       bossFill.style.width = `${bossRatio * 100}%`;
     }
-    touchSkill?.classList.toggle("is-ready", hasSkill);
+    touchSkill?.classList.toggle("is-ready", cooldowns.nova <= 0 && (state.energy ?? 0) >= SKILL_COSTS.nova);
+    touchLance?.classList.toggle("is-ready", cooldowns.lance <= 0 && (state.energy ?? 0) >= SKILL_COSTS.lance);
+    touchRift?.classList.toggle("is-ready", cooldowns.rift <= 0 && (state.energy ?? 0) >= SKILL_COSTS.rift);
   };
 
   class LunarSquadronScene extends Phaser.Scene {
@@ -3419,6 +4279,8 @@ function initSpaceGame() {
         weapon: 1,
         overdrive: 0,
         shield: 0,
+        rift: 0,
+        cooldowns: { nova: 0, lance: 0, rift: 0 },
         skillCooldown: 0,
         skillReady: true,
         bossHp: 0,
@@ -3462,7 +4324,7 @@ function initSpaceGame() {
       this.physics.add.overlap(this.player, this.enemyBullets, this.damagePlayer, null, this);
       this.physics.add.overlap(this.player, this.powerups, this.collectPowerup, null, this);
 
-      this.keys = this.input.keyboard.addKeys("W,A,S,D,UP,DOWN,LEFT,RIGHT,SPACE,SHIFT,R");
+      this.keys = this.input.keyboard.addKeys("W,A,S,D,UP,DOWN,LEFT,RIGHT,SPACE,SHIFT,E,Q,R");
       this.focusKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.CTRL);
       this.input.on("pointermove", (pointer) => this.player.target.set(pointer.x, pointer.y));
       this.input.on("pointerdown", (pointer) => {
@@ -3471,6 +4333,8 @@ function initSpaceGame() {
       });
       this.input.keyboard.on("keydown-SPACE", () => this.fire(true));
       this.input.keyboard.on("keydown-SHIFT", () => this.castSkill());
+      this.input.keyboard.on("keydown-E", () => this.castIonLance());
+      this.input.keyboard.on("keydown-Q", () => this.castTimeRift());
       this.input.keyboard.on("keydown-R", () => {
         if (this.state.gameOver || this.state.missionComplete) this.scene.restart();
       });
@@ -3560,6 +4424,32 @@ function initSpaceGame() {
       g.lineBetween(18, 20, 66, 20);
       g.generateTexture("enemy", 84, 36);
       g.clear();
+      g.fillStyle(0x071523, 1);
+      g.fillTriangle(42, 0, 78, 34, 42, 28);
+      g.fillTriangle(42, 0, 6, 34, 42, 28);
+      g.fillStyle(0x75f5ff, 0.92);
+      g.fillTriangle(42, 5, 62, 31, 42, 24);
+      g.fillTriangle(42, 5, 22, 31, 42, 24);
+      g.fillStyle(0xff8fa8, 0.9);
+      g.fillCircle(42, 16, 5);
+      g.lineStyle(2, 0xf5d287, 0.54);
+      g.strokeCircle(42, 17, 12);
+      g.generateTexture("enemyScout", 84, 42);
+      g.clear();
+      g.fillStyle(0x221629, 1);
+      g.fillRoundedRect(0, 15, 122, 46, 20);
+      g.fillStyle(0x554063, 1);
+      g.fillTriangle(10, 38, 56, 0, 54, 76);
+      g.fillTriangle(112, 38, 66, 0, 68, 76);
+      g.lineStyle(3, 0xf5d287, 0.72);
+      g.strokeRoundedRect(14, 11, 94, 54, 20);
+      g.fillStyle(0xff8fa8, 0.94);
+      g.fillCircle(61, 38, 12);
+      g.fillStyle(0x75f5ff, 0.72);
+      g.fillCircle(28, 38, 5);
+      g.fillCircle(94, 38, 5);
+      g.generateTexture("enemyBomber", 122, 78);
+      g.clear();
       g.fillStyle(0xdec182, 1);
       g.beginPath();
       g.moveTo(31, 2);
@@ -3613,16 +4503,18 @@ function initSpaceGame() {
       this.starLayers = [];
       for (let layer = 0; layer < 3; layer += 1) {
         const graphics = this.add.graphics().setDepth(layer);
-        const stars = Array.from({ length: layer === 0 ? 80 : 55 }, () => ({
+        const stars = Array.from({ length: layer === 0 ? 130 : (layer === 1 ? 96 : 72) }, () => ({
           x: Phaser.Math.Between(0, this.width),
           y: Phaser.Math.Between(0, this.height),
-          r: Phaser.Math.FloatBetween(0.7, 1.8 + layer),
+          r: Phaser.Math.FloatBetween(0.45, 1.65 + layer * 0.9),
           c: layer === 2 && Math.random() > 0.65 ? 0x75f5ff : 0xffffff
         }));
-        this.starLayers.push({ graphics, stars, speed: 14 + layer * 34 });
+        this.starLayers.push({ graphics, stars, speed: 10 + layer * 30 });
       }
       this.orbits = this.add.graphics().setDepth(1).setAlpha(0.52);
       this.nebula = this.add.graphics().setDepth(0);
+      this.meteorLayer = this.add.graphics().setDepth(2);
+      this.distantPlanet = this.add.graphics().setDepth(1);
     }
 
     startWave(index) {
@@ -3639,10 +4531,12 @@ function initSpaceGame() {
         this.spawnTimer.paused = false;
         this.asteroidTimer.delay = index === 0 ? 1120 : 720;
       }
-      this.waveBanner.setText(`${config.label}\n${config.objective}`);
+      const label = t(config.labelKey);
+      const objective = t(config.objectiveKey);
+      this.waveBanner.setText(`${label}\n${objective}`);
       this.waveBanner.setStyle({ fontSize: this.bannerFontSize() });
       this.tweens.add({ targets: this.waveBanner, alpha: 1, y: this.bannerY(), duration: 420, yoyo: true, hold: 1350, ease: "Sine.easeInOut" });
-      setStatus(`任务 ${index + 1}: ${config.objective}`);
+      setStatus(fmt(t("gameMissionPrefix"), { wave: index + 1, objective }));
       updateHud(this.state);
     }
 
@@ -3650,18 +4544,21 @@ function initSpaceGame() {
       if (this.state.gameOver || this.state.missionComplete) return;
       const config = WAVE_CONFIGS[this.state.wave];
       const x = Phaser.Math.Between(60, this.width - 60);
-      const enemy = this.enemies.create(x, -40, "enemy");
       const elite = this.state.wave > 0 && Math.random() > 0.74;
-      enemy.setCircle(18, 24, 0);
-      enemy.hp = elite ? 4 : (this.state.wave === 0 ? 1 : 2);
-      enemy.score = elite ? 320 + this.state.wave * 80 : 120 + this.state.wave * 45;
-      enemy.kind = elite ? "elite" : "fighter";
+      const scout = !elite && Math.random() > 0.52;
+      const texture = elite ? "enemyBomber" : (scout ? "enemyScout" : "enemy");
+      const enemy = this.enemies.create(x, -40, texture);
+      enemy.setCircle(elite ? 25 : 18, elite ? 36 : 24, elite ? 14 : 0);
+      enemy.hp = elite ? 6 : (scout ? 1 : (this.state.wave === 0 ? 1 : 2));
+      enemy.score = elite ? 420 + this.state.wave * 110 : (scout ? 150 : 120 + this.state.wave * 45);
+      enemy.kind = elite ? "bomber" : (scout ? "scout" : "fighter");
       enemy.pattern = Math.random() > 0.5 ? "sine" : "dive";
       enemy.phase = Math.random() * Math.PI * 2;
-      enemy.setVelocity(Phaser.Math.Between(-50, 50), (118 + this.state.wave * 32) * config.speed);
+      const riftFactor = this.state.rift > 0 ? 0.54 : 1;
+      enemy.setVelocity(Phaser.Math.Between(-50, 50) * riftFactor, (118 + this.state.wave * 32) * config.speed * (scout ? 1.28 : 1) * riftFactor);
       enemy.setDepth(8);
-      enemy.setScale(elite ? 1.18 : 1);
-      enemy.setTint(elite ? 0xf5d287 : 0xffffff);
+      enemy.setScale(elite ? 1.08 : (scout ? 0.9 : 1));
+      enemy.setTint(elite ? 0xf5d287 : (this.state.rift > 0 ? 0xb99cff : 0xffffff));
       if (this.state.wave > 0 && Math.random() > 0.56) {
         this.time.delayedCall(700, () => this.fireEnemy(enemy));
       }
@@ -3684,7 +4581,7 @@ function initSpaceGame() {
       this.boss.setDepth(9);
       this.tweens.add({ targets: this.boss, y: this.height * 0.2, duration: 900, ease: "Power2" });
       this.bossTimer = this.time.addEvent({ delay: 620, callback: () => this.fireBoss(), loop: true });
-      setStatus("母舰核心已进入轨道。使用 Shift 星环技能清理弹幕并击穿护盾。");
+      setStatus(t("gameBossStatus"));
     }
 
     spawnAsteroid() {
@@ -3725,7 +4622,7 @@ function initSpaceGame() {
       if (!bullet) return;
       bullet.setActive(true).setVisible(true).setDepth(7);
       bullet.body.enable = true;
-      this.physics.moveToObject(bullet, this.player, 240 + this.state.wave * 32);
+      this.physics.moveToObject(bullet, this.player, (240 + this.state.wave * 32) * (this.state.rift > 0 ? 0.52 : 1));
     }
 
     fireBoss() {
@@ -3744,7 +4641,7 @@ function initSpaceGame() {
         bullet.setActive(true).setVisible(true).setDepth(7);
         bullet.body.enable = true;
         bullet.setBlendMode(Phaser.BlendModes.ADD);
-        this.physics.velocityFromAngle(angle, mode === 2 ? 260 : 210, bullet.body.velocity);
+        this.physics.velocityFromAngle(angle, (mode === 2 ? 260 : 210) * (this.state.rift > 0 ? 0.5 : 1), bullet.body.velocity);
       }
     }
 
@@ -3799,14 +4696,14 @@ function initSpaceGame() {
       powerup.disableBody(true, true);
       if (type === "weapon") {
         this.state.weapon = Math.min(3, this.state.weapon + 1);
-        setStatus("武器升级：书页激光已扩展。");
+        setStatus(t("gameWeaponStatus"));
       } else if (type === "repair") {
         this.state.hull = Math.min(100, this.state.hull + 24);
-        setStatus("修复完成：舰体装甲恢复。");
+        setStatus(t("gameRepairStatus"));
       } else {
         this.state.overdrive = 8000;
         this.state.energy = Math.min(100, this.state.energy + 18);
-        setStatus("过载启动：短时间双倍伤害。");
+        setStatus(t("gameOverdriveStatus"));
       }
       playSound("success");
       updateHud(this.state);
@@ -3822,12 +4719,33 @@ function initSpaceGame() {
       powerup.setTint(powerup.kind === "repair" ? 0x89f2c1 : (powerup.kind === "weapon" ? 0x75f5ff : 0xf5d287));
     }
 
-    castSkill() {
-      if (!this.state.skillReady || this.state.energy < 100 || this.state.gameOver || this.state.missionComplete) return;
+    canUseSkill(key) {
+      if (this.state.gameOver || this.state.missionComplete) return false;
+      if ((this.state.energy ?? 0) < SKILL_COSTS[key]) {
+        setStatus(t("gameSkillNoEnergy"));
+        playSound("select");
+        return false;
+      }
+      if ((this.state.cooldowns?.[key] || 0) > 0) {
+        setStatus(t("gameSkillCooling"));
+        playSound("select");
+        return false;
+      }
+      return true;
+    }
+
+    beginSkill(key) {
+      this.state.energy = Math.max(0, this.state.energy - SKILL_COSTS[key]);
+      this.state.cooldowns[key] = SKILL_COOLDOWNS[key];
+      this.state.skillCooldown = Math.min(...Object.values(this.state.cooldowns).filter(Boolean), SKILL_COOLDOWNS[key]);
       this.state.skillReady = false;
-      this.state.skillCooldown = 9000;
-      this.state.energy = 0;
-      this.state.shield = 1100;
+      this.state.shield = Math.max(this.state.shield, 820);
+    }
+
+    castSkill() {
+      if (!this.canUseSkill("nova")) return;
+      this.beginSkill("nova");
+      this.state.shield = Math.max(this.state.shield, 1100);
       const ring = this.add.circle(this.player.x, this.player.y, 28, 0x75f5ff, 0.18).setStrokeStyle(3, 0xf5d287, 0.92).setDepth(20);
       this.tweens.add({ targets: ring, radius: 340, alpha: 0, duration: 520, ease: "Expo.easeOut", onComplete: () => ring.destroy() });
       [...this.enemies.getChildren(), ...this.asteroids.getChildren()].forEach((target) => {
@@ -3848,7 +4766,61 @@ function initSpaceGame() {
         }
       });
       this.enemyBullets.clear(true, true);
-      setStatus("星环技能释放：清空弹幕并击穿近距离目标。");
+      setStatus(t("gameNovaStatus"));
+      playSound("success");
+      updateHud(this.state);
+    }
+
+    castIonLance() {
+      if (!this.canUseSkill("lance")) return;
+      this.beginSkill("lance");
+      const beamWidth = this.width < 540 ? 34 : 46;
+      const beam = this.add.rectangle(this.player.x, this.player.y * 0.5, beamWidth, this.player.y, 0x75f5ff, 0.18)
+        .setStrokeStyle(2, 0xfff8df, 0.86)
+        .setBlendMode(Phaser.BlendModes.ADD)
+        .setDepth(21);
+      const core = this.add.rectangle(this.player.x, this.player.y * 0.5, Math.max(10, beamWidth * 0.34), this.player.y, 0xfff8df, 0.62)
+        .setBlendMode(Phaser.BlendModes.ADD)
+        .setDepth(22);
+      this.tweens.add({ targets: [beam, core], alpha: 0, scaleX: 2.4, duration: 360, ease: "Expo.easeOut", onComplete: () => { beam.destroy(); core.destroy(); } });
+      const targets = [...this.enemies.getChildren(), ...this.asteroids.getChildren()];
+      targets.forEach((target) => {
+        if (!target.active || target.y > this.player.y + 12) return;
+        if (Math.abs(target.x - this.player.x) > beamWidth * 1.4) return;
+        target.hp -= target.isBoss ? 24 : 7;
+        this.flashAt(target.x, target.y, target.isBoss ? "#f5d287" : "#75f5ff", target.isBoss ? 30 : 14);
+        if (target.hp <= 0) {
+          if (target.kind === "asteroid") {
+            target.disableBody(true, true);
+            this.state.score += target.score || 35;
+          } else {
+            this.hitEnemy({ disableBody: () => {} }, target);
+          }
+        }
+      });
+      this.cameras.main.flash(120, 117, 245, 255, false);
+      setStatus(t("gameLanceStatus"));
+      playSound("success");
+      updateHud(this.state);
+    }
+
+    castTimeRift() {
+      if (!this.canUseSkill("rift")) return;
+      this.beginSkill("rift");
+      this.state.rift = 4200;
+      this.state.shield = Math.max(this.state.shield, 1500);
+      const rift = this.add.circle(this.player.x, this.player.y - 120, 64, 0x9f8cff, 0.14)
+        .setStrokeStyle(3, 0x75f5ff, 0.78)
+        .setBlendMode(Phaser.BlendModes.ADD)
+        .setDepth(19);
+      this.tweens.add({ targets: rift, radius: Math.min(this.width, this.height) * 0.58, alpha: 0, duration: 980, ease: "Expo.easeOut", onComplete: () => rift.destroy() });
+      [...this.enemies.getChildren(), ...this.enemyBullets.getChildren(), ...this.asteroids.getChildren()].forEach((target) => {
+        if (!target.active || !target.body) return;
+        target.setTint?.(0xb99cff);
+        target.body.velocity.x *= 0.42;
+        target.body.velocity.y *= 0.42;
+      });
+      setStatus(t("gameRiftStatus"));
       playSound("success");
       updateHud(this.state);
     }
@@ -3873,8 +4845,8 @@ function initSpaceGame() {
       this.enemyBullets.clear(true, true);
       this.enemies.clear(true, true);
       this.asteroids.clear(true, true);
-      setStatus("通关完成：月球远征舰队已守住文学星图航道。按 R 可重新挑战。");
-      this.waveBanner.setText("MISSION COMPLETE\n月球航道已净空").setAlpha(1).setY(this.height * 0.32);
+      setStatus(t("gameMissionCompleteStatus"));
+      this.waveBanner.setText(t("gameMissionCompleteBanner")).setAlpha(1).setY(this.height * 0.32);
       this.tweens.add({ targets: this.waveBanner, scale: 1.06, yoyo: true, repeat: -1, duration: 820, ease: "Sine.easeInOut" });
       playSound("success");
     }
@@ -3886,8 +4858,8 @@ function initSpaceGame() {
       this.spawnTimer.paused = true;
       this.asteroidTimer.paused = true;
       this.bossTimer?.remove(false);
-      setStatus("舰体失守。按 R 重新部署，或返回星图。");
-      this.waveBanner.setText("MISSION FAILED\n按 R 重新挑战").setAlpha(1).setY(this.height * 0.32);
+      setStatus(t("gameFailedStatus"));
+      this.waveBanner.setText(t("gameFailedBanner")).setAlpha(1).setY(this.height * 0.32);
       this.cameras.main.shake(320, 0.012);
       playSound("close");
     }
@@ -3938,9 +4910,14 @@ function initSpaceGame() {
         .setScale(this.focusKey?.isDown ? 1.32 : 1)
         .setAlpha(this.state.shield > 0 ? 1 : 0.82);
       this.state.shield = Math.max(0, this.state.shield - delta);
-      this.state.skillCooldown = Math.max(0, this.state.skillCooldown - delta);
-      this.state.skillReady = this.state.skillCooldown <= 0;
+      Object.keys(this.state.cooldowns).forEach((key) => {
+        this.state.cooldowns[key] = Math.max(0, this.state.cooldowns[key] - delta);
+      });
+      const pendingCooldowns = Object.values(this.state.cooldowns).filter((value) => value > 0);
+      this.state.skillCooldown = pendingCooldowns.length ? Math.min(...pendingCooldowns) : 0;
+      this.state.skillReady = Object.values(this.state.cooldowns).every((value) => value <= 0);
       this.state.overdrive = Math.max(0, this.state.overdrive - delta);
+      this.state.rift = Math.max(0, this.state.rift - delta);
       this.state.energy = Math.min(100, this.state.energy + dt * 2.4);
       if (this.boss?.active) this.state.bossHp = Math.max(0, this.boss.hp);
       this.cleanupOffscreen();
@@ -3957,6 +4934,19 @@ function initSpaceGame() {
       this.nebula.fillEllipse(this.width * 0.26, this.height * 0.22, this.width * 0.68, this.height * 0.36);
       this.nebula.fillStyle(0x0d3359, 0.18);
       this.nebula.fillEllipse(this.width * 0.74, this.height * 0.32, this.width * 0.76, this.height * 0.22);
+      for (let i = 0; i < 18; i += 1) {
+        const offset = i / 17;
+        const x = this.width * (0.04 + offset * 0.92);
+        const y = this.height * (0.2 + Math.sin(offset * Math.PI * 1.4 + time / 2600) * 0.16 + offset * 0.28);
+        const alpha = 0.035 + Math.sin(time / 900 + i) * 0.018;
+        this.nebula.fillStyle(i % 3 === 0 ? 0x75f5ff : (i % 3 === 1 ? 0xb99cff : 0xf5d287), Math.max(0.015, alpha));
+        this.nebula.fillEllipse(x, y, this.width * (0.18 + offset * 0.12), this.height * 0.07);
+      }
+      this.distantPlanet.clear();
+      this.distantPlanet.fillStyle(0x1c2940, 0.34);
+      this.distantPlanet.fillCircle(this.width * 0.82, this.height * 0.18, Math.min(this.width, this.height) * 0.11);
+      this.distantPlanet.fillStyle(0x75f5ff, 0.08);
+      this.distantPlanet.fillEllipse(this.width * 0.82, this.height * 0.18, Math.min(this.width, this.height) * 0.28, Math.min(this.width, this.height) * 0.045);
       this.nebula.lineStyle(2, 0x75f5ff, 0.08);
       this.nebula.lineBetween(this.width * 0.08, this.height * 0.78, this.width * 0.92, this.height * 0.12);
       this.nebula.lineStyle(1, 0xb99cff, 0.08);
@@ -3980,6 +4970,14 @@ function initSpaceGame() {
           layer.graphics.fillCircle(star.x, star.y, star.r);
         });
       });
+      this.meteorLayer.clear();
+      const sweep = (time * 0.08) % (this.width + this.height);
+      if (sweep < this.width * 0.92) {
+        this.meteorLayer.lineStyle(2, 0xfff8df, 0.28);
+        this.meteorLayer.lineBetween(sweep, this.height * 0.14, sweep + 130, this.height * 0.14 + 62);
+        this.meteorLayer.lineStyle(5, 0x75f5ff, 0.08);
+        this.meteorLayer.lineBetween(sweep - 12, this.height * 0.14 - 5, sweep + 142, this.height * 0.14 + 67);
+      }
     }
 
     cleanupOffscreen() {
@@ -4005,8 +5003,8 @@ function initSpaceGame() {
     overlay.setAttribute("aria-hidden", "false");
     document.body.classList.add("game-open");
     mount.innerHTML = "";
-    setStatus("舰队启动：月球航道正在校准。");
-    updateHud({ score: 0, wave: 0, hull: 100, energy: 100, combo: 1, skillReady: true, skillCooldown: 0, bossHp: 0, bossMax: 0 });
+    setStatus(t("gameStatusBoot"));
+    updateHud({ score: 0, wave: 0, hull: 100, energy: 100, combo: 1, cooldowns: { nova: 0, lance: 0, rift: 0 }, skillReady: true, skillCooldown: 0, bossHp: 0, bossMax: 0 });
     phaserGame = new Phaser.Game({
       type: Phaser.AUTO,
       parent: mount,
@@ -4072,13 +5070,28 @@ function initSpaceGame() {
     event.preventDefault();
     activeScene?.castSkill();
   });
+  touchLance?.addEventListener("pointerdown", (event) => {
+    event.preventDefault();
+    activeScene?.castIonLance();
+  });
+  touchRift?.addEventListener("pointerdown", (event) => {
+    event.preventDefault();
+    activeScene?.castTimeRift();
+  });
 
   closeButton.addEventListener("click", close);
   window.addEventListener("resize", () => {
     if (phaserGame) phaserGame.scale.resize(Math.max(360, mount.clientWidth), Math.max(360, mount.clientHeight));
   });
 
-  spaceGameController = { open, close };
+  const refreshCopy = () => {
+    if (!phaserGame) {
+      setStatus(t("gameStatusBoot"));
+      updateHud({ score: 0, wave: 0, hull: 100, energy: 100, combo: 1, cooldowns: { nova: 0, lance: 0, rift: 0 }, bossHp: 0, bossMax: 0 });
+    }
+  };
+
+  spaceGameController = { open, close, refreshCopy };
 }
 
 function bindGlobalEvents() {
