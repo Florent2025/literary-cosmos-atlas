@@ -2603,7 +2603,47 @@ function initThreeCosmos() {
     }
   };
 
+  const spawnAmbientMeteor = () => {
+    if (!stage.isConnected) return;
+    if (!document.body.classList.contains("has-entered") || document.body.classList.contains("game-open")) return;
+    if (window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches) return;
+    const rect = stage.getBoundingClientRect();
+    if (rect.width < 100 || rect.height < 100) return;
+    const direction = Math.random() > 0.28 ? 1 : -1;
+    const startX = direction > 0
+      ? Math.random() * rect.width * 0.58
+      : rect.width * (0.44 + Math.random() * 0.52);
+    const startY = rect.height * (0.05 + Math.random() * 0.44);
+    const travelX = direction * (rect.width * (0.16 + Math.random() * 0.18));
+    const travelY = rect.height * (0.07 + Math.random() * 0.1);
+    const angle = direction > 0
+      ? 18 + Math.random() * 16
+      : 164 + Math.random() * 14;
+    const duration = 1.05 + Math.random() * 0.5;
+    const meteor = document.createElement("i");
+    meteor.className = "meteor-trail meteor-trail--ambient";
+    meteor.style.left = `${startX}px`;
+    meteor.style.top = `${startY}px`;
+    meteor.style.setProperty("--trail-angle", `${angle}deg`);
+    meteor.style.setProperty("--trail-scale", `${1.05 + Math.random() * 0.58}`);
+    meteor.style.setProperty("--travel-x", `${travelX}px`);
+    meteor.style.setProperty("--travel-y", `${travelY}px`);
+    meteor.style.setProperty("--ambient-duration", `${duration}s`);
+    stage.appendChild(meteor);
+    window.setTimeout(() => meteor.remove(), duration * 1000 + 180);
+  };
+
+  const scheduleAmbientMeteor = () => {
+    window.setTimeout(() => {
+      spawnAmbientMeteor();
+      if (stage.isConnected) scheduleAmbientMeteor();
+    }, document.body.classList.contains("has-entered")
+      ? 1200 + Math.random() * 2800
+      : 700 + Math.random() * 1100);
+  };
+
   let lastSpark = 0;
+  scheduleAmbientMeteor();
   stage.addEventListener("pointerenter", () => {
     lit = true;
     stage.classList.add("is-lit");

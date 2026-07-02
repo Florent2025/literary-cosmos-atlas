@@ -2080,6 +2080,49 @@ main {
   transform: translateY(-50%);
 }
 
+.meteor-trail--ambient {
+  z-index: 12;
+  width: clamp(96px, 12vw, 190px);
+  height: 2px;
+  opacity: 0;
+  transform:
+    translate(-6px, -1px)
+    rotate(var(--trail-angle, 22deg))
+    translate3d(0, 0, 0)
+    scaleX(var(--trail-scale, 1));
+  animation: ambient-meteor-flight var(--ambient-duration, 1.35s) cubic-bezier(0.18, 0.76, 0.22, 1) forwards;
+}
+
+.meteor-trail--ambient::before {
+  width: 9px;
+  height: 9px;
+  background: radial-gradient(circle, #fff, #bff8ff 48%, rgba(117, 245, 255, 0));
+}
+
+@keyframes ambient-meteor-flight {
+  0% {
+    opacity: 0;
+    filter: blur(0.2px);
+    transform:
+      translate(-6px, -1px)
+      rotate(var(--trail-angle, 22deg))
+      translate3d(0, 0, 0)
+      scaleX(0.12);
+  }
+  12% {
+    opacity: 0.95;
+  }
+  100% {
+    opacity: 0;
+    filter: blur(0.9px);
+    transform:
+      translate(-6px, -1px)
+      rotate(var(--trail-angle, 22deg))
+      translate3d(var(--travel-x, 260px), var(--travel-y, 110px), 0)
+      scaleX(var(--trail-scale, 1.25));
+  }
+}
+
 .space-game {
   position: fixed;
   inset: 0;
@@ -3212,6 +3255,98 @@ body.has-entered .site-header:not(.is-compact) {
 
 .hero .timepiece__pin {
   background: #c7ab66;
+}
+
+/* Vivid deep-space backdrop: dense stars, drifting nebulae, and a luminous Milky Way. */
+.hero__stage {
+  background:
+    radial-gradient(circle at 22% 18%, rgba(255, 255, 255, 0.96) 0 1px, transparent 1.7px),
+    radial-gradient(circle at 78% 12%, rgba(174, 229, 255, 0.9) 0 1px, transparent 1.8px),
+    radial-gradient(circle at 92% 42%, rgba(244, 206, 122, 0.76) 0 1px, transparent 1.8px),
+    radial-gradient(circle at 12% 74%, rgba(199, 184, 255, 0.78) 0 1px, transparent 1.8px),
+    radial-gradient(circle at 49% 44%, rgba(38, 141, 204, 0.42) 0 15%, rgba(11, 31, 61, 0.28) 31%, transparent 50%),
+    radial-gradient(ellipse at 75% 22%, rgba(129, 71, 214, 0.23), transparent 34%),
+    radial-gradient(ellipse at 26% 72%, rgba(0, 174, 210, 0.2), transparent 32%),
+    linear-gradient(112deg, #01030a 0%, #071225 38%, #02030b 100%);
+  background-size:
+    132px 132px,
+    174px 174px,
+    214px 214px,
+    156px 156px,
+    100% 100%,
+    100% 100%,
+    100% 100%,
+    100% 100%;
+  animation: cosmic-star-drift 42s linear infinite;
+}
+
+.hero__stage::before {
+  background:
+    linear-gradient(90deg, rgba(0, 0, 0, 0.86) 0 11%, rgba(0, 0, 0, 0.24) 21%, transparent 38%, transparent 78%, rgba(0, 0, 0, 0.28) 100%) center / 100% 100% no-repeat,
+    radial-gradient(ellipse at 16% 48%, rgba(154, 96, 42, 0.26), rgba(30, 18, 12, 0.18) 27%, transparent 56%) left center / 28% 100% no-repeat,
+    linear-gradient(124deg, transparent 0 18%, rgba(36, 92, 178, 0.18) 24%, rgba(153, 94, 230, 0.24) 33%, rgba(117, 245, 255, 0.18) 43%, rgba(244, 206, 122, 0.12) 51%, transparent 66%),
+    radial-gradient(ellipse at 46% 42%, rgba(255, 255, 255, 0.34), transparent 8%),
+    radial-gradient(ellipse at 48% 47%, rgba(117, 245, 255, 0.32), transparent 18%),
+    radial-gradient(ellipse at 58% 58%, rgba(159, 140, 255, 0.22), transparent 26%),
+    radial-gradient(ellipse at 48% 104%, rgba(38, 23, 13, 0.78) 0 22%, rgba(5, 5, 8, 0.38) 45%, transparent 72%);
+  opacity: 0.86;
+  mix-blend-mode: screen;
+  animation: galaxy-breathe 18s ease-in-out infinite alternate;
+}
+
+.hero__stage::after {
+  background:
+    radial-gradient(circle at 54% 47%, rgba(117, 245, 255, 0.28), transparent 0 2px, transparent 3px),
+    radial-gradient(circle at 18% 19%, rgba(255, 255, 255, 0.92) 0 1px, transparent 2px),
+    radial-gradient(circle at 32% 29%, rgba(117, 245, 255, 0.72) 0 1px, transparent 2px),
+    radial-gradient(circle at 71% 18%, rgba(255, 255, 255, 0.7) 0 1px, transparent 2px),
+    radial-gradient(circle at 88% 74%, rgba(244, 206, 122, 0.82) 0 1px, transparent 2px),
+    repeating-conic-gradient(from 18deg at 55% 51%, rgba(245, 210, 135, 0.16) 0 0.2deg, transparent 0.2deg 8deg),
+    conic-gradient(from 116deg at 55% 51%, transparent 0 11%, rgba(117, 245, 255, 0.12) 12%, transparent 14% 45%, rgba(245, 210, 135, 0.12) 47%, transparent 51% 100%);
+  background-size:
+    auto,
+    122px 122px,
+    188px 188px,
+    166px 166px,
+    236px 236px,
+    auto,
+    auto;
+  opacity: 0.74;
+  animation: chrono-map-turn 88s linear infinite, star-twinkle 7s ease-in-out infinite alternate;
+}
+
+@keyframes cosmic-star-drift {
+  to {
+    background-position:
+      132px 74px,
+      -174px 96px,
+      214px -88px,
+      -156px -70px,
+      center,
+      center,
+      center,
+      center;
+  }
+}
+
+@keyframes galaxy-breathe {
+  from {
+    opacity: 0.72;
+    filter: saturate(1.08) brightness(0.92);
+  }
+  to {
+    opacity: 0.95;
+    filter: saturate(1.45) brightness(1.12);
+  }
+}
+
+@keyframes star-twinkle {
+  from {
+    filter: brightness(0.92);
+  }
+  to {
+    filter: brightness(1.28);
+  }
 }
 
 .hero-hotspots {
