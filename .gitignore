@@ -8,3 +8,7 @@ The Athenaeum.dc.html
 The Literary Cosmos.dc.backup-*.html
 新建文件夹/
 validation-*.png
+
+# Generated Python bytecode
+__pycache__/
+*.py[cod]

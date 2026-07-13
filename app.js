@@ -1,4 +1,4 @@
-const MOVEMENTS = [
+const CLASSIC_MOVEMENTS = [
   {
     id: "classical-poetics",
     title: "古典诗学",
@@ -657,16 +657,22 @@ const MOVEMENTS = [
   }
 ];
 
+const MOVEMENTS = [
+  ...CLASSIC_MOVEMENTS.map((movement) => ({ ...movement, collection: movement.collection || "classics" })),
+  ...(window.LITERARY_FRONTIER_CATALOG || [])
+];
+
 const state = {
   activeIndex: 0,
   worldOpen: false,
   currentWorldId: null,
-  language: "zh",
-  sound: true,
+  language: ["zh", "en", "fr"].includes(localStorage.getItem("literary-language")) ? localStorage.getItem("literary-language") : "zh",
+  sound: localStorage.getItem("literary-sound") === "on",
   audioContext: null
 };
 
 let cosmosController = null;
+let lastWorldTrigger = null;
 
 const UI_COPY = {
   zh: {
@@ -696,28 +702,28 @@ const UI_COPY = {
     navAtlas: "星图索引",
     navArchive: "思想档案",
     heroOverline: "GLOBAL LITERARY THEORY ATLAS",
-    heroTitle: "每一本流派，都是一扇世界之门。",
-    heroLead: "你已进入一座会呼吸的文学图书馆。真实地球缓慢旋转，十六本理论之书沿轨道漂移：近处的书脊放大成入口，远处的书影退入星尘。",
+    heroTitle: "每一种思想与方法，都是一扇世界之门。",
+    heroLead: "你已进入一座会呼吸的文学图书馆。真实地球缓慢旋转，四十二本理论与研究之书沿轨道漂移：近处的书脊放大成入口，远处的书影退入星尘。",
     heroPrimary: "进入书架轨道",
     heroSecondary: "打开今日之书",
     libraryOverline: "SCROLLING BOOKSHELF",
-    libraryTitle: "滚动书架：每本书都是一个理论世界",
+    libraryTitle: "滚动书架：每本研究卷都是一个思想世界",
     atlasOverline: "CONSTELLATION INDEX",
     atlasTitle: "星图索引：理论如何彼此牵引",
     archiveOverline: "KNOWLEDGE ARCHIVE",
     archiveTitle: "思想档案：主要命题、读法与文本案例",
     railAria: "书架浏览状态",
-    railPrev: "上一本文学理论书",
-    railNext: "下一本文学理论书",
-    theoryEntry: "理论入口",
+    railPrev: "上一本研究卷",
+    railNext: "下一本研究卷",
+    theoryEntry: "研究入口",
     coreIdeas: "核心命题",
-    method: "如何用它读文本",
+    method: "理论机制与研究路径",
     cases: "文本案例",
     figures: "思想家与作家肖像",
     works: "代表作品书封",
-    relations: "关联流派",
-    quizTitle: "理论测试题库",
-    quizIntro: "完成全部题目后会自动核对答案，适合快速检查是否真正进入这本书的阅读方法。",
+    relations: "关联理论与研究路径",
+    quizTitle: "研究测试题库",
+    quizIntro: "完成全部题目后会自动核对答案与原典依据，用来检验是否真正理解这本研究卷。",
     quizSubmit: "提交核对",
     quizWaiting: "等待作答",
     researchDepth: "研究纵深",
@@ -839,28 +845,28 @@ const UI_COPY = {
     navAtlas: "Theory Map",
     navArchive: "Archive",
     heroOverline: "GLOBAL LITERARY THEORY ATLAS",
-    heroTitle: "Every movement is a book; every book opens a world.",
-    heroLead: "Enter a breathing literary observatory. The real Earth turns slowly while sixteen theory volumes drift in orbit: near books swell into portals, distant spines recede into stardust.",
+    heroTitle: "Every idea becomes a book; every book opens a world.",
+    heroLead: "Enter a breathing literary observatory. The real Earth turns slowly while forty-two theory and research volumes drift in orbit: near books swell into portals, distant spines recede into stardust.",
     heroPrimary: "Enter Book Orbit",
     heroSecondary: "Open Today’s Book",
     libraryOverline: "SCROLLING BOOKSHELF",
-    libraryTitle: "Scrolling Bookshelf: Every Volume Is A Theory World",
+    libraryTitle: "Scrolling Bookshelf: Every Volume Opens A World Of Thought",
     atlasOverline: "CONSTELLATION INDEX",
     atlasTitle: "Constellation Index: How Theories Pull On One Another",
     archiveOverline: "KNOWLEDGE ARCHIVE",
     archiveTitle: "Knowledge Archive: Claims, Methods And Textual Cases",
     railAria: "Bookshelf browsing status",
-    railPrev: "Previous theory book",
-    railNext: "Next theory book",
-    theoryEntry: "Theory Gateway",
+    railPrev: "Previous research volume",
+    railNext: "Next research volume",
+    theoryEntry: "Research Gateway",
     coreIdeas: "Core Claims",
-    method: "How To Read With It",
+    method: "Mechanisms And Research Pathways",
     cases: "Textual Cases",
     figures: "Thinkers And Writers",
     works: "Representative Works",
     relations: "Related Movements",
-    quizTitle: "Theory Quiz Bank",
-    quizIntro: "Answer all questions and the site checks them automatically, so you can test whether you have entered this book’s method.",
+    quizTitle: "Research Quiz Bank",
+    quizIntro: "Answer every question to check both the answer and its primary-source basis.",
     quizSubmit: "Check Answers",
     quizWaiting: "Waiting for answers",
     researchDepth: "Research Depth",
@@ -982,28 +988,28 @@ const UI_COPY = {
     navAtlas: "Carte théorique",
     navArchive: "Archive",
     heroOverline: "ATLAS MONDIAL DE LA THÉORIE LITTÉRAIRE",
-    heroTitle: "Chaque courant est un livre; chaque livre ouvre un monde.",
-    heroLead: "Entrez dans un observatoire littéraire vivant. La Terre réelle tourne lentement tandis que seize volumes théoriques dérivent en orbite: les livres proches deviennent des portails, les dos lointains se retirent dans la poussière d’étoiles.",
+    heroTitle: "Chaque idée devient un livre; chaque livre ouvre un monde.",
+    heroLead: "Entrez dans un observatoire littéraire vivant. La Terre réelle tourne lentement tandis que quarante-deux volumes de théorie et de recherche dérivent en orbite: les livres proches deviennent des portails, les dos lointains se retirent dans la poussière d’étoiles.",
     heroPrimary: "Entrer dans l’orbite",
     heroSecondary: "Ouvrir le livre du jour",
     libraryOverline: "BIBLIOTHÈQUE DÉFILANTE",
-    libraryTitle: "Bibliothèque défilante: chaque volume est un monde théorique",
+    libraryTitle: "Bibliothèque défilante: chaque volume ouvre un monde de pensée",
     atlasOverline: "INDEX CONSTELLÉ",
     atlasTitle: "Index constellé: comment les théories s’attirent",
     archiveOverline: "ARCHIVE DU SAVOIR",
     archiveTitle: "Archive du savoir: thèses, méthodes et cas textuels",
     railAria: "État de navigation dans la bibliothèque",
-    railPrev: "Livre théorique précédent",
-    railNext: "Livre théorique suivant",
-    theoryEntry: "Porte théorique",
+    railPrev: "Volume de recherche précédent",
+    railNext: "Volume de recherche suivant",
+    theoryEntry: "Porte de recherche",
     coreIdeas: "Thèses essentielles",
-    method: "Lire avec cette théorie",
+    method: "Mécanismes et parcours de recherche",
     cases: "Cas textuels",
     figures: "Penseurs et écrivains",
     works: "Œuvres représentatives",
     relations: "Courants associés",
-    quizTitle: "Banque de quiz théoriques",
-    quizIntro: "Répondez à toutes les questions; le site les corrige automatiquement pour vérifier votre entrée dans la méthode du livre.",
+    quizTitle: "Banque de quiz de recherche",
+    quizIntro: "Répondez à toutes les questions pour vérifier la réponse et son appui dans la source primaire.",
     quizSubmit: "Vérifier",
     quizWaiting: "En attente de réponses",
     researchDepth: "Profondeur de recherche",
@@ -1640,6 +1646,8 @@ const GRAPH_EDGE_TRANSLATIONS = {
 
 function graphEdgeType(source, target) {
   const ids = [source.id, target.id];
+  if ([source, target].some((movement) => movement.collection === "regions")) return "world";
+  if ([source, target].some((movement) => movement.collection === "synthesis")) return "history";
   if (ids.some((id) => ["marxism", "new-historicism", "postcolonial"].includes(id))) return "history";
   if (ids.some((id) => ["psychoanalysis", "feminism-queer", "poststructuralism"].includes(id))) return "subject";
   if (ids.some((id) => ["structuralism", "russian-formalism", "reader-response"].includes(id))) return "form";
@@ -1659,7 +1667,7 @@ function fmt(template, values = {}) {
 }
 
 function baseMovementText(movement, key, language = state.language) {
-  return MOVEMENT_TRANSLATIONS[language]?.[movement.id]?.[key] || movement[key];
+  return movement.i18n?.[language]?.[key] ?? MOVEMENT_TRANSLATIONS[language]?.[movement.id]?.[key] ?? movement[key];
 }
 
 function translatePerson(name) {
@@ -1676,7 +1684,7 @@ function translateKeywords(movement) {
 }
 
 function localizedLocationLabel(movement) {
-  return LOCATION_TRANSLATIONS[state.language]?.[movement.id] || MOVEMENT_LOCATIONS[movement.id]?.label || baseMovementText(movement, "region");
+  return LOCATION_TRANSLATIONS[state.language]?.[movement.id] || MOVEMENT_LOCATIONS[movement.id]?.label || movement.location?.label || baseMovementText(movement, "region");
 }
 
 function localizedGraphGroup(group) {
@@ -1692,6 +1700,16 @@ function graphEdgeMeta(type) {
 }
 
 function zhExpandedContent(movement) {
+  if (movement.sourceChapter) {
+    return {
+      intro: movement.intro,
+      door: movement.door,
+      deepDive: movement.deepDive,
+      coreIdeas: movement.coreIdeas,
+      method: movement.method,
+      cases: movement.cases
+    };
+  }
   const title = baseMovementText(movement, "title", "zh");
   const relationNames = movement.relations.slice(0, 3).map((id) => baseMovementText(movementById(id), "title", "zh")).join("、");
   const keywords = movement.keywords.slice(0, 4).join("、");
@@ -1738,6 +1756,20 @@ function localizedMovement(movement) {
   }
 
   const language = state.language;
+  const authoredTranslation = movement.i18n?.[language];
+  if (authoredTranslation) {
+    return {
+      ...movement,
+      ...authoredTranslation,
+      deepDive: authoredTranslation.deepDive || movement.deepDive,
+      coreIdeas: authoredTranslation.coreIdeas || movement.coreIdeas,
+      method: authoredTranslation.method || movement.method,
+      cases: authoredTranslation.cases || movement.cases,
+      keywords: authoredTranslation.keywords || movement.keywords,
+      figures: movement.figures.map((figure) => ({ ...figure })),
+      works: movement.works.map((work) => ({ ...work }))
+    };
+  }
   const profile = CONTENT_PROFILES[language]?.[movement.id] || CONTENT_PROFILES.en[movement.id];
   const title = baseMovementText(movement, "title", language);
   const era = baseMovementText(movement, "era", language);
@@ -1844,6 +1876,14 @@ function cssVarsFor(movement) {
   return `--book-a:${movement.palette[0]};--book-b:${movement.palette[1]};--book-glow:${movement.palette[2]};`;
 }
 
+function collectionLabel(movement) {
+  if (movement.collection === "classics") {
+    return state.language === "fr" ? "Théories classiques" : state.language === "en" ? "Classic Theory" : "经典理论";
+  }
+  const labels = window.LITERARY_COLLECTION_LABELS?.[movement.collection];
+  return labels?.[state.language] || labels?.zh || movement.collection || "";
+}
+
 function movementById(id) {
   return MOVEMENTS.find((item) => item.id === id) || MOVEMENTS[0];
 }
@@ -1853,7 +1893,8 @@ function renderBooks() {
   track.innerHTML = MOVEMENTS.map((movement, index) => {
     const local = localizedMovement(movement);
     return `
-    <button class="book tilt-target${index === 0 ? " is-active" : ""}" type="button" data-open="${movement.id}" style="${cssVarsFor(movement)}">
+    <button class="book tilt-target${index === 0 ? " is-active" : ""}" type="button" data-open="${movement.id}" data-collection="${movement.collection}" tabindex="${index === 0 ? "0" : "-1"}" aria-current="${index === 0 ? "true" : "false"}" style="${cssVarsFor(movement)}">
+      <span class="book__collection">${collectionLabel(movement)}</span>
       <p class="book__kicker">${String(index + 1).padStart(2, "0")} · ${local.era}</p>
       <h3>${local.title}</h3>
       <div class="book__footer">
@@ -1866,7 +1907,8 @@ function renderBooks() {
 
 function renderArchive() {
   $("#archiveGrid").innerHTML = MOVEMENTS.map((movement) => `
-    <button class="archive-card magnetic" type="button" data-open="${movement.id}" style="${cssVarsFor(movement)}">
+    <button class="archive-card magnetic" type="button" data-open="${movement.id}" data-collection="${movement.collection}" data-search="${escapeAttribute(`${movement.title} ${movement.era} ${movement.region} ${movement.keywords.join(" ")}`)}" style="${cssVarsFor(movement)}">
+      <span class="archive-card__collection">${collectionLabel(movement)}</span>
       <span class="archive-card__meta">${localizedMovement(movement).era} · ${localizedMovement(movement).region}</span>
       <h3>${localizedMovement(movement).title}</h3>
       <p>${localizedMovement(movement).intro}</p>
@@ -1874,27 +1916,64 @@ function renderArchive() {
   `).join("");
 }
 
+function graphGroupFor(movement) {
+  if (GRAPH_POSITIONS[movement.id]) return GRAPH_POSITIONS[movement.id].group;
+  if (movement.collection === "regions") return "world";
+  if (movement.collection === "synthesis") return "history";
+  if (["environmental-humanities", "decolonial-global-south", "world-literature-translation"].includes(movement.id)) return "world";
+  if (["affect-postcritique", "gender-queer-trans", "medical-humanities-disability", "memory-trauma-platform"].includes(movement.id)) return "subject";
+  return "form";
+}
+
+function buildGraphNodes() {
+  const collections = {
+    classics: MOVEMENTS.filter((movement) => movement.collection === "classics"),
+    frontiers: MOVEMENTS.filter((movement) => movement.collection === "frontiers"),
+    regions: MOVEMENTS.filter((movement) => movement.collection === "regions"),
+    inner: MOVEMENTS.filter((movement) => ["foundations", "synthesis"].includes(movement.collection))
+  };
+  const rings = {
+    classics: { radiusX: 38, radiusY: 31, start: -Math.PI / 2 },
+    frontiers: { radiusX: 26, radiusY: 19, start: -Math.PI / 2.15 },
+    regions: { radiusX: 45.5, radiusY: 40, start: -Math.PI / 2 },
+    inner: { radiusX: 11.5, radiusY: 9.5, start: -Math.PI / 2 }
+  };
+  return MOVEMENTS.map((movement) => {
+    const ringName = movement.collection === "classics"
+      ? "classics"
+      : movement.collection === "frontiers"
+        ? "frontiers"
+        : movement.collection === "regions"
+          ? "regions"
+          : "inner";
+    const members = collections[ringName];
+    const slot = members.findIndex((item) => item.id === movement.id);
+    const ring = rings[ringName];
+    const angle = ring.start + (slot / Math.max(1, members.length)) * Math.PI * 2;
+    return {
+      movement,
+      x: 50 + Math.cos(angle) * ring.radiusX,
+      y: 50 + Math.sin(angle) * ring.radiusY,
+      group: graphGroupFor(movement),
+      ring: ringName
+    };
+  });
+}
+
 function renderOrbitMap() {
   const map = $("#orbitMap");
-  const nodes = MOVEMENTS.map((movement) => ({
-    movement,
-    ...(GRAPH_POSITIONS[movement.id] || { x: 50, y: 50, group: "form" })
-  }));
+  const nodes = buildGraphNodes();
   const nodeById = Object.fromEntries(nodes.map((node) => [node.movement.id, node]));
   const seen = new Set();
   const edges = [];
   MOVEMENTS.forEach((source) => {
     source.relations.forEach((targetId) => {
-      const target = movementById(targetId);
-      if (!target || target.id === source.id) return;
+      const target = MOVEMENTS.find((movement) => movement.id === targetId);
+      if (!target || target.id === source.id || !nodeById[source.id] || !nodeById[target.id]) return;
       const key = [source.id, target.id].sort().join("|");
       if (seen.has(key)) return;
       seen.add(key);
-      edges.push({
-        from: nodeById[source.id],
-        to: nodeById[target.id],
-        type: graphEdgeType(source, target)
-      });
+      edges.push({ from: nodeById[source.id], to: nodeById[target.id], type: graphEdgeType(source, target) });
     });
   });
 
@@ -1903,34 +1982,37 @@ function renderOrbitMap() {
     const midX = (edge.from.x + edge.to.x) / 2;
     const midY = (edge.from.y + edge.to.y) / 2;
     return `
-      <g class="graph-edge graph-edge--${edge.type}">
+      <g class="graph-edge graph-edge--${edge.type}" data-from="${edge.from.movement.id}" data-to="${edge.to.movement.id}">
         <line class="orbit-line" x1="${edge.from.x}" y1="${edge.from.y}" x2="${edge.to.x}" y2="${edge.to.y}" style="--edge-color:${meta.color}"></line>
-        <circle cx="${midX}" cy="${midY}" r="0.42" style="fill:${meta.color}"></circle>
+        <circle cx="${midX}" cy="${midY}" r="0.34" style="fill:${meta.color}"></circle>
       </g>
     `;
   }).join("");
 
-  const groupMarkup = GRAPH_GROUPS.map((group) => `
-    <span class="graph-cluster graph-cluster--${group.key}" style="left:${group.x}%;top:${group.y}%;--cluster-color:${group.color}">
-      ${localizedGraphGroup(group)}
-    </span>
-  `).join("");
+  const ringLabels = [
+    { key: "regions", x: 7, y: 6, color: "#75f5ff" },
+    { key: "frontiers", x: 25, y: 17, color: "#a8c7ff" },
+    { key: "classics", x: 34, y: 30, color: "#89f2c1" },
+    { key: "synthesis", x: 45, y: 47, color: "#e2c98f" }
+  ];
+  const groupMarkup = ringLabels.map((label) => {
+    const fakeMovement = { collection: label.key === "synthesis" ? "synthesis" : label.key };
+    return `<span class="graph-cluster graph-cluster--${label.key}" style="left:${label.x}%;top:${label.y}%;--cluster-color:${label.color}">${collectionLabel(fakeMovement)}</span>`;
+  }).join("");
 
-  const nodeMarkup = nodes.map(({ movement, x, y, group }) => {
+  const nodeMarkup = nodes.map(({ movement, x, y, group, ring }) => {
     const local = localizedMovement(movement);
     return `
-    <button class="orbit-node magnetic orbit-node--${group}" type="button" data-open="${movement.id}" style="left:${x}%;top:${y}%;${cssVarsFor(movement)}">
-      <span>${local.title}</span>
-      <em>${local.lens.split("·")[0].trim()}</em>
-    </button>
-  `;
+      <button class="orbit-node magnetic orbit-node--${group} orbit-node--ring-${ring}" type="button" data-open="${movement.id}" data-node-id="${movement.id}" style="left:${x}%;top:${y}%;${cssVarsFor(movement)}">
+        <span>${local.title}</span>
+        <em>${local.lens.split("·")[0].trim()}</em>
+      </button>
+    `;
   }).join("");
 
   const legendMarkup = `
     <div class="graph-legend" aria-label="${t("graphLegend")}">
-      ${Object.entries(GRAPH_EDGE_TYPES).map(([key, meta]) => `
-        <span style="--edge-color:${meta.color}"><i></i>${graphEdgeMeta(key).label}</span>
-      `).join("")}
+      ${Object.entries(GRAPH_EDGE_TYPES).map(([key, meta]) => `<span style="--edge-color:${meta.color}"><i></i>${graphEdgeMeta(key).label}</span>`).join("")}
     </div>
   `;
 
@@ -1940,6 +2022,24 @@ function renderOrbitMap() {
     ${nodeMarkup}
     ${legendMarkup}
   `;
+
+  const focusRelations = (id) => {
+    const movement = movementById(id);
+    const linked = new Set([id, ...movement.relations, ...MOVEMENTS.filter((item) => item.relations.includes(id)).map((item) => item.id)]);
+    map.classList.add("is-tracing");
+    $$(".orbit-node", map).forEach((node) => node.classList.toggle("is-related", linked.has(node.dataset.nodeId)));
+    $$(".graph-edge", map).forEach((edge) => edge.classList.toggle("is-related", edge.dataset.from === id || edge.dataset.to === id));
+  };
+  const clearRelations = () => {
+    map.classList.remove("is-tracing");
+    $$(".is-related", map).forEach((element) => element.classList.remove("is-related"));
+  };
+  $$(".orbit-node", map).forEach((node) => {
+    node.addEventListener("mouseenter", () => focusRelations(node.dataset.nodeId));
+    node.addEventListener("mouseleave", clearRelations);
+    node.addEventListener("focus", () => focusRelations(node.dataset.nodeId));
+    node.addEventListener("blur", clearRelations);
+  });
 }
 
 function setActiveBook(index) {
@@ -1953,7 +2053,12 @@ function setActiveBook(index) {
   const railProgress = $("#railProgress");
   if (railCount) railCount.textContent = `${String(bounded + 1).padStart(2, "0")}/${String(MOVEMENTS.length).padStart(2, "0")}`;
   if (railProgress) railProgress.style.width = `${((bounded + 1) / MOVEMENTS.length) * 100}%`;
-  $$(".book").forEach((book, i) => book.classList.toggle("is-active", i === bounded));
+  $$(".book").forEach((book, i) => {
+    const isActive = i === bounded;
+    book.classList.toggle("is-active", isActive);
+    book.tabIndex = isActive ? 0 : -1;
+    book.setAttribute("aria-current", String(isActive));
+  });
 }
 
 function setupBookRail() {
@@ -1999,6 +2104,17 @@ function setupBookRail() {
   rail.addEventListener("pointerdown", () => rail.classList.add("is-dragging"));
   rail.addEventListener("pointerup", () => window.setTimeout(updateFromScroll, 80));
   rail.addEventListener("pointercancel", () => rail.classList.remove("is-dragging"));
+  rail.addEventListener("keydown", (event) => {
+    if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) return;
+    event.preventDefault();
+    const nextIndex = event.key === "Home"
+      ? 0
+      : event.key === "End"
+        ? MOVEMENTS.length - 1
+        : state.activeIndex + (event.key === "ArrowRight" ? 1 : -1);
+    scrollToBook(nextIndex);
+    window.setTimeout(() => $$(".book", track)[Math.max(0, Math.min(MOVEMENTS.length - 1, nextIndex))]?.focus({ preventScroll: true }), 240);
+  });
   $("#railPrev")?.addEventListener("click", () => scrollToBook(state.activeIndex - 1));
   $("#railNext")?.addEventListener("click", () => scrollToBook(state.activeIndex + 1));
   window.addEventListener("resize", () => window.setTimeout(updateFromScroll, 120));
@@ -2007,6 +2123,7 @@ function setupBookRail() {
 
 function applyLanguage(language) {
   state.language = UI_COPY[language] ? language : "zh";
+  localStorage.setItem("literary-language", state.language);
   document.documentElement.lang = state.language === "zh" ? "zh-CN" : (state.language === "fr" ? "fr" : "en");
   document.title = t("documentTitle");
   document.querySelector("meta[name='description']")?.setAttribute("content", t("documentDescription"));
@@ -2019,6 +2136,7 @@ function applyLanguage(language) {
   });
   $$("[data-lang]").forEach((button) => {
     button.classList.toggle("is-active", button.dataset.lang === state.language);
+    button.setAttribute("aria-pressed", String(button.dataset.lang === state.language));
   });
   renderBooks();
   renderArchive();
@@ -2029,6 +2147,7 @@ function applyLanguage(language) {
   cosmosController?.refreshLabels?.();
   spaceGameController?.refreshCopy?.();
   if (state.worldOpen && state.currentWorldId) openWorld(state.currentWorldId);
+  document.dispatchEvent(new CustomEvent("literary-language-change", { detail: { language: state.language } }));
 }
 
 function setupLanguageSwitcher() {
@@ -2265,6 +2384,8 @@ function sourceDossierMarkup(movement) {
 }
 
 function buildQuiz(movement) {
+  const researchQuestions = window.ResearchAtlas?.buildQuiz?.(movement, state.language);
+  if (researchQuestions?.length) return researchQuestions;
   const local = localizedMovement(movement);
   const related = movementById(movement.relations[0]);
   const unrelated = MOVEMENTS.find((item) => item.id !== movement.id && !movement.relations.includes(item.id)) || MOVEMENTS[0];
@@ -2449,6 +2570,7 @@ function openWorld(id) {
           <ul class="case-list">${local.cases.map((item) => `<li>${item}</li>`).join("")}</ul>
         </section>
         ${researchMarkup(movement)}
+        ${movement.sourceChapter ? `<section class="world-section research-reader-shell" data-research-reader data-chapter="${movement.id}" aria-live="polite"></section>` : ""}
         ${sourceDossierMarkup(movement)}
         <section class="world-section">
           <h3>${t("figures")}</h3>
@@ -2482,6 +2604,9 @@ function openWorld(id) {
 
   world.classList.add("is-open");
   world.setAttribute("aria-hidden", "false");
+  world.removeAttribute("inert");
+  $("#siteHeader")?.setAttribute("inert", "");
+  $("main")?.setAttribute("inert", "");
   document.body.style.overflow = "hidden";
   state.worldOpen = true;
   playSound("book");
@@ -2499,6 +2624,10 @@ function openWorld(id) {
   setupTilt();
   setupOpenButtons(content);
   setupQuiz(content);
+  window.ResearchAtlas?.enhanceWorld?.(content, movement);
+  const panel = $(".world__panel", world);
+  panel?.scrollTo({ top: 0, left: 0 });
+  window.requestAnimationFrame(() => $(".world__close", world)?.focus({ preventScroll: true }));
 }
 
 function closeWorld() {
@@ -2508,20 +2637,27 @@ function closeWorld() {
   state.currentWorldId = null;
   playSound("close");
   document.body.style.overflow = "";
+  $("#siteHeader")?.removeAttribute("inert");
+  $("main")?.removeAttribute("inert");
+  window.ResearchAtlas?.onWorldClosed?.();
+  const finishClose = () => {
+    world.classList.remove("is-open");
+    world.setAttribute("aria-hidden", "true");
+    world.setAttribute("inert", "");
+    const returnTarget = lastWorldTrigger?.isConnected ? lastWorldTrigger : $(".brand");
+    returnTarget?.focus({ preventScroll: true });
+    lastWorldTrigger = null;
+  };
   if (window.gsap) {
     gsap.to(".world__panel", { autoAlpha: 0, y: 28, scale: 0.98, duration: 0.22, ease: "power2.in" });
     gsap.to(".world__scrim", {
       autoAlpha: 0,
       duration: 0.24,
       delay: 0.12,
-      onComplete: () => {
-        world.classList.remove("is-open");
-        world.setAttribute("aria-hidden", "true");
-      }
+      onComplete: finishClose
     });
   } else {
-    world.classList.remove("is-open");
-    world.setAttribute("aria-hidden", "true");
+    finishClose();
   }
 }
 
@@ -2532,6 +2668,7 @@ function setupOpenButtons() {
     const button = event.target.closest("[data-open]");
     if (!button) return;
     event.preventDefault();
+    lastWorldTrigger = button;
     openWorld(button.dataset.open);
     if (window.anime) {
       anime({
@@ -2815,7 +2952,15 @@ function initLibraryGate() {
     camera.updateProjectionMatrix();
   };
 
+  let gateDisposed = false;
   const animate = () => {
+    if (!gate.isConnected) {
+      if (!gateDisposed) {
+        renderer.dispose();
+        gateDisposed = true;
+      }
+      return;
+    }
     requestAnimationFrame(animate);
     gateState.progress += (gateState.target - gateState.progress) * 0.08;
     gate.style.setProperty("--gate-progress", gateState.progress.toFixed(3));
@@ -3352,8 +3497,9 @@ function initThreeCosmos() {
 
   const locationMarkers = new THREE.Group();
   const locationPickers = [];
+  const markerGlowTexture = makeBookGlowTexture({ palette: ["#ffffff", "#ffffff", "#ffffff"] });
   MOVEMENTS.forEach((movement) => {
-    const loc = MOVEMENT_LOCATIONS[movement.id];
+    const loc = MOVEMENT_LOCATIONS[movement.id] || movement.location;
     if (!loc) return;
     const marker = new THREE.Group();
     const pos = latLonToVector3(loc.lat, loc.lon, 1.665);
@@ -3382,7 +3528,7 @@ function initThreeCosmos() {
       })
     );
     const plume = new THREE.Sprite(new THREE.SpriteMaterial({
-      map: makeBookGlowTexture(movement),
+      map: markerGlowTexture,
       color: markerColor,
       transparent: true,
       opacity: 0.26,
@@ -3454,7 +3600,7 @@ function initThreeCosmos() {
     { radiusX: 4.92, radiusZ: 3.42, baseY: 0.47, phase: Math.PI * 1.58, speed: 0.098 }
   ];
   const laneSlots = Math.ceil(MOVEMENTS.length / orbitLanes.length);
-  for (let i = 0; i < MOVEMENTS.length; i += 1) {
+  const addOrbitBook = (i) => {
     const movement = MOVEMENTS[i];
     const bookKit = makeBookMaterials(movement, i);
     const book = new THREE.Mesh(bookGeometry, bookKit.materials);
@@ -3485,6 +3631,29 @@ function initThreeCosmos() {
       coverPivot: null
     };
     satellites.add(book);
+  };
+  const initialBookCount = window.matchMedia("(max-width: 720px)").matches ? 3 : 4;
+  for (let i = 0; i < Math.min(initialBookCount, MOVEMENTS.length); i += 1) addOrbitBook(i);
+  let nextBookIndex = initialBookCount;
+  const addBookBatch = (deadline) => {
+    if (document.body.classList.contains("game-open")) {
+      window.setTimeout(() => window.requestIdleCallback ? requestIdleCallback(addBookBatch) : addBookBatch(), 600);
+      return;
+    }
+    let added = 0;
+    while (nextBookIndex < MOVEMENTS.length && added < 4 && (!deadline || deadline.timeRemaining() > 4)) {
+      addOrbitBook(nextBookIndex);
+      nextBookIndex += 1;
+      added += 1;
+    }
+    if (nextBookIndex < MOVEMENTS.length) {
+      if (window.requestIdleCallback) requestIdleCallback(addBookBatch, { timeout: 900 });
+      else window.setTimeout(() => addBookBatch(), 80);
+    }
+  };
+  if (nextBookIndex < MOVEMENTS.length) {
+    if (window.requestIdleCallback) requestIdleCallback(addBookBatch, { timeout: 900 });
+    else window.setTimeout(() => addBookBatch(), 80);
   }
   group.add(satellites);
 
@@ -3791,8 +3960,12 @@ function initThreeCosmos() {
     camera.updateProjectionMatrix();
   };
 
+  const reducedCosmosMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)");
+  let renderedReducedFrame = false;
   const animate = () => {
     requestAnimationFrame(animate);
+    if (document.hidden || document.body.classList.contains("game-open") || !canvas.isConnected) return;
+    if (reducedCosmosMotion?.matches && renderedReducedFrame) return;
     const time = performance.now() / 1000;
     group.rotation.y += lit ? 0.0028 : 0.001;
     group.rotation.x = Math.sin(performance.now() / 2300) * 0.08;
@@ -3867,6 +4040,7 @@ function initThreeCosmos() {
     atmosphereMaterial.uniforms.intensity.value += (((earthHovered ? 1.58 : (globeAwake ? 1.12 : 0.55))) - atmosphereMaterial.uniforms.intensity.value) * 0.06;
     ringMaterial.opacity += ((lit ? 0.92 : 0.5) - ringMaterial.opacity) * 0.06;
     renderer.render(scene, camera);
+    renderedReducedFrame = true;
   };
 
   const sparkle = (event) => {
@@ -4049,8 +4223,8 @@ function initScrollAnimations() {
       trigger: ".atlas",
       start: "top 65%",
       onEnter: () => {
-        gsap.from(".orbit-node", { scale: 0.2, autoAlpha: 0, stagger: { each: 0.035, from: "center" }, duration: 0.8, ease: "elastic.out(1, .6)" });
-        gsap.from(".graph-edge", { autoAlpha: 0, stagger: 0.018, duration: 0.72, ease: "power2.out" });
+        gsap.from(".orbit-node", { scale: 0.45, autoAlpha: 0, stagger: { each: 0.012, from: "center" }, duration: 0.58, ease: "back.out(1.4)" });
+        gsap.from(".graph-edge", { autoAlpha: 0, stagger: 0.006, duration: 0.52, ease: "power2.out" });
         gsap.from(".graph-cluster, .graph-legend", { y: 12, autoAlpha: 0, stagger: 0.05, duration: 0.5 }, "-=0.42");
       },
       once: true
@@ -4215,6 +4389,7 @@ function initSpaceGame() {
   const hullText = $("#gameHull");
   const energyText = $("#gameEnergy");
   const comboText = $("#gameCombo");
+  const progressText = $("#gameProgress");
   const skillText = $("#gameSkill");
   const hullFill = $("#gameHullFill");
   const energyFill = $("#gameEnergyFill");
@@ -4225,6 +4400,10 @@ function initSpaceGame() {
   const touchSkill = $("#touchSkill");
   const touchLance = $("#touchLance");
   const touchRift = $("#touchRift");
+  const touchFocus = $("#touchFocus");
+  const pauseButton = $("#pauseSpaceGame");
+  const restartButton = $("#restartSpaceGame");
+  const powerButtons = $$('[data-game-power]');
   if (!overlay || !mount || !closeButton || !scoreText || !waveText || !hullText || !energyText || !comboText || !skillText || !statusText) return;
 
   const WAVE_CONFIGS = [
@@ -4234,9 +4413,12 @@ function initSpaceGame() {
   ];
   const SKILL_COSTS = { nova: 100, lance: 64, rift: 78 };
   const SKILL_COOLDOWNS = { nova: 9000, lance: 5600, rift: 7800 };
+  const ENERGY_REGEN_PER_SECOND = 2.8;
 
   let phaserGame = null;
   let activeScene = null;
+  let gamePaused = false;
+  let gameReturnTarget = null;
 
   const setStatus = (text) => {
     statusText.textContent = text;
@@ -4248,10 +4430,16 @@ function initSpaceGame() {
     hullText.textContent = String(Math.max(0, Math.ceil(state.hull)));
     energyText.textContent = String(Math.max(0, Math.floor(state.energy ?? 0)));
     comboText.textContent = `x${Math.max(1, Math.floor(state.combo || 1))}`;
+    if (progressText) {
+      const config = WAVE_CONFIGS[Math.min(state.wave || 0, WAVE_CONFIGS.length - 1)];
+      progressText.textContent = config.boss
+        ? `${Math.max(0, Math.ceil(state.bossHp || 0))}/${Math.max(1, state.bossMax || 1)}`
+        : `${Math.min(state.kills || 0, config.target)}/${config.target}${state.wave === 0 ? ` · ${Math.min(1, state.upgradesCollected || 0)}/1` : ""}`;
+    }
     const cooldowns = state.cooldowns || { nova: 0, lance: 0, rift: 0 };
     const readyKeys = Object.keys(SKILL_COSTS).filter((key) => cooldowns[key] <= 0 && (state.energy ?? 0) >= SKILL_COSTS[key]);
     const waiting = Object.keys(SKILL_COSTS)
-      .map((key) => cooldowns[key] > 0 ? cooldowns[key] : ((state.energy ?? 0) < SKILL_COSTS[key] ? (SKILL_COSTS[key] - (state.energy ?? 0)) * 85 : 0))
+      .map((key) => cooldowns[key] > 0 ? cooldowns[key] : ((state.energy ?? 0) < SKILL_COSTS[key] ? ((SKILL_COSTS[key] - (state.energy ?? 0)) / ENERGY_REGEN_PER_SECOND) * 1000 : 0))
       .filter(Boolean);
     skillText.textContent = readyKeys.length ? `${readyKeys.length}/3 ${t("gameReady")}` : (waiting.length ? `${Math.ceil(Math.min(...waiting) / 1000)}s` : `${Math.floor(state.energy ?? 0)}%`);
     if (hullFill) hullFill.style.width = `${Math.max(0, Math.min(100, state.hull))}%`;
@@ -4264,41 +4452,70 @@ function initSpaceGame() {
     touchSkill?.classList.toggle("is-ready", cooldowns.nova <= 0 && (state.energy ?? 0) >= SKILL_COSTS.nova);
     touchLance?.classList.toggle("is-ready", cooldowns.lance <= 0 && (state.energy ?? 0) >= SKILL_COSTS.lance);
     touchRift?.classList.toggle("is-ready", cooldowns.rift <= 0 && (state.energy ?? 0) >= SKILL_COSTS.rift);
+    powerButtons.forEach((button) => {
+      const active = (state.powerMode || "balanced") === button.dataset.gamePower;
+      button.classList.toggle("is-active", active);
+      button.setAttribute("aria-pressed", String(active));
+    });
+    overlay.classList.toggle("is-critical", (state.hull ?? 100) <= 28 && !state.gameOver);
   };
 
   class LunarSquadronScene extends Phaser.Scene {
     constructor() {
       super("LunarSquadronScene");
-      this.state = {
+      this.state = this.makeInitialState();
+    }
+
+    makeInitialState() {
+      return {
         score: 0,
         wave: 0,
         kills: 0,
+        upgradesCollected: 0,
         hull: 100,
         energy: 100,
         combo: 1,
+        maxCombo: 1,
+        comboTimer: 0,
         weapon: 1,
         overdrive: 0,
         shield: 0,
         rift: 0,
+        powerMode: "balanced",
         cooldowns: { nova: 0, lance: 0, rift: 0 },
         skillCooldown: 0,
         skillReady: true,
         bossHp: 0,
         bossMax: 0,
         missionComplete: false,
-        gameOver: false
+        gameOver: false,
+        phase: "briefing",
+        transitionLocked: false,
+        elapsed: 0
       };
     }
 
     create() {
+      this.state = this.makeInitialState();
+      this.boss = null;
+      this.bossTimer = null;
+      this.touchFire = false;
+      this.touchFocus = false;
+      this.inputMode = "pointer";
+      this.lastHudUpdate = 0;
+      this.lastBackdropUpdate = 0;
+      this.riftTargets = new Set();
+      this.telegraphs = new Set();
       activeScene = this;
       this.input.mouse?.disableContextMenu();
       this.width = this.scale.width;
       this.height = this.scale.height;
+      this.worldScale = Phaser.Math.Clamp(this.height / 900, 0.42, 1.08);
       this.createTextures();
       this.createBackdrop();
       this.physics.world.setBounds(0, 0, this.width, this.height);
-      this.player = this.physics.add.image(this.width * 0.5, this.height * 0.78, "ship");
+      const playerStartY = this.height * (this.isShortLandscape() ? 0.68 : 0.76);
+      this.player = this.physics.add.image(this.width * 0.5, playerStartY, "ship");
       this.player.setCircle(8, 24, 28);
       this.player.setDepth(12);
       this.player.setDamping(true);
@@ -4324,9 +4541,12 @@ function initSpaceGame() {
       this.physics.add.overlap(this.player, this.enemyBullets, this.damagePlayer, null, this);
       this.physics.add.overlap(this.player, this.powerups, this.collectPowerup, null, this);
 
-      this.keys = this.input.keyboard.addKeys("W,A,S,D,UP,DOWN,LEFT,RIGHT,SPACE,SHIFT,E,Q,R");
+      this.keys = this.input.keyboard.addKeys("W,A,S,D,UP,DOWN,LEFT,RIGHT,SPACE,SHIFT,E,Q,R,ONE,TWO,THREE,FOUR");
       this.focusKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.CTRL);
-      this.input.on("pointermove", (pointer) => this.player.target.set(pointer.x, pointer.y));
+      this.input.on("pointermove", (pointer) => {
+        this.inputMode = "pointer";
+        this.player.target.set(pointer.x, pointer.y);
+      });
       this.input.on("pointerdown", (pointer) => {
         if (pointer.rightButtonDown()) this.castSkill();
         else this.fire(true);
@@ -4335,6 +4555,10 @@ function initSpaceGame() {
       this.input.keyboard.on("keydown-SHIFT", () => this.castSkill());
       this.input.keyboard.on("keydown-E", () => this.castIonLance());
       this.input.keyboard.on("keydown-Q", () => this.castTimeRift());
+      this.input.keyboard.on("keydown-ONE", () => this.setPowerMode("weapons"));
+      this.input.keyboard.on("keydown-TWO", () => this.setPowerMode("engines"));
+      this.input.keyboard.on("keydown-THREE", () => this.setPowerMode("shields"));
+      this.input.keyboard.on("keydown-FOUR", () => this.setPowerMode("balanced"));
       this.input.keyboard.on("keydown-R", () => {
         if (this.state.gameOver || this.state.missionComplete) this.scene.restart();
       });
@@ -4357,10 +4581,29 @@ function initSpaceGame() {
       updateHud(this.state);
     }
 
+    setPowerMode(mode) {
+      if (!['weapons', 'engines', 'shields', 'balanced'].includes(mode)) return;
+      this.state.powerMode = mode;
+      if (this.fireTimer) this.fireTimer.delay = mode === "weapons" ? 112 : 150;
+      const labels = {
+        zh: { weapons: "武器优先：射速与输出增强", engines: "引擎优先：机动与能量恢复增强", shields: "护盾优先：减伤与无敌窗增强", balanced: "均衡分配：系统恢复标准输出" },
+        en: { weapons: "Weapons priority: fire rate and output boosted", engines: "Engines priority: mobility and recharge boosted", shields: "Shields priority: damage resistance boosted", balanced: "Balanced power restored" },
+        fr: { weapons: "Priorité armes : cadence et puissance accrues", engines: "Priorité moteurs : mobilité et recharge accrues", shields: "Priorité boucliers : résistance accrue", balanced: "Distribution équilibrée rétablie" }
+      };
+      setStatus(labels[state.language]?.[mode] || labels.zh[mode]);
+      updateHud(this.state);
+    }
+
     resizeScene(gameSize) {
       this.width = gameSize.width;
       this.height = gameSize.height;
+      this.worldScale = Phaser.Math.Clamp(this.height / 900, 0.42, 1.08);
       this.physics.world.setBounds(0, 0, this.width, this.height);
+      if (this.player) {
+        this.player.x = Phaser.Math.Clamp(this.player.x, 34, this.width - 34);
+        this.player.y = Phaser.Math.Clamp(this.player.y, this.height * 0.34, this.playerBottomLimit());
+        this.player.target.set(this.player.x, this.player.y);
+      }
       if (this.waveBanner) {
         this.waveBanner
           .setStyle({ fontSize: this.bannerFontSize() })
@@ -4368,15 +4611,26 @@ function initSpaceGame() {
       }
     }
 
+    isShortLandscape() {
+      return this.height < 520 && this.width > this.height;
+    }
+
+    playerBottomLimit() {
+      return this.height - (this.isShortLandscape() ? 112 : 96);
+    }
+
     bannerFontSize() {
-      return `${Math.round(Phaser.Math.Clamp(this.width * 0.052, 19, 42))}px`;
+      const responsiveSize = Math.min(this.width * 0.052, this.height * (this.isShortLandscape() ? 0.074 : 0.08));
+      return `${Math.round(Phaser.Math.Clamp(responsiveSize, 18, 36))}px`;
     }
 
     bannerY() {
+      if (this.isShortLandscape()) return this.height * 0.49;
       return this.height * (this.width < 520 ? 0.27 : 0.23);
     }
 
     createTextures() {
+      if (this.textures.exists("ship")) return;
       const g = this.add.graphics();
       g.clear();
       g.fillStyle(0x0a1222, 1);
@@ -4520,7 +4774,10 @@ function initSpaceGame() {
     startWave(index) {
       this.state.wave = index;
       this.state.kills = 0;
+      this.state.upgradesCollected = 0;
+      this.state.transitionLocked = false;
       const config = WAVE_CONFIGS[index];
+      this.state.phase = config.boss ? "boss" : "combat";
       this.spawnTimer.delay = config.spawn;
       this.asteroidTimer.paused = false;
       if (config.boss) {
@@ -4541,7 +4798,7 @@ function initSpaceGame() {
     }
 
     spawnEnemy() {
-      if (this.state.gameOver || this.state.missionComplete) return;
+      if (this.state.gameOver || this.state.missionComplete || this.state.transitionLocked) return;
       const config = WAVE_CONFIGS[this.state.wave];
       const x = Phaser.Math.Between(60, this.width - 60);
       const elite = this.state.wave > 0 && Math.random() > 0.74;
@@ -4554,33 +4811,30 @@ function initSpaceGame() {
       enemy.kind = elite ? "bomber" : (scout ? "scout" : "fighter");
       enemy.pattern = Math.random() > 0.5 ? "sine" : "dive";
       enemy.phase = Math.random() * Math.PI * 2;
-      const riftFactor = this.state.rift > 0 ? 0.54 : 1;
-      enemy.setVelocity(Phaser.Math.Between(-50, 50) * riftFactor, (118 + this.state.wave * 32) * config.speed * (scout ? 1.28 : 1) * riftFactor);
+      enemy.age = 0;
+      enemy.nextShotAt = this.time.now + Phaser.Math.Between(elite ? 950 : 1500, elite ? 1650 : 2850);
+      enemy.baseSpeedY = (118 + this.state.wave * 32) * config.speed * (scout ? 1.28 : 1) * this.worldScale;
+      enemy.setVelocity(Phaser.Math.Between(-50, 50) * this.worldScale, enemy.baseSpeedY);
       enemy.setDepth(8);
       enemy.setScale(elite ? 1.08 : (scout ? 0.9 : 1));
-      enemy.setTint(elite ? 0xf5d287 : (this.state.rift > 0 ? 0xb99cff : 0xffffff));
-      if (this.state.wave > 0 && Math.random() > 0.56) {
-        this.time.delayedCall(700, () => this.fireEnemy(enemy));
-      }
-      if (elite) {
-        this.time.delayedCall(1180, () => this.fireEnemy(enemy));
-        this.time.delayedCall(1540, () => this.fireEnemy(enemy));
-      }
+      if (elite) enemy.setTint(0xf5d287);
+      this.slowTargetForRift(enemy, 0.54);
     }
 
     spawnBoss() {
       if (this.boss || this.state.gameOver) return;
       this.boss = this.enemies.create(this.width / 2, -80, "boss");
       this.boss.setSize(224, 84, true);
-      this.boss.hp = 120;
+      this.boss.hp = 180;
       this.boss.score = 3600;
       this.boss.isBoss = true;
       this.boss.kind = "boss";
+      this.boss.combatPhase = 1;
       this.state.bossHp = this.boss.hp;
       this.state.bossMax = this.boss.hp;
       this.boss.setDepth(9);
       this.tweens.add({ targets: this.boss, y: this.height * 0.2, duration: 900, ease: "Power2" });
-      this.bossTimer = this.time.addEvent({ delay: 620, callback: () => this.fireBoss(), loop: true });
+      this.bossTimer = this.time.addEvent({ delay: 940, callback: () => this.fireBoss(), loop: true });
       setStatus(t("gameBossStatus"));
     }
 
@@ -4593,7 +4847,8 @@ function initSpaceGame() {
       asteroid.hp = Math.ceil(scale * 2);
       asteroid.score = 35;
       asteroid.kind = "asteroid";
-      asteroid.setVelocity(Phaser.Math.Between(-45, 45), Phaser.Math.Between(92, 180) + this.state.wave * 18);
+      asteroid.setVelocity(Phaser.Math.Between(-45, 45) * this.worldScale, (Phaser.Math.Between(92, 180) + this.state.wave * 18) * this.worldScale);
+      this.slowTargetForRift(asteroid, 0.52);
       asteroid.setAngularVelocity(Phaser.Math.Between(-70, 70));
       asteroid.setDepth(5);
     }
@@ -4608,8 +4863,8 @@ function initSpaceGame() {
         if (!bullet) return;
         bullet.setActive(true).setVisible(true).setDepth(10);
         bullet.body.enable = true;
-        bullet.setVelocity((index - (offsets.length - 1) / 2) * 42, -720);
-        bullet.damage = this.state.overdrive > 0 ? 2 : 1;
+        bullet.setVelocity((index - (offsets.length - 1) / 2) * 42 * this.worldScale, -720 * this.worldScale);
+        bullet.damage = (this.state.overdrive > 0 ? 2 : 1) * (this.state.powerMode === "weapons" ? 1.35 : 1);
         bullet.setBlendMode(Phaser.BlendModes.ADD);
       });
       if (manual) playSound("laser");
@@ -4622,27 +4877,50 @@ function initSpaceGame() {
       if (!bullet) return;
       bullet.setActive(true).setVisible(true).setDepth(7);
       bullet.body.enable = true;
-      this.physics.moveToObject(bullet, this.player, (240 + this.state.wave * 32) * (this.state.rift > 0 ? 0.52 : 1));
+      bullet.grazed = false;
+      this.physics.moveToObject(bullet, this.player, (240 + this.state.wave * 32) * this.worldScale);
+      this.slowTargetForRift(bullet, 0.52);
     }
 
     fireBoss() {
       if (!this.boss?.active || this.state.gameOver) return;
-      const mode = Math.floor(this.time.now / 1600) % 3;
-      const count = mode === 0 ? 12 : (mode === 1 ? 18 : 7);
-      const aim = Phaser.Math.RadToDeg(Phaser.Math.Angle.Between(this.boss.x, this.boss.y, this.player.x, this.player.y));
-      for (let i = 0; i < count; i += 1) {
-        const angle = mode === 0
-          ? -168 + i * 28 + Math.sin(this.time.now / 380) * 8
-          : (mode === 1
-            ? 18 + i * 20 + this.time.now * 0.055
-            : aim - 42 + i * 14);
-        const bullet = this.enemyBullets.get(this.boss.x, this.boss.y + 38, "enemyBullet");
-        if (!bullet) continue;
-        bullet.setActive(true).setVisible(true).setDepth(7);
-        bullet.body.enable = true;
-        bullet.setBlendMode(Phaser.BlendModes.ADD);
-        this.physics.velocityFromAngle(angle, (mode === 2 ? 260 : 210) * (this.state.rift > 0 ? 0.5 : 1), bullet.body.velocity);
+      const ratio = this.boss.hp / this.state.bossMax;
+      const phase = ratio > 0.66 ? 1 : (ratio > 0.33 ? 2 : 3);
+      if (phase !== this.boss.combatPhase) {
+        this.boss.combatPhase = phase;
+        this.cameras.main.flash(180, 117, 245, 255, false);
+        setStatus(state.language === "zh" ? `母舰进入第 ${phase} 阶段：观察预警并寻找弹幕缺口。` : state.language === "fr" ? `Phase ${phase} du vaisseau-mère : suivez les alertes.` : `Mothership phase ${phase}: read the telegraphs and find the gaps.`);
       }
+      if (this.bossTimer) this.bossTimer.delay = phase === 1 ? 980 : (phase === 2 ? 850 : 730);
+      const warning = this.add.circle(this.boss.x, this.boss.y + 32, 22, 0xff8fa8, 0.08)
+        .setStrokeStyle(2, phase === 3 ? 0xff8fa8 : 0xf5d287, 0.82)
+        .setBlendMode(Phaser.BlendModes.ADD)
+        .setDepth(18);
+      this.telegraphs.add(warning);
+      this.tweens.add({ targets: warning, scale: 3.45, alpha: 0.56, duration: 380, ease: "Sine.easeOut" });
+      this.time.delayedCall(420, () => {
+        if (warning.active) warning.destroy();
+        this.telegraphs.delete(warning);
+        if (!this.boss?.active || this.state.gameOver) return;
+        const mode = phase - 1;
+        const count = phase === 1 ? 10 : (phase === 2 ? 16 : 9);
+        const aim = Phaser.Math.RadToDeg(Phaser.Math.Angle.Between(this.boss.x, this.boss.y, this.player.x, this.player.y));
+        for (let i = 0; i < count; i += 1) {
+          const angle = mode === 0
+            ? -160 + i * 32 + Math.sin(this.time.now / 420) * 7
+            : (mode === 1
+              ? 20 + i * 22 + this.time.now * 0.05
+              : aim - 56 + i * 14);
+          const bullet = this.enemyBullets.get(this.boss.x, this.boss.y + 38, "enemyBullet");
+          if (!bullet) continue;
+          bullet.setActive(true).setVisible(true).setDepth(7);
+          bullet.body.enable = true;
+          bullet.grazed = false;
+          bullet.setBlendMode(Phaser.BlendModes.ADD);
+          this.physics.velocityFromAngle(angle, (phase === 3 ? 278 : 214) * this.worldScale, bullet.body.velocity);
+          this.slowTargetForRift(bullet, 0.5);
+        }
+      });
     }
 
     hitEnemy(bullet, enemy) {
@@ -4654,11 +4932,14 @@ function initSpaceGame() {
       const wasBoss = enemy.isBoss;
       const score = enemy.score || 100;
       enemy.disableBody(true, true);
-      this.state.combo = Math.min(9, (this.state.combo || 1) + (wasBoss ? 2 : 1));
+      const multiplier = this.state.comboTimer > 0 ? Math.max(1, this.state.combo || 1) : 1;
+      this.state.score += score * multiplier;
+      this.state.combo = Math.min(12, multiplier + (wasBoss ? 2 : 1));
+      this.state.maxCombo = Math.max(this.state.maxCombo, this.state.combo);
+      this.state.comboTimer = 2500;
       this.state.energy = Math.min(100, (this.state.energy || 0) + (wasBoss ? 40 : 8));
-      this.state.score += score * this.state.combo;
       this.state.kills += 1;
-      if (Math.random() > (wasBoss ? 0.1 : 0.72)) this.dropPowerup(enemy.x, enemy.y);
+      if ((!wasBoss && this.state.wave === 0 && this.state.kills === 5) || Math.random() > (wasBoss ? 0.1 : 0.72)) this.dropPowerup(enemy.x, enemy.y);
       playSound(wasBoss ? "success" : "blast");
       if (wasBoss) this.completeMission();
       else this.checkWaveProgress();
@@ -4680,12 +4961,15 @@ function initSpaceGame() {
     damagePlayer(player, hazard) {
       if (!hazard.active || this.state.shield > 0 || this.state.gameOver || this.state.missionComplete) return;
       hazard.disableBody(true, true);
-      this.state.hull -= hazard.isBoss ? 35 : 18;
+      const damage = hazard.isBoss ? 35 : 18;
+      this.state.hull -= this.state.powerMode === "shields" ? damage * 0.62 : damage;
       this.state.combo = 1;
+      this.state.comboTimer = 0;
       this.state.energy = Math.max(0, this.state.energy - 18);
-      this.state.shield = 850;
+      this.state.shield = this.state.powerMode === "shields" ? 1250 : 850;
       this.flashAt(player.x, player.y, "#ff8fa8", 26);
-      this.cameras.main.shake(170, 0.007);
+      if (!window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches) this.cameras.main.shake(170, 0.007);
+      navigator.vibrate?.(35);
       playSound("blast");
       if (this.state.hull <= 0) this.endGame(false);
       updateHud(this.state);
@@ -4694,29 +4978,47 @@ function initSpaceGame() {
     collectPowerup(player, powerup) {
       const type = powerup.kind;
       powerup.disableBody(true, true);
+      this.state.upgradesCollected += 1;
       if (type === "weapon") {
-        this.state.weapon = Math.min(3, this.state.weapon + 1);
-        setStatus(t("gameWeaponStatus"));
+        if (this.state.weapon >= 3) {
+          this.state.score += 420;
+          this.state.energy = Math.min(100, this.state.energy + 22);
+          setStatus(state.language === "zh" ? "武器已满级：升级转化为分数与能量。" : state.language === "fr" ? "Arme maximale : bonus converti en score et énergie." : "Weapon maxed: upgrade converted to score and energy.");
+        } else {
+          this.state.weapon += 1;
+          setStatus(t("gameWeaponStatus"));
+        }
       } else if (type === "repair") {
-        this.state.hull = Math.min(100, this.state.hull + 24);
-        setStatus(t("gameRepairStatus"));
+        if (this.state.hull >= 99) {
+          this.state.score += 280;
+          this.state.energy = Math.min(100, this.state.energy + 16);
+          setStatus(state.language === "zh" ? "舰体完整：修复模块转化为能量。" : state.language === "fr" ? "Coque intacte : réparation convertie en énergie." : "Hull intact: repair converted to energy.");
+        } else {
+          this.state.hull = Math.min(100, this.state.hull + 24);
+          setStatus(t("gameRepairStatus"));
+        }
+      } else if (type === "shield") {
+        this.state.shield = Math.max(this.state.shield, 4200);
+        this.state.energy = Math.min(100, this.state.energy + 12);
+        setStatus(state.language === "zh" ? "相位护盾上线：短时间免疫碰撞。" : state.language === "fr" ? "Bouclier de phase activé." : "Phase shield online: temporary collision immunity.");
       } else {
         this.state.overdrive = 8000;
         this.state.energy = Math.min(100, this.state.energy + 18);
         setStatus(t("gameOverdriveStatus"));
       }
       playSound("success");
+      this.checkWaveProgress();
       updateHud(this.state);
     }
 
     dropPowerup(x, y) {
-      const types = ["weapon", "repair", "overdrive"];
+      const types = ["weapon", "repair", "overdrive", "shield"];
       const powerup = this.powerups.create(x, y, "powerup");
       powerup.kind = types[Phaser.Math.Between(0, types.length - 1)];
       powerup.setCircle(15, 2, 2);
       powerup.setVelocity(Phaser.Math.Between(-30, 30), 92);
       powerup.setDepth(9);
-      powerup.setTint(powerup.kind === "repair" ? 0x89f2c1 : (powerup.kind === "weapon" ? 0x75f5ff : 0xf5d287));
+      powerup.setTint(powerup.kind === "repair" ? 0x89f2c1 : (powerup.kind === "weapon" ? 0x75f5ff : (powerup.kind === "shield" ? 0x9f8cff : 0xf5d287)));
     }
 
     canUseSkill(key) {
@@ -4746,12 +5048,13 @@ function initSpaceGame() {
       if (!this.canUseSkill("nova")) return;
       this.beginSkill("nova");
       this.state.shield = Math.max(this.state.shield, 1100);
+      const novaRadius = Math.min(this.width, this.height) * 0.42;
       const ring = this.add.circle(this.player.x, this.player.y, 28, 0x75f5ff, 0.18).setStrokeStyle(3, 0xf5d287, 0.92).setDepth(20);
-      this.tweens.add({ targets: ring, radius: 340, alpha: 0, duration: 520, ease: "Expo.easeOut", onComplete: () => ring.destroy() });
+      this.tweens.add({ targets: ring, radius: novaRadius, alpha: 0, duration: 520, ease: "Expo.easeOut", onComplete: () => ring.destroy() });
       [...this.enemies.getChildren(), ...this.asteroids.getChildren()].forEach((target) => {
         if (!target.active) return;
         const distance = Phaser.Math.Distance.Between(this.player.x, this.player.y, target.x, target.y);
-        if (distance < 345) {
+        if (distance < novaRadius) {
           target.hp -= target.isBoss ? 8 : 5;
           this.flashAt(target.x, target.y, "#fff8df", 12);
           if (target.hp <= 0) {
@@ -4816,6 +5119,10 @@ function initSpaceGame() {
       this.tweens.add({ targets: rift, radius: Math.min(this.width, this.height) * 0.58, alpha: 0, duration: 980, ease: "Expo.easeOut", onComplete: () => rift.destroy() });
       [...this.enemies.getChildren(), ...this.enemyBullets.getChildren(), ...this.asteroids.getChildren()].forEach((target) => {
         if (!target.active || !target.body) return;
+        if (!target.riftSnapshot) {
+          target.riftSnapshot = { vx: target.body.velocity.x, vy: target.body.velocity.y, tint: target.tintTopLeft || 0xffffff };
+        }
+        this.riftTargets.add(target);
         target.setTint?.(0xb99cff);
         target.body.velocity.x *= 0.42;
         target.body.velocity.y *= 0.42;
@@ -4825,11 +5132,47 @@ function initSpaceGame() {
       updateHud(this.state);
     }
 
+    slowTargetForRift(target, factor = 0.42) {
+      if (this.state.rift <= 0 || !target?.active || !target.body || target.riftSnapshot) return;
+      target.riftSnapshot = {
+        vx: target.body.velocity.x,
+        vy: target.body.velocity.y,
+        tint: target.tintTopLeft || 0xffffff
+      };
+      this.riftTargets.add(target);
+      target.setTint?.(0xb99cff);
+      target.body.velocity.x *= factor;
+      target.body.velocity.y *= factor;
+    }
+
+    releaseTimeRift() {
+      this.riftTargets.forEach((target) => {
+        const snapshot = target?.riftSnapshot;
+        if (!target?.active || !target.body || !snapshot) return;
+        target.setVelocity(snapshot.vx, snapshot.vy);
+        if (snapshot.tint && snapshot.tint !== 0xffffff) target.setTint(snapshot.tint);
+        else target.clearTint?.();
+        delete target.riftSnapshot;
+      });
+      this.riftTargets.clear();
+    }
+
+    clearTelegraphs() {
+      this.telegraphs?.forEach((warning) => {
+        this.tweens.killTweensOf(warning);
+        if (warning?.active) warning.destroy();
+      });
+      this.telegraphs?.clear();
+    }
+
     checkWaveProgress() {
       const config = WAVE_CONFIGS[this.state.wave];
-      if (config.boss || this.state.kills < config.target) return;
+      if (config.boss || this.state.transitionLocked || this.state.kills < config.target) return;
+      if (this.state.wave === 0 && this.state.upgradesCollected < 1) return;
       const nextWave = this.state.wave + 1;
       if (nextWave < WAVE_CONFIGS.length) {
+        this.state.transitionLocked = true;
+        this.state.phase = "clearing";
         this.spawnTimer.paused = true;
         this.time.delayedCall(1100, () => this.startWave(nextWave));
       }
@@ -4838,14 +5181,17 @@ function initSpaceGame() {
     completeMission() {
       if (this.state.missionComplete) return;
       this.state.missionComplete = true;
+      this.state.phase = "result";
+      this.state.transitionLocked = true;
       this.state.bossHp = 0;
       this.spawnTimer.paused = true;
       this.asteroidTimer.paused = true;
       this.bossTimer?.remove(false);
+      this.clearTelegraphs();
       this.enemyBullets.clear(true, true);
       this.enemies.clear(true, true);
       this.asteroids.clear(true, true);
-      setStatus(t("gameMissionCompleteStatus"));
+      setStatus(`${t("gameMissionCompleteStatus")} · ${Math.floor(this.state.score)} pts · x${this.state.maxCombo} · ${Math.floor(this.state.elapsed)}s`);
       this.waveBanner.setText(t("gameMissionCompleteBanner")).setAlpha(1).setY(this.height * 0.32);
       this.tweens.add({ targets: this.waveBanner, scale: 1.06, yoyo: true, repeat: -1, duration: 820, ease: "Sine.easeInOut" });
       playSound("success");
@@ -4854,11 +5200,14 @@ function initSpaceGame() {
     endGame() {
       if (this.state.gameOver) return;
       this.state.gameOver = true;
+      this.state.phase = "result";
+      this.state.transitionLocked = true;
       this.state.bossHp = 0;
       this.spawnTimer.paused = true;
       this.asteroidTimer.paused = true;
       this.bossTimer?.remove(false);
-      setStatus(t("gameFailedStatus"));
+      this.clearTelegraphs();
+      setStatus(`${t("gameFailedStatus")} · ${Math.floor(this.state.score)} pts · x${this.state.maxCombo} · ${Math.floor(this.state.elapsed)}s`);
       this.waveBanner.setText(t("gameFailedBanner")).setAlpha(1).setY(this.height * 0.32);
       this.cameras.main.shake(320, 0.012);
       playSound("close");
@@ -4871,27 +5220,32 @@ function initSpaceGame() {
 
     update(time, delta) {
       const dt = delta / 1000;
-      this.drawBackdrop(dt, time);
+      if (time - this.lastBackdropUpdate >= 33) {
+        const backdropDt = this.lastBackdropUpdate ? (time - this.lastBackdropUpdate) / 1000 : dt;
+        this.drawBackdrop(backdropDt, time);
+        this.lastBackdropUpdate = time;
+      }
       if (this.state.gameOver || this.state.missionComplete) return;
+      this.state.elapsed += dt;
 
       const move = new Phaser.Math.Vector2(0, 0);
       if (this.keys.A.isDown || this.keys.LEFT.isDown) move.x -= 1;
       if (this.keys.D.isDown || this.keys.RIGHT.isDown) move.x += 1;
       if (this.keys.W.isDown || this.keys.UP.isDown) move.y -= 1;
       if (this.keys.S.isDown || this.keys.DOWN.isDown) move.y += 1;
+      const focused = Boolean(this.focusKey?.isDown || this.touchFocus);
       if (move.lengthSq() > 0) {
-        move.normalize().scale(this.focusKey?.isDown ? 310 : 520);
+        this.inputMode = "keyboard";
+        this.player.target.set(this.player.x, this.player.y);
+        const engineFactor = this.state.powerMode === "engines" ? 1.28 : 1;
+        move.normalize().scale((focused ? 310 : 520) * engineFactor * this.worldScale);
         this.player.setAcceleration(move.x, move.y);
-      } else {
-        const pointer = this.input.activePointer;
-        if (pointer.isDown || pointer.x !== 0 || pointer.y !== 0) {
-          this.player.target.set(pointer.x, pointer.y);
-        }
+      } else if (this.inputMode === "pointer") {
         const dx = this.player.target.x - this.player.x;
         const dy = this.player.target.y - this.player.y;
         const distance = Math.max(1, Math.hypot(dx, dy));
-        const focused = this.focusKey?.isDown;
-        const speed = Phaser.Math.Clamp(distance * (focused ? 4.2 : 7.2), 0, focused ? 390 : 760);
+        const engineFactor = this.state.powerMode === "engines" ? 1.22 : 1;
+        const speed = Phaser.Math.Clamp(distance * (focused ? 4.2 : 7.2), 0, (focused ? 390 : 760) * engineFactor * this.worldScale);
         const desiredX = dx / distance * speed;
         const desiredY = dy / distance * speed;
         this.player.setAcceleration(0, 0);
@@ -4899,15 +5253,19 @@ function initSpaceGame() {
           Phaser.Math.Linear(this.player.body.velocity.x, desiredX, 0.26),
           Phaser.Math.Linear(this.player.body.velocity.y, desiredY, 0.26)
         );
+      } else {
+        this.player.setAcceleration(0, 0);
+        this.player.setVelocity(this.player.body.velocity.x * 0.82, this.player.body.velocity.y * 0.82);
+        this.player.target.set(this.player.x, this.player.y);
       }
       this.player.x = Phaser.Math.Clamp(this.player.x, 34, this.width - 34);
-      this.player.y = Phaser.Math.Clamp(this.player.y, this.height * 0.34, this.height - 46);
+      this.player.y = Phaser.Math.Clamp(this.player.y, this.height * 0.34, this.playerBottomLimit());
       const roll = Phaser.Math.Clamp(this.player.body.velocity.x / 1180, -0.35, 0.35);
       this.player.setRotation(roll);
       this.playerGlow.setPosition(this.player.x, this.player.y).setRotation(roll).setAlpha(this.state.shield > 0 ? 0.9 : 0.42);
       this.hitCore
         .setPosition(this.player.x, this.player.y)
-        .setScale(this.focusKey?.isDown ? 1.32 : 1)
+        .setScale(focused ? 1.32 : 1)
         .setAlpha(this.state.shield > 0 ? 1 : 0.82);
       this.state.shield = Math.max(0, this.state.shield - delta);
       Object.keys(this.state.cooldowns).forEach((key) => {
@@ -4917,11 +5275,47 @@ function initSpaceGame() {
       this.state.skillCooldown = pendingCooldowns.length ? Math.min(...pendingCooldowns) : 0;
       this.state.skillReady = Object.values(this.state.cooldowns).every((value) => value <= 0);
       this.state.overdrive = Math.max(0, this.state.overdrive - delta);
+      const previousRift = this.state.rift;
       this.state.rift = Math.max(0, this.state.rift - delta);
-      this.state.energy = Math.min(100, this.state.energy + dt * 2.4);
+      if (previousRift > 0 && this.state.rift === 0) this.releaseTimeRift();
+      this.state.comboTimer = Math.max(0, this.state.comboTimer - delta);
+      if (this.state.comboTimer === 0) this.state.combo = 1;
+      const regenFactor = this.state.powerMode === "engines" ? 1.45 : (this.state.powerMode === "weapons" ? 0.82 : 1);
+      this.state.energy = Math.min(100, this.state.energy + dt * ENERGY_REGEN_PER_SECOND * regenFactor);
+      this.enemies.children.each((enemy) => {
+        if (!enemy?.active) return;
+        if (enemy.isBoss) {
+          if (enemy.y > this.height * 0.15) {
+            enemy.x = this.width * 0.5 + Math.sin(time / (enemy.combatPhase === 3 ? 520 : 780)) * this.width * 0.22;
+          }
+          return;
+        }
+        enemy.age = (enemy.age || 0) + delta;
+        if (!enemy.riftSnapshot) {
+          if (enemy.pattern === "sine") enemy.setVelocityX(Math.sin(enemy.age * 0.0042 + enemy.phase) * 118 * this.worldScale);
+          else if (enemy.age > 760) enemy.setVelocityX(Phaser.Math.Clamp((this.player.x - enemy.x) * 0.42, -150, 150) * this.worldScale);
+        }
+        if (this.state.wave > 0 && time >= (enemy.nextShotAt || Infinity) && enemy.y > 20 && enemy.y < this.height * 0.72) {
+          this.fireEnemy(enemy);
+          enemy.nextShotAt = time + Phaser.Math.Between(enemy.kind === "bomber" ? 900 : 1500, enemy.kind === "bomber" ? 1500 : 2850);
+        }
+      });
+      this.enemyBullets.children.each((bullet) => {
+        if (!bullet?.active || bullet.grazed) return;
+        const distance = Phaser.Math.Distance.Between(this.player.x, this.player.y, bullet.x, bullet.y);
+        if (distance > 12 && distance < 38) {
+          bullet.grazed = true;
+          this.state.energy = Math.min(100, this.state.energy + 2.5);
+          this.state.comboTimer = Math.max(this.state.comboTimer, 1650);
+          this.flashAt(bullet.x, bullet.y, "#75f5ff", 4);
+        }
+      });
       if (this.boss?.active) this.state.bossHp = Math.max(0, this.boss.hp);
       this.cleanupOffscreen();
-      updateHud(this.state);
+      if (time - this.lastHudUpdate >= 100) {
+        updateHud(this.state);
+        this.lastHudUpdate = time;
+      }
     }
 
     drawBackdrop(dt, time) {
@@ -4990,7 +5384,6 @@ function initSpaceGame() {
       this.enemyBullets.children.each(kill);
       this.enemies.children.each((enemy) => {
         if (!enemy.isBoss) kill(enemy);
-        if (enemy.active && !enemy.isBoss && this.state.wave > 0 && Math.random() < 0.004) this.fireEnemy(enemy);
       });
       this.asteroids.children.each(kill);
       this.powerups.children.each(kill);
@@ -4999,17 +5392,23 @@ function initSpaceGame() {
 
   const open = () => {
     if (phaserGame) return;
+    gameReturnTarget = document.activeElement;
     overlay.classList.add("is-open");
     overlay.setAttribute("aria-hidden", "false");
+    overlay.removeAttribute("inert");
+    $("#siteHeader")?.setAttribute("inert", "");
+    $("main")?.setAttribute("inert", "");
     document.body.classList.add("game-open");
+    gamePaused = false;
+    pauseButton?.setAttribute("aria-pressed", "false");
     mount.innerHTML = "";
     setStatus(t("gameStatusBoot"));
     updateHud({ score: 0, wave: 0, hull: 100, energy: 100, combo: 1, cooldowns: { nova: 0, lance: 0, rift: 0 }, skillReady: true, skillCooldown: 0, bossHp: 0, bossMax: 0 });
     phaserGame = new Phaser.Game({
       type: Phaser.AUTO,
       parent: mount,
-      width: Math.max(360, mount.clientWidth),
-      height: Math.max(360, mount.clientHeight),
+      width: Math.max(280, mount.clientWidth),
+      height: Math.max(300, mount.clientHeight),
       backgroundColor: "#01040a",
       physics: {
         default: "arcade",
@@ -5022,6 +5421,7 @@ function initSpaceGame() {
       scene: LunarSquadronScene
     });
     playSound("moon");
+    window.requestAnimationFrame(() => closeButton.focus({ preventScroll: true }));
     if (window.gsap) {
       gsap.killTweensOf(overlay);
       gsap.fromTo(overlay, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.42, ease: "power3.out", clearProps: "opacity,visibility" });
@@ -5037,10 +5437,18 @@ function initSpaceGame() {
     }
     mount.innerHTML = "";
     document.body.classList.remove("game-open");
+    overlay.setAttribute("aria-hidden", "true");
+    overlay.setAttribute("inert", "");
+    if (!state.worldOpen) {
+      $("#siteHeader")?.removeAttribute("inert");
+      $("main")?.removeAttribute("inert");
+    }
     playSound("close");
     const finalize = () => {
       overlay.classList.remove("is-open");
-      overlay.setAttribute("aria-hidden", "true");
+      const returnTarget = gameReturnTarget?.isConnected ? gameReturnTarget : $(".brand");
+      returnTarget?.focus({ preventScroll: true });
+      gameReturnTarget = null;
       if (window.gsap) gsap.set(overlay, { clearProps: "opacity,visibility" });
     };
     if (window.gsap) {
@@ -5078,10 +5486,40 @@ function initSpaceGame() {
     event.preventDefault();
     activeScene?.castTimeRift();
   });
+  touchFocus?.addEventListener("pointerdown", (event) => {
+    event.preventDefault();
+    touchFocus.classList.add("is-active");
+    if (activeScene) activeScene.touchFocus = true;
+  });
+  ["pointerup", "pointerleave", "pointercancel"].forEach((type) => touchFocus?.addEventListener(type, () => {
+    touchFocus.classList.remove("is-active");
+    if (activeScene) activeScene.touchFocus = false;
+  }));
+  powerButtons.forEach((button) => button.addEventListener("click", () => activeScene?.setPowerMode(button.dataset.gamePower)));
+  pauseButton?.addEventListener("click", () => {
+    if (!phaserGame) return;
+    gamePaused = !gamePaused;
+    if (gamePaused) phaserGame.scene.pause("LunarSquadronScene");
+    else phaserGame.scene.resume("LunarSquadronScene");
+    pauseButton.textContent = gamePaused ? "▶" : "Ⅱ";
+    pauseButton.setAttribute("aria-pressed", String(gamePaused));
+  });
+  restartButton?.addEventListener("click", () => {
+    if (!phaserGame) return;
+    if (gamePaused) {
+      phaserGame.scene.resume("LunarSquadronScene");
+      gamePaused = false;
+      pauseButton.textContent = "Ⅱ";
+      pauseButton.setAttribute("aria-pressed", "false");
+    }
+    const scene = phaserGame.scene.getScene("LunarSquadronScene") || activeScene;
+    scene?.clearTelegraphs?.();
+    scene?.scene.restart();
+  });
 
   closeButton.addEventListener("click", close);
   window.addEventListener("resize", () => {
-    if (phaserGame) phaserGame.scale.resize(Math.max(360, mount.clientWidth), Math.max(360, mount.clientHeight));
+    if (phaserGame) phaserGame.scale.resize(Math.max(280, mount.clientWidth), Math.max(300, mount.clientHeight));
   });
 
   const refreshCopy = () => {
@@ -5099,16 +5537,34 @@ function bindGlobalEvents() {
   $$("a[href^='#']").forEach((link) => link.addEventListener("click", () => playSound("select")));
   $$("[data-close-world]").forEach((el) => el.addEventListener("click", closeWorld));
   document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape") closeWorld();
+    if (event.key === "Escape") {
+      if (document.body.classList.contains("game-open")) spaceGameController?.close?.();
+      else closeWorld();
+    }
+    if (event.key !== "Tab" || !state.worldOpen) return;
+    const panel = $(".world__panel");
+    const focusable = $$("a[href],button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex='-1'])", panel)
+      .filter((element) => !element.hidden && element.getClientRects().length);
+    if (!focusable.length) return;
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    if (event.shiftKey && document.activeElement === first) {
+      event.preventDefault();
+      last.focus();
+    } else if (!event.shiftKey && document.activeElement === last) {
+      event.preventDefault();
+      first.focus();
+    }
   });
   $("#soundToggle").classList.toggle("is-on", state.sound);
+  $("#soundToggle").setAttribute("aria-pressed", String(state.sound));
   $("#soundToggle").addEventListener("click", () => {
     state.sound = !state.sound;
+    localStorage.setItem("literary-sound", state.sound ? "on" : "off");
     $("#soundToggle").classList.toggle("is-on", state.sound);
+    $("#soundToggle").setAttribute("aria-pressed", String(state.sound));
     if (state.sound) playSound("success");
-    if (window.anime) {
-      anime({ targets: "#soundToggle", rotate: [0, 8, -8, 0], duration: 420, easing: "easeOutElastic(1, .5)" });
-    }
+    if (window.gsap) gsap.fromTo("#soundToggle", { rotate: -7 }, { rotate: 0, duration: 0.5, ease: "elastic.out(1, .55)" });
   });
 }
 
@@ -5123,11 +5579,15 @@ function init() {
   setupMagnetic();
   initStars();
   initLibraryGate();
-  initThreeCosmos();
   initClock();
   initSpaceGame();
   bindGlobalEvents();
   initScrollAnimations();
+  const startCosmos = () => {
+    if (!cosmosController) initThreeCosmos();
+  };
+  if (window.requestIdleCallback) requestIdleCallback(startCosmos, { timeout: 1400 });
+  else window.setTimeout(startCosmos, 120);
 }
 
 document.addEventListener("DOMContentLoaded", init);
