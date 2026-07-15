@@ -687,6 +687,9 @@ const UI_COPY = {
     languageAria: "网页语言",
     brandAria: "回到开场",
     navAria: "页面导航",
+    navToggleAria: "打开或关闭导航",
+    collectionNavAria: "理论书分卷导航",
+    archiveToolbarAria: "思想档案筛选",
     soundAria: "切换界面声效",
     cosmosAria: "旋转的文学星仪",
     clockAria: "星盘实时时钟",
@@ -701,6 +704,8 @@ const UI_COPY = {
     navLibrary: "书架轨道",
     navAtlas: "星图索引",
     navArchive: "思想档案",
+    navResearch: "研究原典",
+    skipMain: "跳到主要内容",
     heroOverline: "GLOBAL LITERARY THEORY ATLAS",
     heroTitle: "每一种思想与方法，都是一扇世界之门。",
     heroLead: "你已进入一座会呼吸的文学图书馆。真实地球缓慢旋转，四十二本理论与研究之书沿轨道漂移：近处的书脊放大成入口，远处的书影退入星尘。",
@@ -712,6 +717,10 @@ const UI_COPY = {
     atlasTitle: "星图索引：理论如何彼此牵引",
     archiveOverline: "KNOWLEDGE ARCHIVE",
     archiveTitle: "思想档案：主要命题、读法与文本案例",
+    archiveSearchLabel: "检索",
+    archiveSearchPlaceholder: "理论、人物、概念或地区",
+    researchOverline: "研究原典语料库",
+    researchTitle: "研究原典：完整资料、表格与图表",
     railAria: "书架浏览状态",
     railPrev: "上一本研究卷",
     railNext: "下一本研究卷",
@@ -770,13 +779,24 @@ const UI_COPY = {
     gameAria: "月球星战模拟舱",
     gameMountAria: "可游玩的月球星战小游戏",
     gameTitle: "月球远征舰队",
-    gameSubtitle: "LUNAR SQUADRON · THREE WAVE CAMPAIGN",
+    gameSubtitle: "LUNAR SQUADRON · THREE-SECTOR CAMPAIGN",
     gameScoreLabel: "得分",
     gameWaveLabel: "波次",
     gameHullLabel: "舰体",
     gameEnergyLabel: "能量",
     gameComboLabel: "连击",
+    gameProgressLabel: "目标",
     gameSkillLabel: "技能",
+    gamePauseAria: "暂停游戏",
+    gameRestartAria: "重新开始",
+    gamePowerAria: "战机能量分配",
+    gamePowerTitle: "能量分配",
+    gamePowerWeapons: "武器",
+    gamePowerBalanced: "均衡",
+    gamePowerEngines: "引擎",
+    gamePowerShields: "护盾",
+    gameFocusAria: "精密闪避",
+    gameFocus: "聚焦",
     gameReady: "就绪",
     gameBack: "返回星图",
     gameBriefingTitle: "驾驶舱指令",
@@ -797,10 +817,31 @@ const UI_COPY = {
     touchLance: "光矛",
     touchRift: "裂隙",
     gameStatusBoot: "舰队启动：月球航道正在校准。",
+    gameSectorClear: "战区净空",
+    gameUpgradeTitle: "选择一项舰载模块",
+    gameUpgradeLead: "升级将保留到本轮战役结束。",
+    gameResultTitle: "远征战报",
+    gameResultScoreLabel: "得分",
+    gameRankLabel: "评级",
+    gameBestLabel: "最高分",
+    gameResultRestart: "再次出航",
+    gameResultExit: "返回星图",
+    moduleSplitName: "棱镜分束器",
+    moduleSplitDesc: "主炮增加两道侧向激光。",
+    modulePierceName: "相位穿甲弹",
+    modulePierceDesc: "激光伤害提升并穿透装甲。",
+    moduleShieldName: "星辉电容器",
+    moduleShieldDesc: "受击减伤，护盾无敌窗延长。",
+    moduleDroneName: "双生僚机",
+    moduleDroneDesc: "两架无人僚机同步开火。",
+    moduleRecyclerName: "零点回收器",
+    moduleRecyclerDesc: "击落敌机恢复额外能量。",
+    moduleAfterburnerName: "彗尾推进器",
+    moduleAfterburnerDesc: "机动速度与聚焦闪避增强。",
     gameWave1Label: "月面巡逻圈",
-    gameWave1Objective: "击落 18 架侦察机，收集任意升级。",
+    gameWave1Objective: "击落 18 架先遣机，突破编队封锁。",
     gameWave2Label: "碎星带突围",
-    gameWave2Objective: "击落 26 架护卫机，避开陨石潮。",
+    gameWave2Objective: "击落 24 架护卫机，避开陨石潮。",
     gameWave3Label: "轨道母舰决战",
     gameWave3Objective: "摧毁母舰核心，完成通关。",
     gameMissionPrefix: "任务 {wave}: {objective}",
@@ -814,9 +855,9 @@ const UI_COPY = {
     gameSkillNoEnergy: "能量不足，继续击落目标或收集升级。",
     gameSkillCooling: "技能仍在冷却。",
     gameMissionCompleteStatus: "通关完成：月球远征舰队已守住文学星图航道。按 R 可重新挑战。",
-    gameMissionCompleteBanner: "MISSION COMPLETE\n月球航道已净空",
+    gameMissionCompleteBanner: "任务完成\n月球航道已净空",
     gameFailedStatus: "舰体失守。按 R 重新部署，或返回星图。",
-    gameFailedBanner: "MISSION FAILED\n按 R 重新挑战"
+    gameFailedBanner: "任务失败\n按 R 重新挑战"
   },
   en: {
     documentTitle: "Literary Theory Cosmos | The Literary Cosmos",
@@ -830,6 +871,9 @@ const UI_COPY = {
     languageAria: "Website language",
     brandAria: "Return to opening scene",
     navAria: "Page navigation",
+    navToggleAria: "Open or close navigation",
+    collectionNavAria: "Theory collection navigation",
+    archiveToolbarAria: "Knowledge archive filters",
     soundAria: "Toggle interface sound",
     cosmosAria: "Rotating literary astrolabe",
     clockAria: "Real-time astrolabe chronometer",
@@ -844,6 +888,8 @@ const UI_COPY = {
     navLibrary: "Book Orbit",
     navAtlas: "Theory Map",
     navArchive: "Archive",
+    navResearch: "Research Corpus",
+    skipMain: "Skip to main content",
     heroOverline: "GLOBAL LITERARY THEORY ATLAS",
     heroTitle: "Every idea becomes a book; every book opens a world.",
     heroLead: "Enter a breathing literary observatory. The real Earth turns slowly while forty-two theory and research volumes drift in orbit: near books swell into portals, distant spines recede into stardust.",
@@ -855,6 +901,10 @@ const UI_COPY = {
     atlasTitle: "Constellation Index: How Theories Pull On One Another",
     archiveOverline: "KNOWLEDGE ARCHIVE",
     archiveTitle: "Knowledge Archive: Claims, Methods And Textual Cases",
+    archiveSearchLabel: "Search",
+    archiveSearchPlaceholder: "Theory, figure, concept or region",
+    researchOverline: "PRIMARY RESEARCH CORPUS",
+    researchTitle: "Primary Sources: Complete Texts, Tables And Figures",
     railAria: "Bookshelf browsing status",
     railPrev: "Previous research volume",
     railNext: "Next research volume",
@@ -913,13 +963,24 @@ const UI_COPY = {
     gameAria: "Lunar squadron battle simulator",
     gameMountAria: "Playable lunar squadron mini-game",
     gameTitle: "Lunar Expedition Squadron",
-    gameSubtitle: "LUNAR SQUADRON · THREE WAVE CAMPAIGN",
+    gameSubtitle: "LUNAR SQUADRON · THREE-SECTOR CAMPAIGN",
     gameScoreLabel: "Score",
     gameWaveLabel: "Wave",
     gameHullLabel: "Hull",
     gameEnergyLabel: "Energy",
     gameComboLabel: "Combo",
+    gameProgressLabel: "Objective",
     gameSkillLabel: "Skills",
+    gamePauseAria: "Pause game",
+    gameRestartAria: "Restart mission",
+    gamePowerAria: "Starfighter power allocation",
+    gamePowerTitle: "Power allocation",
+    gamePowerWeapons: "Weapons",
+    gamePowerBalanced: "Balanced",
+    gamePowerEngines: "Engines",
+    gamePowerShields: "Shields",
+    gameFocusAria: "Precision dodge",
+    gameFocus: "Focus",
     gameReady: "Ready",
     gameBack: "Back To Star Map",
     gameBriefingTitle: "Cockpit Commands",
@@ -940,10 +1001,31 @@ const UI_COPY = {
     touchLance: "Lance",
     touchRift: "Rift",
     gameStatusBoot: "Squadron launch: lunar route calibration in progress.",
+    gameSectorClear: "SECTOR CLEAR",
+    gameUpgradeTitle: "Choose A Ship Module",
+    gameUpgradeLead: "The upgrade remains active for this campaign.",
+    gameResultTitle: "Expedition Report",
+    gameResultScoreLabel: "Score",
+    gameRankLabel: "Rank",
+    gameBestLabel: "Best score",
+    gameResultRestart: "Launch Again",
+    gameResultExit: "Return To Star Map",
+    moduleSplitName: "Prism Splitter",
+    moduleSplitDesc: "Adds two wing-mounted laser lanes.",
+    modulePierceName: "Phase-Piercing Rounds",
+    modulePierceDesc: "Raises laser damage and penetrates armor.",
+    moduleShieldName: "Aegis Capacitor",
+    moduleShieldDesc: "Reduces impact damage and extends invulnerability.",
+    moduleDroneName: "Twin Drone Wing",
+    moduleDroneDesc: "Two autonomous wingmen fire in formation.",
+    moduleRecyclerName: "Zero-Point Recycler",
+    moduleRecyclerDesc: "Destroyed hostiles restore extra energy.",
+    moduleAfterburnerName: "Comet Afterburner",
+    moduleAfterburnerDesc: "Boosts mobility and precision dodge.",
     gameWave1Label: "Moon Patrol Ring",
-    gameWave1Objective: "Destroy 18 scouts and collect any upgrade.",
+    gameWave1Objective: "Destroy 18 vanguard ships and break the formation screen.",
     gameWave2Label: "Asteroid Belt Breakout",
-    gameWave2Objective: "Destroy 26 escorts and survive the asteroid tide.",
+    gameWave2Objective: "Destroy 24 escorts and survive the asteroid tide.",
     gameWave3Label: "Orbital Dreadnought Duel",
     gameWave3Objective: "Destroy the mothership core and clear the campaign.",
     gameMissionPrefix: "Mission {wave}: {objective}",
@@ -973,6 +1055,9 @@ const UI_COPY = {
     languageAria: "Langue du site",
     brandAria: "Revenir à la scène d’ouverture",
     navAria: "Navigation de page",
+    navToggleAria: "Ouvrir ou fermer la navigation",
+    collectionNavAria: "Navigation des collections théoriques",
+    archiveToolbarAria: "Filtres des archives du savoir",
     soundAria: "Activer ou couper les sons",
     cosmosAria: "Astrolabe littéraire en rotation",
     clockAria: "Chronomètre astrolabe en temps réel",
@@ -987,6 +1072,8 @@ const UI_COPY = {
     navLibrary: "Orbite des livres",
     navAtlas: "Carte théorique",
     navArchive: "Archive",
+    navResearch: "Corpus de recherche",
+    skipMain: "Aller au contenu principal",
     heroOverline: "ATLAS MONDIAL DE LA THÉORIE LITTÉRAIRE",
     heroTitle: "Chaque idée devient un livre; chaque livre ouvre un monde.",
     heroLead: "Entrez dans un observatoire littéraire vivant. La Terre réelle tourne lentement tandis que quarante-deux volumes de théorie et de recherche dérivent en orbite: les livres proches deviennent des portails, les dos lointains se retirent dans la poussière d’étoiles.",
@@ -998,6 +1085,10 @@ const UI_COPY = {
     atlasTitle: "Index constellé: comment les théories s’attirent",
     archiveOverline: "ARCHIVE DU SAVOIR",
     archiveTitle: "Archive du savoir: thèses, méthodes et cas textuels",
+    archiveSearchLabel: "Rechercher",
+    archiveSearchPlaceholder: "Théorie, figure, concept ou région",
+    researchOverline: "CORPUS DE RECHERCHE PRIMAIRE",
+    researchTitle: "Sources primaires : textes, tableaux et figures intégraux",
     railAria: "État de navigation dans la bibliothèque",
     railPrev: "Volume de recherche précédent",
     railNext: "Volume de recherche suivant",
@@ -1055,16 +1146,27 @@ const UI_COPY = {
     quizRelationExplain: "{title} se relie à {related}, ce qui aide à comparer migration des concepts, différences de méthode et continuité historique.",
     gameAria: "Simulateur de bataille d’escadron lunaire",
     gameMountAria: "Mini-jeu jouable d’escadron lunaire",
-    gameTitle: "Escadron d’expédition lunaire",
-    gameSubtitle: "ESCADRON LUNAIRE · CAMPAGNE EN TROIS VAGUES",
+    gameTitle: "Escadron lunaire",
+    gameSubtitle: "ESCADRON LUNAIRE · CAMPAGNE EN TROIS SECTEURS",
     gameScoreLabel: "Score",
     gameWaveLabel: "Vague",
     gameHullLabel: "Coque",
     gameEnergyLabel: "Énergie",
     gameComboLabel: "Combo",
-    gameSkillLabel: "Compétences",
+    gameProgressLabel: "Cible",
+    gameSkillLabel: "Tech.",
+    gamePauseAria: "Mettre le jeu en pause",
+    gameRestartAria: "Recommencer la mission",
+    gamePowerAria: "Répartition de l’énergie du chasseur",
+    gamePowerTitle: "Énergie",
+    gamePowerWeapons: "Armes",
+    gamePowerBalanced: "Équilibré",
+    gamePowerEngines: "Moteurs",
+    gamePowerShields: "Boucliers",
+    gameFocusAria: "Esquive précise",
+    gameFocus: "Précision",
     gameReady: "Prêt",
-    gameBack: "Retour à la carte",
+    gameBack: "Carte stellaire",
     gameBriefingTitle: "Commandes du cockpit",
     gameKeyMove: "Déplacer",
     gameKeyFire: "Tirer",
@@ -1083,10 +1185,31 @@ const UI_COPY = {
     touchLance: "Lance",
     touchRift: "Faille",
     gameStatusBoot: "Lancement de l’escadron: calibration de la route lunaire.",
+    gameSectorClear: "SECTEUR SÉCURISÉ",
+    gameUpgradeTitle: "Choisissez un module de bord",
+    gameUpgradeLead: "L’amélioration reste active durant cette campagne.",
+    gameResultTitle: "Rapport d’expédition",
+    gameResultScoreLabel: "Score",
+    gameRankLabel: "Rang",
+    gameBestLabel: "Meilleur score",
+    gameResultRestart: "Repartir en mission",
+    gameResultExit: "Retour à la carte",
+    moduleSplitName: "Diviseur prismatique",
+    moduleSplitDesc: "Ajoute deux couloirs laser latéraux.",
+    modulePierceName: "Munitions à phase",
+    modulePierceDesc: "Augmente les dégâts et traverse le blindage.",
+    moduleShieldName: "Condensateur Égide",
+    moduleShieldDesc: "Réduit les impacts et prolonge l’invulnérabilité.",
+    moduleDroneName: "Escadre de drones jumeaux",
+    moduleDroneDesc: "Deux ailiers autonomes tirent en formation.",
+    moduleRecyclerName: "Recycleur du point zéro",
+    moduleRecyclerDesc: "Chaque ennemi détruit rend de l’énergie.",
+    moduleAfterburnerName: "Postcombustion cométaire",
+    moduleAfterburnerDesc: "Améliore la mobilité et l’esquive précise.",
     gameWave1Label: "Anneau de patrouille lunaire",
-    gameWave1Objective: "Détruisez 18 éclaireurs et collectez une amélioration.",
+    gameWave1Objective: "Détruisez 18 vaisseaux d’avant-garde et brisez leurs formations.",
     gameWave2Label: "Percée de la ceinture d’astéroïdes",
-    gameWave2Objective: "Détruisez 26 escortes et survivez à la marée d’astéroïdes.",
+    gameWave2Objective: "Détruisez 24 escortes et survivez à la marée d’astéroïdes.",
     gameWave3Label: "Duel du cuirassé orbital",
     gameWave3Objective: "Détruisez le cœur du vaisseau-mère et terminez la campagne.",
     gameMissionPrefix: "Mission {wave}: {objective}",
@@ -1658,6 +1781,35 @@ function graphEdgeType(source, target) {
 const $ = (selector, root = document) => root.querySelector(selector);
 const $$ = (selector, root = document) => Array.from(root.querySelectorAll(selector));
 
+let frontierLocalePack = null;
+let frontierLocalePromise = null;
+let languageRequestVersion = 0;
+
+async function ensureFrontierLocalePack(language) {
+  if (language === "zh" || frontierLocalePack) return frontierLocalePack;
+  if (!frontierLocalePromise) {
+    frontierLocalePromise = fetch("./data/frontier-locales.json?v=20260715-7", { cache: "no-cache" })
+      .then((response) => {
+        if (!response.ok) throw new Error(`Locale pack HTTP ${response.status}`);
+        return response.json();
+      })
+      .then((payload) => {
+        frontierLocalePack = payload;
+        window.LITERARY_LOCALES = payload;
+        return payload;
+      })
+      .catch((error) => {
+        frontierLocalePromise = null;
+        throw error;
+      });
+  }
+  return frontierLocalePromise;
+}
+
+function frontierLocaleMovement(movement, language = state.language) {
+  return frontierLocalePack?.[language]?.movements?.[movement.id] || null;
+}
+
 function t(key) {
   return UI_COPY[state.language]?.[key] || UI_COPY.zh[key] || key;
 }
@@ -1684,7 +1836,8 @@ function translateKeywords(movement) {
 }
 
 function localizedLocationLabel(movement) {
-  return LOCATION_TRANSLATIONS[state.language]?.[movement.id] || MOVEMENT_LOCATIONS[movement.id]?.label || movement.location?.label || baseMovementText(movement, "region");
+  const translated = frontierLocaleMovement(movement);
+  return translated?.location?.label || translated?.region || LOCATION_TRANSLATIONS[state.language]?.[movement.id] || MOVEMENT_LOCATIONS[movement.id]?.label || movement.location?.label || baseMovementText(movement, "region");
 }
 
 function localizedGraphGroup(group) {
@@ -1756,6 +1909,19 @@ function localizedMovement(movement) {
   }
 
   const language = state.language;
+  const completeTranslation = frontierLocaleMovement(movement, language);
+  if (completeTranslation) {
+    return {
+      ...movement,
+      ...completeTranslation,
+      id: movement.id,
+      relations: movement.relations,
+      palette: movement.palette,
+      collection: movement.collection,
+      sourceChapter: movement.sourceChapter,
+      sourceRanges: movement.sourceRanges
+    };
+  }
   const authoredTranslation = movement.i18n?.[language];
   if (authoredTranslation) {
     return {
@@ -1906,14 +2072,17 @@ function renderBooks() {
 }
 
 function renderArchive() {
-  $("#archiveGrid").innerHTML = MOVEMENTS.map((movement) => `
-    <button class="archive-card magnetic" type="button" data-open="${movement.id}" data-collection="${movement.collection}" data-search="${escapeAttribute(`${movement.title} ${movement.era} ${movement.region} ${movement.keywords.join(" ")}`)}" style="${cssVarsFor(movement)}">
+  $("#archiveGrid").innerHTML = MOVEMENTS.map((movement) => {
+    const local = localizedMovement(movement);
+    return `
+    <button class="archive-card magnetic" type="button" data-open="${movement.id}" data-collection="${movement.collection}" data-search="${escapeAttribute(`${local.title} ${local.era} ${local.region} ${local.keywords.join(" ")}`)}" style="${cssVarsFor(movement)}">
       <span class="archive-card__collection">${collectionLabel(movement)}</span>
-      <span class="archive-card__meta">${localizedMovement(movement).era} · ${localizedMovement(movement).region}</span>
-      <h3>${localizedMovement(movement).title}</h3>
-      <p>${localizedMovement(movement).intro}</p>
+      <span class="archive-card__meta">${local.era} · ${local.region}</span>
+      <h3>${local.title}</h3>
+      <p>${local.intro}</p>
     </button>
-  `).join("");
+  `;
+  }).join("");
 }
 
 function graphGroupFor(movement) {
@@ -2121,18 +2290,38 @@ function setupBookRail() {
   setActiveBook(0);
 }
 
-function applyLanguage(language) {
-  state.language = UI_COPY[language] ? language : "zh";
+async function applyLanguage(language) {
+  const requestedLanguage = UI_COPY[language] ? language : "zh";
+  const requestVersion = ++languageRequestVersion;
+  document.body.classList.add("is-loading-locale");
+  try {
+    await ensureFrontierLocalePack(requestedLanguage);
+  } catch (error) {
+    console.error("Unable to load complete locale pack", error);
+    document.body.classList.remove("is-loading-locale");
+    if (requestedLanguage !== "zh" && requestVersion === languageRequestVersion) {
+      localStorage.setItem("literary-language", "zh");
+      return applyLanguage("zh");
+    }
+    return false;
+  }
+  if (requestVersion !== languageRequestVersion) return false;
+  state.language = requestedLanguage;
   localStorage.setItem("literary-language", state.language);
   document.documentElement.lang = state.language === "zh" ? "zh-CN" : (state.language === "fr" ? "fr" : "en");
   document.title = t("documentTitle");
   document.querySelector("meta[name='description']")?.setAttribute("content", t("documentDescription"));
+  document.querySelector("meta[property='og:title']")?.setAttribute("content", t("documentTitle"));
+  document.querySelector("meta[property='og:description']")?.setAttribute("content", t("documentDescription"));
   document.documentElement.style.setProperty("--gate-scroll-copy", `"${t("gateScrollHint")}"`);
   $$("[data-i18n]").forEach((node) => {
     node.textContent = t(node.dataset.i18n);
   });
   $$("[data-i18n-aria]").forEach((node) => {
     node.setAttribute("aria-label", t(node.dataset.i18nAria));
+  });
+  $$("[data-i18n-placeholder]").forEach((node) => {
+    node.setAttribute("placeholder", t(node.dataset.i18nPlaceholder));
   });
   $$("[data-lang]").forEach((button) => {
     button.classList.toggle("is-active", button.dataset.lang === state.language);
@@ -2148,16 +2337,19 @@ function applyLanguage(language) {
   spaceGameController?.refreshCopy?.();
   if (state.worldOpen && state.currentWorldId) openWorld(state.currentWorldId);
   document.dispatchEvent(new CustomEvent("literary-language-change", { detail: { language: state.language } }));
+  document.body.classList.remove("is-loading-locale");
+  document.dispatchEvent(new CustomEvent("literary-language-ready", { detail: { language: state.language } }));
+  return true;
 }
 
 function setupLanguageSwitcher() {
   if (setupLanguageSwitcher.bound) return;
   setupLanguageSwitcher.bound = true;
-  document.addEventListener("click", (event) => {
+  document.addEventListener("click", async (event) => {
     const button = event.target.closest("[data-lang]");
     if (!button || button.dataset.lang === state.language) return;
-    applyLanguage(button.dataset.lang);
-    playSound("select");
+    const switched = await applyLanguage(button.dataset.lang);
+    if (switched) playSound("select");
   });
   applyLanguage(state.language);
 }
@@ -2734,6 +2926,7 @@ function setupMagnetic() {
 function initStars() {
   const canvas = $("#starCanvas");
   const ctx = canvas.getContext("2d");
+  const reducedStarMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)");
   let stars = [];
   const resize = () => {
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -2757,11 +2950,14 @@ function initStars() {
       ctx.fillStyle = `rgba(210, 238, 255, ${Math.max(0.08, alpha)})`;
       ctx.fill();
     });
-    requestAnimationFrame(draw);
+    if (!reducedStarMotion?.matches) requestAnimationFrame(draw);
   };
   resize();
   draw();
-  window.addEventListener("resize", resize);
+  window.addEventListener("resize", () => {
+    resize();
+    if (reducedStarMotion?.matches) draw();
+  });
 }
 
 function initLibraryGate() {
@@ -2778,11 +2974,14 @@ function initLibraryGate() {
     pointerY: 0,
     touchY: null
   };
+  const reducedGateMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)");
 
   const clamp = (value, min = 0, max = 1) => Math.max(min, Math.min(max, value));
+  let requestGateRender = () => {};
   const setTarget = (value) => {
     gateState.target = clamp(value);
     gate.style.setProperty("--gate-progress", gateState.target.toFixed(3));
+    requestGateRender();
   };
 
   const revealSite = () => {
@@ -2807,6 +3006,11 @@ function initLibraryGate() {
       window.scrollTo(0, 0);
       if (window.ScrollTrigger) ScrollTrigger.refresh();
     };
+    if (reducedGateMotion?.matches) {
+      removeGate();
+      window.gsap?.ticker?.sleep?.();
+      return;
+    }
     window.setTimeout(removeGate, 1700);
 
     if (window.gsap) {
@@ -2844,6 +3048,7 @@ function initLibraryGate() {
     const rect = gate.getBoundingClientRect();
     gateState.pointerX = (event.clientX - rect.left) / rect.width - 0.5;
     gateState.pointerY = (event.clientY - rect.top) / rect.height - 0.5;
+    requestGateRender();
   });
 
   if (!canvas || !window.THREE) return;
@@ -2953,7 +3158,9 @@ function initLibraryGate() {
   };
 
   let gateDisposed = false;
+  let gateAnimationFrame = 0;
   const animate = () => {
+    gateAnimationFrame = 0;
     if (!gate.isConnected) {
       if (!gateDisposed) {
         renderer.dispose();
@@ -2961,23 +3168,33 @@ function initLibraryGate() {
       }
       return;
     }
-    requestAnimationFrame(animate);
-    gateState.progress += (gateState.target - gateState.progress) * 0.08;
+    if (!reducedGateMotion?.matches) gateAnimationFrame = requestAnimationFrame(animate);
+    gateState.progress = reducedGateMotion?.matches
+      ? gateState.target
+      : gateState.progress + (gateState.target - gateState.progress) * 0.08;
     gate.style.setProperty("--gate-progress", gateState.progress.toFixed(3));
     canvas.style.opacity = String(0.16 + gateState.progress * 0.48);
     leftDoor.rotation.y = -gateState.progress * 1.32;
     rightDoor.rotation.y = gateState.progress * 1.32;
-    root.rotation.y += (gateState.pointerX * 0.08 - root.rotation.y) * 0.035;
-    root.rotation.x += (-gateState.pointerY * 0.045 - root.rotation.x) * 0.035;
-    camera.position.z += ((7.6 - gateState.progress * 2.1) - camera.position.z) * 0.05;
-    camera.position.y += ((1.25 + gateState.progress * 0.28) - camera.position.y) * 0.05;
+    const motionBlend = reducedGateMotion?.matches ? 1 : 0.035;
+    const cameraBlend = reducedGateMotion?.matches ? 1 : 0.05;
+    root.rotation.y += (gateState.pointerX * 0.08 - root.rotation.y) * motionBlend;
+    root.rotation.x += (-gateState.pointerY * 0.045 - root.rotation.x) * motionBlend;
+    camera.position.z += ((7.6 - gateState.progress * 2.1) - camera.position.z) * cameraBlend;
+    camera.position.y += ((1.25 + gateState.progress * 0.28) - camera.position.y) * cameraBlend;
     lantern.intensity += ((1.8 + gateState.progress * 2.8) - lantern.intensity) * 0.05;
     renderer.render(scene, camera);
   };
 
+  requestGateRender = () => {
+    if (!gateAnimationFrame && !gateDisposed) gateAnimationFrame = requestAnimationFrame(animate);
+  };
   resize();
-  animate();
-  window.addEventListener("resize", resize);
+  requestGateRender();
+  window.addEventListener("resize", () => {
+    resize();
+    requestGateRender();
+  });
 }
 
 function finishCanvasTexture(texture) {
@@ -3018,14 +3235,25 @@ function leatherColor(movement, amount = 0.34, index = movementIndex(movement)) 
 }
 
 function paintBookGrain(ctx, width, height, density = 18) {
-  const points = Math.round((width * height) / density);
-  for (let i = 0; i < points; i += 1) {
-    const alpha = 0.025 + Math.random() * 0.055;
-    ctx.fillStyle = Math.random() > 0.5
-      ? `rgba(255, 255, 255, ${alpha})`
-      : `rgba(0, 0, 0, ${alpha})`;
-    ctx.fillRect(Math.random() * width, Math.random() * height, 1.2, 1.2);
+  const grain = document.createElement("canvas");
+  const grainScale = Math.max(1, Math.round(Math.sqrt(density / 8)));
+  grain.width = Math.max(32, Math.ceil(width / grainScale));
+  grain.height = Math.max(32, Math.ceil(height / grainScale));
+  const grainContext = grain.getContext("2d");
+  const pixels = grainContext.createImageData(grain.width, grain.height);
+  for (let i = 0; i < pixels.data.length; i += 4) {
+    const light = Math.random() > 0.5;
+    const tone = light ? 255 : 0;
+    pixels.data[i] = tone;
+    pixels.data[i + 1] = tone;
+    pixels.data[i + 2] = tone;
+    pixels.data[i + 3] = Math.round(7 + Math.random() * 14);
   }
+  grainContext.putImageData(pixels, 0, 0);
+  ctx.save();
+  ctx.imageSmoothingEnabled = false;
+  ctx.drawImage(grain, 0, 0, width, height);
+  ctx.restore();
 }
 
 function wrapCanvasText(ctx, text, x, y, maxWidth, lineHeight, maxLines = 3) {
@@ -3565,10 +3793,10 @@ function initThreeCosmos() {
     opacity: 0.18,
     blending: THREE.AdditiveBlending
   });
-  const moonOrbitPath = new THREE.Mesh(new THREE.TorusGeometry(4.35, 0.004, 10, 240), moonOrbitMaterial);
-  moonOrbitPath.scale.z = 0.56;
-  moonOrbitPath.position.y = 0.72;
-  moonOrbitPath.rotation.x = Math.PI / 2.28;
+  const moonOrbitPath = new THREE.Mesh(new THREE.TorusGeometry(5.82, 0.004, 10, 240), moonOrbitMaterial);
+  moonOrbitPath.scale.z = 0.64;
+  moonOrbitPath.position.y = 2.42;
+  moonOrbitPath.rotation.x = Math.PI / 2.18;
   moonOrbitPath.rotation.y = -0.42;
   group.add(moonOrbitPath);
 
@@ -3594,12 +3822,39 @@ function initThreeCosmos() {
   const satellites = new THREE.Group();
   const bookGeometry = new THREE.BoxGeometry(0.72, 1.02, 0.22);
   const orbitLanes = [
-    { radiusX: 3.78, radiusZ: 2.22, baseY: -0.46, phase: 0.18, speed: 0.128 },
-    { radiusX: 4.16, radiusZ: 2.64, baseY: -0.15, phase: Math.PI * 0.52, speed: 0.118 },
-    { radiusX: 4.55, radiusZ: 3.04, baseY: 0.16, phase: Math.PI * 1.05, speed: 0.108 },
-    { radiusX: 4.92, radiusZ: 3.42, baseY: 0.47, phase: Math.PI * 1.58, speed: 0.098 }
+    { radiusX: 3.54, radiusZ: 2.04, baseY: -0.38, inclination: -0.25, speed: 0.068 },
+    { radiusX: 3.84, radiusZ: 2.28, baseY: -0.24, inclination: 0.18, speed: 0.066 },
+    { radiusX: 4.15, radiusZ: 2.52, baseY: -0.1, inclination: -0.14, speed: 0.064 },
+    { radiusX: 4.46, radiusZ: 2.78, baseY: 0.04, inclination: 0.12, speed: 0.062 },
+    { radiusX: 4.78, radiusZ: 3.04, baseY: 0.18, inclination: -0.1, speed: 0.06 },
+    { radiusX: 5.1, radiusZ: 3.3, baseY: 0.3, inclination: 0.08, speed: 0.058 },
+    { radiusX: 5.42, radiusZ: 3.56, baseY: 0.42, inclination: -0.07, speed: 0.056 }
   ];
-  const laneSlots = Math.ceil(MOVEMENTS.length / orbitLanes.length);
+  const orbitPaths = new THREE.Group();
+  orbitLanes.forEach((lane, laneIndex) => {
+    const points = [];
+    for (let pointIndex = 0; pointIndex < 180; pointIndex += 1) {
+      const angle = pointIndex / 180 * Math.PI * 2;
+      const planeDepth = Math.sin(angle) * lane.radiusZ;
+      points.push(new THREE.Vector3(
+        Math.cos(angle) * lane.radiusX,
+        lane.baseY + planeDepth * Math.sin(lane.inclination),
+        planeDepth * Math.cos(lane.inclination)
+      ));
+    }
+    const path = new THREE.LineLoop(
+      new THREE.BufferGeometry().setFromPoints(points),
+      new THREE.LineBasicMaterial({
+        color: laneIndex % 2 ? 0xd8b96f : 0x7fe7ff,
+        transparent: true,
+        opacity: 0.055 + laneIndex * 0.006,
+        depthWrite: false,
+        blending: THREE.AdditiveBlending
+      })
+    );
+    orbitPaths.add(path);
+  });
+  group.add(orbitPaths);
   const addOrbitBook = (i) => {
     const movement = MOVEMENTS[i];
     const bookKit = makeBookMaterials(movement, i);
@@ -3607,7 +3862,8 @@ function initThreeCosmos() {
     const laneIndex = i % orbitLanes.length;
     const lane = orbitLanes[laneIndex];
     const slotIndex = Math.floor(i / orbitLanes.length);
-    const angle = (slotIndex / laneSlots) * Math.PI * 2 + lane.phase;
+    const slotJitter = ((i * 37) % 11 - 5) * 0.012;
+    const angle = (i / MOVEMENTS.length) * Math.PI * 2 + slotJitter;
     book.userData = {
       movementId: movement.id,
       title: localizedMovement(movement).title,
@@ -3619,9 +3875,10 @@ function initThreeCosmos() {
       radiusX: lane.radiusX,
       radiusZ: lane.radiusZ,
       baseY: lane.baseY,
-      bob: 0.1 + laneIndex * 0.018,
-      tilt: (i % 2 ? -1 : 1) * (0.06 + laneIndex * 0.026),
-      depthTwist: (i % 2 ? -1 : 1) * (0.1 + laneIndex * 0.034),
+      inclination: lane.inclination,
+      bob: 0.035 + laneIndex * 0.006,
+      tilt: (i % 2 ? -1 : 1) * (0.035 + laneIndex * 0.009),
+      depthTwist: (i % 2 ? -1 : 1) * (0.07 + laneIndex * 0.014),
       hovered: false,
       opening: false,
       portalHidden: false,
@@ -3632,29 +3889,8 @@ function initThreeCosmos() {
     };
     satellites.add(book);
   };
-  const initialBookCount = window.matchMedia("(max-width: 720px)").matches ? 3 : 4;
-  for (let i = 0; i < Math.min(initialBookCount, MOVEMENTS.length); i += 1) addOrbitBook(i);
-  let nextBookIndex = initialBookCount;
-  const addBookBatch = (deadline) => {
-    if (document.body.classList.contains("game-open")) {
-      window.setTimeout(() => window.requestIdleCallback ? requestIdleCallback(addBookBatch) : addBookBatch(), 600);
-      return;
-    }
-    let added = 0;
-    while (nextBookIndex < MOVEMENTS.length && added < 4 && (!deadline || deadline.timeRemaining() > 4)) {
-      addOrbitBook(nextBookIndex);
-      nextBookIndex += 1;
-      added += 1;
-    }
-    if (nextBookIndex < MOVEMENTS.length) {
-      if (window.requestIdleCallback) requestIdleCallback(addBookBatch, { timeout: 900 });
-      else window.setTimeout(() => addBookBatch(), 80);
-    }
-  };
-  if (nextBookIndex < MOVEMENTS.length) {
-    if (window.requestIdleCallback) requestIdleCallback(addBookBatch, { timeout: 900 });
-    else window.setTimeout(() => addBookBatch(), 80);
-  }
+  MOVEMENTS.forEach((_, index) => addOrbitBook(index));
+  canvas.dataset.orbitCount = String(satellites.children.length);
   group.add(satellites);
 
   const starGeometry = new THREE.BufferGeometry();
@@ -3701,6 +3937,15 @@ function initThreeCosmos() {
   let openingBook = false;
   let lastHoverSound = 0;
   let lastMeteorPoint = null;
+  let orbitClock = 0;
+  let moonClock = 0;
+  let orbitOffset = 0;
+  let orbitVelocity = 0;
+  let orbitPointerId = null;
+  let orbitPointerX = 0;
+  let orbitPointerTime = 0;
+  let orbitDragged = false;
+  let lastAnimationTime = performance.now();
   const pointer = new THREE.Vector2();
   const raycaster = new THREE.Raycaster();
   const tooltip = document.createElement("div");
@@ -3962,14 +4207,30 @@ function initThreeCosmos() {
 
   const reducedCosmosMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)");
   let renderedReducedFrame = false;
+  let cosmosAnimationFrame = 0;
   const animate = () => {
-    requestAnimationFrame(animate);
-    if (document.hidden || document.body.classList.contains("game-open") || !canvas.isConnected) return;
-    if (reducedCosmosMotion?.matches && renderedReducedFrame) return;
-    const time = performance.now() / 1000;
-    group.rotation.y += lit ? 0.0028 : 0.001;
-    group.rotation.x = Math.sin(performance.now() / 2300) * 0.08;
-    globe.rotation.y += lit ? 0.0065 : 0.0028;
+    if (!canvas.isConnected) {
+      cosmosAnimationFrame = 0;
+      return;
+    }
+    if (reducedCosmosMotion?.matches && renderedReducedFrame) {
+      cosmosAnimationFrame = 0;
+      return;
+    }
+    cosmosAnimationFrame = reducedCosmosMotion?.matches ? 0 : requestAnimationFrame(animate);
+    if (document.hidden || document.body.classList.contains("game-open")) return;
+    const now = performance.now();
+    const delta = Math.min(0.05, Math.max(0.001, (now - lastAnimationTime) / 1000));
+    lastAnimationTime = now;
+    const time = now / 1000;
+    const orbitMotion = openingBook ? 0 : (hoveredBook ? 0.11 : (lit ? 0.72 : 1));
+    orbitClock += delta * orbitMotion;
+    moonClock += delta * (lit ? 1.12 : 1);
+    orbitOffset += orbitVelocity * delta;
+    orbitVelocity *= Math.pow(0.055, delta);
+    group.rotation.y += (lit ? 0.11 : 0.045) * delta;
+    group.rotation.x = Math.sin(now / 2300) * 0.08;
+    globe.rotation.y += (lit ? 0.31 : 0.16) * delta;
     nightLights.rotation.y = globe.rotation.y;
     clouds.rotation.y += lit ? 0.008 : 0.0038;
     atmosphere.rotation.y = globe.rotation.y;
@@ -3979,18 +4240,18 @@ function initThreeCosmos() {
       const halo = marker.children[1];
       if (halo?.material) halo.material.opacity = 0.48 + (pulse - 0.84) * 0.42;
     });
-    const moonAngle = time * (lit ? 0.36 : 0.22) - 0.14;
+    const moonAngle = moonClock * 0.2 - 0.14;
     const moonDepth = Math.sin(moonAngle);
     const moonPerspective = 0.74 + (moonDepth + 1) * 0.14;
     moon.position.set(
-      Math.cos(moonAngle) * 4.6,
-      Math.sin(moonAngle * 0.72) * 0.5 + 2.08,
-      moonDepth * 2.5
+      Math.cos(moonAngle) * 6.05,
+      Math.sin(moonAngle * 0.72) * 0.28 + 2.68,
+      moonDepth * 3.55
     );
     moon.scale.setScalar(moonPerspective * (hoveredMoon ? 1.18 : 1));
     moonPicker.position.copy(moon.position);
     moonPicker.scale.copy(moon.scale);
-    moon.rotation.y += lit ? 0.012 : 0.006;
+    moon.rotation.y += (lit ? 0.48 : 0.28) * delta;
     moon.rotation.x = Math.sin(time * 0.45) * 0.12;
     moonMaterial.emissiveIntensity += ((hoveredMoon ? 0.3 : 0.06) - moonMaterial.emissiveIntensity) * 0.08;
     moonOrbitMaterial.opacity += ((hoveredMoon ? 0.52 : 0.18) - moonOrbitMaterial.opacity) * 0.06;
@@ -4005,22 +4266,23 @@ function initThreeCosmos() {
         });
         return;
       }
-      const angle = data.angle + time * data.speed * (lit ? 1.7 : 1);
-      const depth = Math.sin(angle);
-      const nearFactor = (depth + 1) / 2;
-      const scale = 0.26 + Math.pow(nearFactor, 1.55) * 0.9;
+      const angle = data.angle + orbitClock * data.speed + orbitOffset;
+      const planeDepth = Math.sin(angle) * data.radiusZ;
+      const depth = planeDepth * Math.cos(data.inclination);
+      const normalizedNear = Math.max(0, Math.min(1, (depth / data.radiusZ + 1) / 2));
+      const scale = 0.16 + Math.pow(normalizedNear, 1.62) * 0.62;
       const hoverLift = data.hovered ? 0.24 : 0;
       book.position.set(
         Math.cos(angle) * data.radiusX,
-        Math.sin(angle * 1.7 + data.laneIndex * 0.72) * data.bob + data.baseY + hoverLift,
-        depth * data.radiusZ
+        data.baseY + planeDepth * Math.sin(data.inclination) + Math.sin(angle * 2 + data.slotIndex) * data.bob + hoverLift,
+        depth
       );
       book.scale.setScalar(scale * (data.hovered ? 1.14 : 1));
       book.lookAt(camera.position);
       book.rotateY(data.depthTwist + (data.hovered ? data.depthTwist * 0.32 : 0));
       book.rotateZ(data.tilt + (data.hovered ? Math.sin(time * 5 + data.angle) * 0.07 : 0));
       book.renderOrder = Math.round((book.position.z + 6) * 100);
-      const targetOpacity = data.portalHidden ? 0.07 : 1;
+      const targetOpacity = data.portalHidden ? 0.07 : (0.42 + normalizedNear * 0.58);
       data.materials.forEach((material) => {
         material.opacity += (targetOpacity - material.opacity) * 0.12;
         material.depthWrite = material.opacity > 0.35;
@@ -4030,6 +4292,9 @@ function initThreeCosmos() {
       if (coverMaterial?.emissiveIntensity !== undefined) {
         coverMaterial.emissiveIntensity += ((data.hovered ? 0.42 : 0.018) - coverMaterial.emissiveIntensity) * 0.12;
       }
+    });
+    orbitPaths.children.forEach((path, index) => {
+      path.material.opacity += (((hoveredBook?.userData?.laneIndex === index ? 0.18 : (lit ? 0.085 : 0.055 + index * 0.006))) - path.material.opacity) * 0.06;
     });
     starPoints.rotation.y += 0.0009;
     const globeAwake = earthHovered || lit;
@@ -4041,6 +4306,11 @@ function initThreeCosmos() {
     ringMaterial.opacity += ((lit ? 0.92 : 0.5) - ringMaterial.opacity) * 0.06;
     renderer.render(scene, camera);
     renderedReducedFrame = true;
+  };
+
+  const requestCosmosRender = () => {
+    if (reducedCosmosMotion?.matches) renderedReducedFrame = false;
+    if (!cosmosAnimationFrame) cosmosAnimationFrame = requestAnimationFrame(animate);
   };
 
   const sparkle = (event) => {
@@ -4132,6 +4402,7 @@ function initThreeCosmos() {
   stage.addEventListener("pointerenter", () => {
     lit = true;
     stage.classList.add("is-lit");
+    requestCosmosRender();
   });
   stage.addEventListener("pointerleave", () => {
     lit = false;
@@ -4145,16 +4416,50 @@ function initThreeCosmos() {
     canvas.style.cursor = "default";
     setTooltip(null, null);
     stage.classList.remove("is-lit");
+    requestCosmosRender();
   });
+  canvas.addEventListener("pointerdown", (event) => {
+    if (openingBook || event.button !== 0) return;
+    orbitPointerId = event.pointerId;
+    orbitPointerX = event.clientX;
+    orbitPointerTime = event.timeStamp;
+    orbitDragged = false;
+    canvas.setPointerCapture?.(event.pointerId);
+  });
+  const releaseOrbitPointer = (event) => {
+    if (orbitPointerId !== event.pointerId) return;
+    canvas.releasePointerCapture?.(event.pointerId);
+    orbitPointerId = null;
+    canvas.style.cursor = hoveredBook || hoveredMarker || hoveredMoon ? "pointer" : "default";
+    window.setTimeout(() => { orbitDragged = false; }, 0);
+  };
+  canvas.addEventListener("pointerup", releaseOrbitPointer);
+  canvas.addEventListener("pointercancel", releaseOrbitPointer);
   stage.addEventListener("pointermove", (event) => {
-    updateHeroHit(event);
+    if (orbitPointerId === event.pointerId) {
+      const deltaX = event.clientX - orbitPointerX;
+      const deltaTime = Math.max(8, event.timeStamp - orbitPointerTime);
+      orbitPointerX = event.clientX;
+      orbitPointerTime = event.timeStamp;
+      if (Math.abs(deltaX) > 1.5) orbitDragged = true;
+      if (orbitDragged) {
+        orbitOffset += deltaX * 0.0062;
+        orbitVelocity = Math.max(-2.6, Math.min(2.6, deltaX * 0.0062 / (deltaTime / 1000)));
+        canvas.style.cursor = "grabbing";
+        setTooltip(null, null);
+      }
+    } else {
+      updateHeroHit(event);
+    }
     const now = performance.now();
     if (now - lastSpark > 80) {
       lastSpark = now;
       sparkle(event);
     }
+    requestCosmosRender();
   });
   canvas.addEventListener("click", (event) => {
+    if (orbitDragged) return;
     const target = updateHeroHit(event);
     if (!target) return;
     event.preventDefault();
@@ -4167,12 +4472,20 @@ function initThreeCosmos() {
   });
 
   resize();
-  animate();
-  window.addEventListener("resize", resize);
+  requestCosmosRender();
+  window.addEventListener("resize", () => {
+    resize();
+    requestCosmosRender();
+  });
 }
 
 function initScrollAnimations() {
   if (!window.gsap || !window.ScrollTrigger) return;
+  if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) {
+    ScrollTrigger.disable(true, true);
+    gsap.ticker.sleep();
+    return;
+  }
   gsap.registerPlugin(ScrollTrigger);
   gsap.defaults({ ease: "power2.out", duration: 0.6 });
 
@@ -4403,13 +4716,30 @@ function initSpaceGame() {
   const touchFocus = $("#touchFocus");
   const pauseButton = $("#pauseSpaceGame");
   const restartButton = $("#restartSpaceGame");
+  const radarBlips = $("#gameRadarBlips");
+  const draftPanel = $("#gameDraft");
+  const draftChoicesRoot = $("#gameDraftChoices");
+  const resultPanel = $("#gameResult");
+  const resultRank = $("#gameResultRank");
+  const resultScore = $("#gameResultScore");
+  const bestScore = $("#gameBestScore");
+  const resultRestart = $("#gameResultRestart");
+  const resultExit = $("#gameResultExit");
   const powerButtons = $$('[data-game-power]');
   if (!overlay || !mount || !closeButton || !scoreText || !waveText || !hullText || !energyText || !comboText || !skillText || !statusText) return;
 
   const WAVE_CONFIGS = [
-    { labelKey: "gameWave1Label", objectiveKey: "gameWave1Objective", target: 18, spawn: 760, speed: 1, boss: false },
-    { labelKey: "gameWave2Label", objectiveKey: "gameWave2Objective", target: 26, spawn: 560, speed: 1.22, boss: false },
+    { labelKey: "gameWave1Label", objectiveKey: "gameWave1Objective", target: 18, spawn: 1900, speed: 1, boss: false },
+    { labelKey: "gameWave2Label", objectiveKey: "gameWave2Objective", target: 24, spawn: 1580, speed: 1.22, boss: false },
     { labelKey: "gameWave3Label", objectiveKey: "gameWave3Objective", target: 1, spawn: 720, speed: 1.34, boss: true }
+  ];
+  const UPGRADE_DEFS = [
+    { id: "split", icon: "✦", nameKey: "moduleSplitName", descriptionKey: "moduleSplitDesc" },
+    { id: "pierce", icon: "◇", nameKey: "modulePierceName", descriptionKey: "modulePierceDesc" },
+    { id: "shield", icon: "◉", nameKey: "moduleShieldName", descriptionKey: "moduleShieldDesc" },
+    { id: "drone", icon: "◆", nameKey: "moduleDroneName", descriptionKey: "moduleDroneDesc" },
+    { id: "recycler", icon: "∞", nameKey: "moduleRecyclerName", descriptionKey: "moduleRecyclerDesc" },
+    { id: "afterburner", icon: "△", nameKey: "moduleAfterburnerName", descriptionKey: "moduleAfterburnerDesc" }
   ];
   const SKILL_COSTS = { nova: 100, lance: 64, rift: 78 };
   const SKILL_COOLDOWNS = { nova: 9000, lance: 5600, rift: 7800 };
@@ -4419,6 +4749,57 @@ function initSpaceGame() {
   let activeScene = null;
   let gamePaused = false;
   let gameReturnTarget = null;
+  let activeDraft = null;
+
+  const setOverlayState = (panel, visible) => {
+    if (!panel) return;
+    panel.classList.toggle("is-visible", visible);
+    panel.setAttribute("aria-hidden", String(!visible));
+    if (visible) panel.removeAttribute("inert");
+    else panel.setAttribute("inert", "");
+  };
+
+  const renderDraft = () => {
+    if (!activeDraft || !draftChoicesRoot) return;
+    draftChoicesRoot.innerHTML = activeDraft.choices.map((upgrade, index) => `
+      <button type="button" data-upgrade-id="${upgrade.id}">
+        <i aria-hidden="true">${upgrade.icon}</i>
+        <span><b>${t(upgrade.nameKey)}</b><em>${t(upgrade.descriptionKey)}</em></span>
+        <small>0${index + 1}</small>
+      </button>
+    `).join("");
+    draftChoicesRoot.querySelectorAll("[data-upgrade-id]").forEach((button) => button.addEventListener("click", () => {
+      const upgradeId = button.dataset.upgradeId;
+      const choose = activeDraft?.onChoose;
+      activeDraft = null;
+      setOverlayState(draftPanel, false);
+      choose?.(upgradeId);
+    }));
+    draftChoicesRoot.querySelector("button")?.focus({ preventScroll: true });
+  };
+
+  const showUpgradeDraft = (choices, onChoose) => {
+    activeDraft = { choices, onChoose };
+    setOverlayState(resultPanel, false);
+    setOverlayState(draftPanel, true);
+    renderDraft();
+    playSound("success");
+  };
+
+  const hideGameOverlays = () => {
+    activeDraft = null;
+    setOverlayState(draftPanel, false);
+    setOverlayState(resultPanel, false);
+  };
+
+  const showResult = (summary) => {
+    if (resultRank) resultRank.textContent = summary.rank;
+    if (resultScore) resultScore.textContent = String(summary.score).padStart(4, "0");
+    if (bestScore) bestScore.textContent = String(summary.best).padStart(4, "0");
+    setOverlayState(draftPanel, false);
+    setOverlayState(resultPanel, true);
+    resultRestart?.focus({ preventScroll: true });
+  };
 
   const setStatus = (text) => {
     statusText.textContent = text;
@@ -4434,7 +4815,7 @@ function initSpaceGame() {
       const config = WAVE_CONFIGS[Math.min(state.wave || 0, WAVE_CONFIGS.length - 1)];
       progressText.textContent = config.boss
         ? `${Math.max(0, Math.ceil(state.bossHp || 0))}/${Math.max(1, state.bossMax || 1)}`
-        : `${Math.min(state.kills || 0, config.target)}/${config.target}${state.wave === 0 ? ` · ${Math.min(1, state.upgradesCollected || 0)}/1` : ""}`;
+        : `${Math.min(state.kills || 0, config.target)}/${config.target}`;
     }
     const cooldowns = state.cooldowns || { nova: 0, lance: 0, rift: 0 };
     const readyKeys = Object.keys(SKILL_COSTS).filter((key) => cooldowns[key] <= 0 && (state.energy ?? 0) >= SKILL_COSTS[key]);
@@ -4452,6 +4833,12 @@ function initSpaceGame() {
     touchSkill?.classList.toggle("is-ready", cooldowns.nova <= 0 && (state.energy ?? 0) >= SKILL_COSTS.nova);
     touchLance?.classList.toggle("is-ready", cooldowns.lance <= 0 && (state.energy ?? 0) >= SKILL_COSTS.lance);
     touchRift?.classList.toggle("is-ready", cooldowns.rift <= 0 && (state.energy ?? 0) >= SKILL_COSTS.rift);
+    [[touchSkill, "nova"], [touchLance, "lance"], [touchRift, "rift"]].forEach(([button, key]) => {
+      if (!button) return;
+      const ratio = Math.max(0, Math.min(1, (cooldowns[key] || 0) / SKILL_COOLDOWNS[key]));
+      button.style.setProperty("--cooldown-angle", `${ratio * 360}deg`);
+      button.dataset.cost = String(SKILL_COSTS[key]);
+    });
     powerButtons.forEach((button) => {
       const active = (state.powerMode || "balanced") === button.dataset.gamePower;
       button.classList.toggle("is-active", active);
@@ -4481,6 +4868,9 @@ function initSpaceGame() {
         overdrive: 0,
         shield: 0,
         rift: 0,
+        modules: { split: 0, pierce: 0, shield: 0, drone: 0, recycler: 0, afterburner: 0 },
+        upgradesChosen: [],
+        bossModules: 0,
         powerMode: "balanced",
         cooldowns: { nova: 0, lance: 0, rift: 0 },
         skillCooldown: 0,
@@ -4495,15 +4885,25 @@ function initSpaceGame() {
       };
     }
 
+    preload() {
+      if (!this.textures.exists("gameMoon")) this.load.image("gameMoon", "./assets/moon.jpg");
+      if (!this.textures.exists("gameEarthNight")) this.load.image("gameEarthNight", "./assets/earth-night.jpg");
+    }
+
     create() {
       this.state = this.makeInitialState();
+      hideGameOverlays();
       this.boss = null;
+      this.bossModules = [];
       this.bossTimer = null;
       this.touchFire = false;
       this.touchFocus = false;
       this.inputMode = "pointer";
       this.lastHudUpdate = 0;
       this.lastBackdropUpdate = 0;
+      this.lastRadarUpdate = 0;
+      this.nextFireAt = 0;
+      this.formationIndex = 0;
       this.riftTargets = new Set();
       this.telegraphs = new Set();
       activeScene = this;
@@ -4516,17 +4916,29 @@ function initSpaceGame() {
       this.physics.world.setBounds(0, 0, this.width, this.height);
       const playerStartY = this.height * (this.isShortLandscape() ? 0.68 : 0.76);
       this.player = this.physics.add.image(this.width * 0.5, playerStartY, "ship");
-      this.player.setCircle(8, 24, 28);
+      const craftScale = Math.max(0.56, this.worldScale);
+      this.player.setCircle(10, 38, 43).setScale(craftScale);
       this.player.setDepth(12);
       this.player.setDamping(true);
       this.player.setDrag(0.92);
       this.player.setMaxVelocity(620);
       this.player.target = new Phaser.Math.Vector2(this.player.x, this.player.y);
-      this.playerGlow = this.add.image(this.player.x, this.player.y, "shipGlow").setBlendMode(Phaser.BlendModes.ADD).setAlpha(0.52).setDepth(11);
+      this.playerGlow = this.add.image(this.player.x, this.player.y, "shipGlow").setScale(craftScale).setBlendMode(Phaser.BlendModes.ADD).setAlpha(0.52).setDepth(11);
+      this.playerThrusters = [-1, 0, 1].map((slot) => this.add.image(this.player.x + slot * 19 * craftScale, this.player.y + 54 * craftScale, "engineFlare")
+        .setScale((slot === 0 ? 0.92 : 0.68) * craftScale, craftScale)
+        .setBlendMode(Phaser.BlendModes.ADD)
+        .setDepth(11));
       this.hitCore = this.add.circle(this.player.x, this.player.y, 5, 0x75f5ff, 0.92)
         .setStrokeStyle(2, 0xfff8df, 0.82)
         .setBlendMode(Phaser.BlendModes.ADD)
         .setDepth(13);
+      this.droneVisuals = [-1, 1].map((side) => this.add.image(this.player.x + side * 48, this.player.y + 8, "enemyScout")
+        .setScale(0.34)
+        .setFlipY(true)
+        .setTint(0x75f5ff)
+        .setBlendMode(Phaser.BlendModes.ADD)
+        .setDepth(11)
+        .setVisible(false));
 
       this.bullets = this.physics.add.group({ classType: Phaser.Physics.Arcade.Image, maxSize: 90 });
       this.enemyBullets = this.physics.add.group({ classType: Phaser.Physics.Arcade.Image, maxSize: 120 });
@@ -4566,7 +4978,7 @@ function initSpaceGame() {
       this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => this.scale.off("resize", this.resizeScene, this));
 
       this.fireTimer = this.time.addEvent({ delay: 150, callback: () => this.fire(false), loop: true });
-      this.spawnTimer = this.time.addEvent({ delay: WAVE_CONFIGS[0].spawn, callback: () => this.spawnEnemy(), loop: true });
+      this.spawnTimer = this.time.addEvent({ delay: WAVE_CONFIGS[0].spawn, callback: () => this.spawnFormation(), loop: true });
       this.asteroidTimer = this.time.addEvent({ delay: 980, callback: () => this.spawnAsteroid(), loop: true });
       this.bossTimer = null;
       this.waveBanner = this.add.text(this.width / 2, this.height * 0.23, "", {
@@ -4594,12 +5006,35 @@ function initSpaceGame() {
       updateHud(this.state);
     }
 
+    refreshLanguage() {
+      const config = WAVE_CONFIGS[Math.min(this.state.wave, WAVE_CONFIGS.length - 1)];
+      const objective = t(config.objectiveKey);
+      if (this.state.missionComplete) {
+        setStatus(`${t("gameMissionCompleteStatus")} · ${Math.floor(this.state.score)} pts · x${this.state.maxCombo}`);
+        this.waveBanner?.setText(t("gameMissionCompleteBanner"));
+      } else if (this.state.gameOver) {
+        setStatus(`${t("gameFailedStatus")} · ${Math.floor(this.state.score)} pts · x${this.state.maxCombo}`);
+        this.waveBanner?.setText(t("gameFailedBanner"));
+      } else if (this.state.phase === "upgrade") {
+        setStatus(t("gameSectorClear"));
+      } else if (this.state.phase === "boss") {
+        setStatus(t("gameBossStatus"));
+      } else {
+        setStatus(fmt(t("gameMissionPrefix"), { wave: this.state.wave + 1, objective }));
+        this.waveBanner?.setText(`${t(config.labelKey)}\n${objective}`);
+      }
+      updateHud(this.state);
+    }
+
     resizeScene(gameSize) {
       this.width = gameSize.width;
       this.height = gameSize.height;
       this.worldScale = Phaser.Math.Clamp(this.height / 900, 0.42, 1.08);
       this.physics.world.setBounds(0, 0, this.width, this.height);
       if (this.player) {
+        const craftScale = Math.max(0.56, this.worldScale);
+        this.player.setScale(craftScale);
+        this.playerGlow?.setScale(craftScale);
         this.player.x = Phaser.Math.Clamp(this.player.x, 34, this.width - 34);
         this.player.y = Phaser.Math.Clamp(this.player.y, this.height * 0.34, this.playerBottomLimit());
         this.player.target.set(this.player.x, this.player.y);
@@ -4609,6 +5044,10 @@ function initSpaceGame() {
           .setStyle({ fontSize: this.bannerFontSize() })
           .setPosition(this.width / 2, this.bannerY());
       }
+      const celestialSize = Math.min(this.width, this.height);
+      this.backdropEarth?.setPosition(this.width * 0.82, this.height * 0.16).setDisplaySize(celestialSize * 0.3, celestialSize * 0.3);
+      this.backdropMoon?.setPosition(this.width * 0.16, this.height * 0.72).setDisplaySize(celestialSize * 0.17, celestialSize * 0.17);
+      this.updateCelestialMasks?.();
     }
 
     isShortLandscape() {
@@ -4632,77 +5071,107 @@ function initSpaceGame() {
     createTextures() {
       if (this.textures.exists("ship")) return;
       const g = this.add.graphics();
+      const point = (x, y) => ({ x, y });
       g.clear();
-      g.fillStyle(0x0a1222, 1);
-      g.fillTriangle(32, 2, 60, 70, 32, 56);
-      g.fillTriangle(32, 2, 4, 70, 32, 56);
-      g.fillStyle(0xeaf8ff, 0.92);
-      g.fillTriangle(32, 4, 48, 62, 32, 52);
-      g.fillTriangle(32, 4, 16, 62, 32, 52);
-      g.fillStyle(0x75f5ff, 1);
-      g.fillRoundedRect(27, 17, 10, 42, 4);
-      g.fillStyle(0x14233a, 1);
-      g.fillEllipse(32, 26, 13, 18);
-      g.lineStyle(2, 0x75f5ff, 0.82);
-      g.strokeEllipse(32, 26, 15, 20);
-      g.lineStyle(3, 0xf5d287, 0.64);
-      g.lineBetween(16, 58, 48, 58);
-      g.fillStyle(0xf5d287, 1);
-      g.fillEllipse(20, 70, 8, 20);
-      g.fillEllipse(44, 70, 8, 20);
-      g.fillStyle(0x75f5ff, 0.9);
-      g.fillEllipse(32, 76, 10, 24);
-      g.generateTexture("ship", 64, 82);
+      g.fillStyle(0x020711, 1);
+      g.fillPoints([point(48, 1), point(61, 27), point(92, 70), point(69, 68), point(62, 99), point(48, 87), point(34, 99), point(27, 68), point(4, 70), point(35, 27)], true);
+      g.fillStyle(0x12223a, 1);
+      g.fillPoints([point(48, 4), point(59, 34), point(80, 63), point(60, 59), point(56, 91), point(48, 82), point(40, 91), point(36, 59), point(16, 63), point(37, 34)], true);
+      g.fillStyle(0x29465b, 0.92);
+      g.fillPoints([point(48, 8), point(57, 42), point(64, 70), point(48, 79), point(32, 70), point(39, 42)], true);
+      g.lineStyle(2, 0x78ecff, 0.9);
+      g.strokePoints([point(48, 2), point(61, 28), point(91, 69), point(68, 67), point(61, 97)], false);
+      g.strokePoints([point(48, 2), point(35, 28), point(5, 69), point(28, 67), point(35, 97)], false);
+      g.lineStyle(2, 0xd7b86e, 0.8);
+      g.lineBetween(23, 61, 42, 53);
+      g.lineBetween(73, 61, 54, 53);
+      g.strokeEllipse(48, 46, 24, 39);
+      g.fillStyle(0x030812, 1);
+      g.fillEllipse(48, 42, 19, 31);
+      g.fillStyle(0x4fdcf5, 0.76);
+      g.fillEllipse(48, 38, 11, 20);
+      g.fillStyle(0xe9fbff, 0.9);
+      g.fillEllipse(46, 34, 4, 7);
+      g.lineStyle(1, 0x78ecff, 0.54);
+      g.lineBetween(48, 58, 48, 82);
+      g.lineBetween(30, 70, 39, 65);
+      g.lineBetween(66, 70, 57, 65);
+      g.fillStyle(0xd7b86e, 1);
+      g.fillCircle(32, 69, 3);
+      g.fillCircle(64, 69, 3);
+      g.fillStyle(0x78ecff, 0.92);
+      g.fillRoundedRect(43, 76, 10, 17, 4);
+      g.fillStyle(0x09111f, 1);
+      g.fillRoundedRect(29, 90, 11, 12, 4);
+      g.fillRoundedRect(56, 90, 11, 12, 4);
+      g.generateTexture("ship", 96, 108);
       g.clear();
-      g.fillStyle(0x75f5ff, 0.44);
-      g.fillCircle(42, 42, 38);
-      g.generateTexture("shipGlow", 84, 84);
+      g.fillStyle(0x75f5ff, 0.05);
+      g.fillCircle(66, 66, 62);
+      g.fillStyle(0x75f5ff, 0.08);
+      g.fillCircle(66, 66, 43);
+      g.fillStyle(0x75f5ff, 0.16);
+      g.fillCircle(66, 66, 25);
+      g.generateTexture("shipGlow", 132, 132);
       g.clear();
-      g.fillStyle(0x75f5ff, 1);
-      g.fillRoundedRect(6, 0, 8, 34, 5);
-      g.generateTexture("laser", 20, 36);
+      g.fillStyle(0x5ee8ff, 0.08);
+      g.fillEllipse(12, 27, 24, 54);
+      g.fillStyle(0x5ee8ff, 0.24);
+      g.fillEllipse(12, 22, 15, 43);
+      g.fillStyle(0xeafcff, 0.95);
+      g.fillEllipse(12, 6, 6, 12);
+      g.generateTexture("engineFlare", 24, 56);
       g.clear();
-      g.fillStyle(0x3c3156, 1);
-      g.fillTriangle(0, 20, 42, 2, 36, 38);
-      g.fillTriangle(84, 20, 42, 2, 48, 38);
-      g.fillStyle(0xb99cff, 0.9);
-      g.fillTriangle(7, 18, 42, 6, 39, 28);
-      g.fillTriangle(77, 18, 42, 6, 45, 28);
-      g.fillStyle(0x0b1724, 1);
-      g.fillEllipse(42, 18, 25, 28);
-      g.fillStyle(0xff8fa8, 0.88);
-      g.fillCircle(42, 18, 6);
-      g.lineStyle(3, 0x75f5ff, 1);
-      g.strokeCircle(42, 18, 14);
-      g.lineStyle(2, 0xf5d287, 0.52);
-      g.lineBetween(18, 20, 66, 20);
-      g.generateTexture("enemy", 84, 36);
-      g.clear();
-      g.fillStyle(0x071523, 1);
-      g.fillTriangle(42, 0, 78, 34, 42, 28);
-      g.fillTriangle(42, 0, 6, 34, 42, 28);
+      g.fillStyle(0x75f5ff, 0.18);
+      g.fillRoundedRect(2, 0, 16, 42, 8);
       g.fillStyle(0x75f5ff, 0.92);
-      g.fillTriangle(42, 5, 62, 31, 42, 24);
-      g.fillTriangle(42, 5, 22, 31, 42, 24);
-      g.fillStyle(0xff8fa8, 0.9);
-      g.fillCircle(42, 16, 5);
-      g.lineStyle(2, 0xf5d287, 0.54);
-      g.strokeCircle(42, 17, 12);
-      g.generateTexture("enemyScout", 84, 42);
+      g.fillRoundedRect(7, 1, 6, 38, 3);
+      g.fillStyle(0xffffff, 1);
+      g.fillRoundedRect(9, 2, 2, 32, 1);
+      g.generateTexture("laser", 20, 44);
       g.clear();
-      g.fillStyle(0x221629, 1);
-      g.fillRoundedRect(0, 15, 122, 46, 20);
-      g.fillStyle(0x554063, 1);
-      g.fillTriangle(10, 38, 56, 0, 54, 76);
-      g.fillTriangle(112, 38, 66, 0, 68, 76);
-      g.lineStyle(3, 0xf5d287, 0.72);
-      g.strokeRoundedRect(14, 11, 94, 54, 20);
-      g.fillStyle(0xff8fa8, 0.94);
-      g.fillCircle(61, 38, 12);
-      g.fillStyle(0x75f5ff, 0.72);
-      g.fillCircle(28, 38, 5);
-      g.fillCircle(94, 38, 5);
-      g.generateTexture("enemyBomber", 122, 78);
+      g.fillStyle(0x120d20, 1);
+      g.fillPoints([point(2, 27), point(38, 3), point(54, 12), point(70, 3), point(106, 27), point(75, 24), point(66, 48), point(54, 39), point(42, 48), point(33, 24)], true);
+      g.fillStyle(0x49345e, 0.96);
+      g.fillPoints([point(12, 26), point(42, 9), point(54, 17), point(66, 9), point(96, 26), point(69, 27), point(54, 37), point(39, 27)], true);
+      g.lineStyle(2, 0xc7a6ff, 0.84);
+      g.strokePoints([point(3, 27), point(38, 3), point(54, 12), point(70, 3), point(105, 27)], false);
+      g.lineStyle(1, 0xd7b86e, 0.64);
+      g.lineBetween(22, 26, 44, 20);
+      g.lineBetween(86, 26, 64, 20);
+      g.fillStyle(0xff557d, 0.98);
+      g.fillCircle(54, 23, 7);
+      g.fillStyle(0xffc1d0, 1);
+      g.fillCircle(54, 22, 2);
+      g.generateTexture("enemy", 108, 54);
+      g.clear();
+      g.fillStyle(0x07131d, 1);
+      g.fillPoints([point(46, 1), point(88, 43), point(57, 35), point(46, 56), point(35, 35), point(4, 43)], true);
+      g.fillStyle(0x19506a, 0.94);
+      g.fillPoints([point(46, 6), point(76, 39), point(53, 30), point(46, 49), point(39, 30), point(16, 39)], true);
+      g.lineStyle(2, 0x75f5ff, 0.92);
+      g.strokePoints([point(46, 2), point(88, 43), point(57, 35), point(46, 56), point(35, 35), point(4, 43), point(46, 2)], false);
+      g.fillStyle(0xff668c, 0.98);
+      g.fillCircle(46, 25, 6);
+      g.fillStyle(0xf3fbff, 0.86);
+      g.fillCircle(46, 24, 2);
+      g.generateTexture("enemyScout", 92, 58);
+      g.clear();
+      g.fillStyle(0x160b17, 1);
+      g.fillRoundedRect(4, 22, 124, 50, 18);
+      g.fillStyle(0x40223e, 1);
+      g.fillPoints([point(8, 47), point(47, 4), point(58, 30), point(74, 30), point(85, 4), point(124, 47), point(92, 81), point(66, 69), point(40, 81)], true);
+      g.lineStyle(3, 0xd7b86e, 0.82);
+      g.strokeRoundedRect(12, 19, 108, 56, 18);
+      g.lineStyle(1, 0xff7598, 0.62);
+      g.lineBetween(25, 47, 52, 35);
+      g.lineBetween(107, 47, 80, 35);
+      g.fillStyle(0xff557d, 0.96);
+      g.fillCircle(66, 46, 13);
+      g.fillStyle(0x75f5ff, 0.8);
+      g.fillCircle(29, 47, 5);
+      g.fillCircle(103, 47, 5);
+      g.generateTexture("enemyBomber", 132, 88);
       g.clear();
       g.fillStyle(0xdec182, 1);
       g.beginPath();
@@ -4723,9 +5192,13 @@ function initSpaceGame() {
       g.strokeCircle(30, 30, 27);
       g.generateTexture("asteroid", 62, 62);
       g.clear();
-      g.fillStyle(0xff8fa8, 1);
-      g.fillCircle(8, 8, 7);
-      g.generateTexture("enemyBullet", 16, 16);
+      g.fillStyle(0xff8fa8, 0.2);
+      g.fillCircle(10, 10, 10);
+      g.fillStyle(0xff557d, 0.96);
+      g.fillPoints([point(10, 1), point(18, 10), point(10, 19), point(2, 10)], true);
+      g.fillStyle(0xffffff, 0.92);
+      g.fillCircle(10, 10, 3);
+      g.generateTexture("enemyBullet", 20, 20);
       g.clear();
       g.fillStyle(0x89f2c1, 1);
       g.fillCircle(17, 17, 15);
@@ -4733,27 +5206,61 @@ function initSpaceGame() {
       g.strokeCircle(17, 17, 10);
       g.generateTexture("powerup", 34, 34);
       g.clear();
-      g.fillStyle(0x070b14, 1);
-      g.fillRoundedRect(0, 18, 260, 88, 22);
-      g.fillStyle(0x15192d, 1);
-      g.fillRoundedRect(16, 0, 228, 112, 26);
-      g.fillStyle(0x242c45, 1);
-      g.fillTriangle(0, 58, 62, 18, 62, 100);
-      g.fillTriangle(260, 58, 198, 18, 198, 100);
-      g.lineStyle(4, 0xf5d287, 0.9);
-      g.strokeRoundedRect(18, 8, 224, 96, 22);
-      g.lineStyle(2, 0x75f5ff, 0.5);
-      g.strokeRoundedRect(34, 24, 192, 64, 16);
-      g.fillStyle(0xff8fa8, 0.92);
-      g.fillCircle(130, 56, 18);
-      g.fillStyle(0x75f5ff, 0.64);
-      g.fillCircle(72, 56, 8);
-      g.fillCircle(188, 56, 8);
-      g.generateTexture("boss", 260, 112);
+      g.fillStyle(0x03060e, 1);
+      g.fillPoints([point(2, 75), point(43, 30), point(84, 16), point(112, 2), point(150, 23), point(188, 2), point(216, 16), point(257, 30), point(298, 75), point(244, 70), point(218, 126), point(150, 106), point(82, 126), point(56, 70)], true);
+      g.fillStyle(0x171528, 1);
+      g.fillPoints([point(22, 72), point(55, 39), point(101, 28), point(119, 15), point(150, 33), point(181, 15), point(199, 28), point(245, 39), point(278, 72), point(222, 66), point(205, 108), point(150, 93), point(95, 108), point(78, 66)], true);
+      g.fillStyle(0x2b2948, 0.9);
+      g.fillRoundedRect(82, 37, 136, 55, 20);
+      g.lineStyle(4, 0xd7b86e, 0.86);
+      g.strokePoints([point(3, 74), point(43, 30), point(84, 16), point(112, 2)], false);
+      g.strokePoints([point(297, 74), point(257, 30), point(216, 16), point(188, 2)], false);
+      g.strokeRoundedRect(84, 36, 132, 57, 20);
+      g.lineStyle(2, 0x75f5ff, 0.58);
+      g.strokeEllipse(150, 65, 64, 48);
+      g.lineBetween(46, 58, 104, 48);
+      g.lineBetween(254, 58, 196, 48);
+      g.fillStyle(0xff557d, 0.98);
+      g.fillCircle(150, 64, 20);
+      g.fillStyle(0xffd2dc, 0.9);
+      g.fillCircle(146, 59, 6);
+      g.fillStyle(0x75f5ff, 0.82);
+      [67, 101, 199, 233].forEach((x) => g.fillCircle(x, 60, 6));
+      g.generateTexture("boss", 300, 136);
+      g.clear();
+      g.fillStyle(0x090d18, 1);
+      g.fillCircle(32, 32, 29);
+      g.fillStyle(0x302844, 1);
+      g.fillCircle(32, 32, 22);
+      g.lineStyle(4, 0xd7b86e, 0.88);
+      g.strokeCircle(32, 32, 27);
+      g.lineStyle(2, 0x75f5ff, 0.72);
+      g.strokeCircle(32, 32, 17);
+      g.fillStyle(0xff557d, 0.98);
+      g.fillCircle(32, 32, 8);
+      g.fillStyle(0xd8eaff, 0.9);
+      g.fillRoundedRect(28, 0, 8, 26, 4);
+      g.generateTexture("bossTurret", 64, 64);
       g.destroy();
     }
 
     createBackdrop() {
+      const celestialSize = Math.min(this.width, this.height);
+      this.backdropEarth = this.add.image(this.width * 0.82, this.height * 0.16, "gameEarthNight")
+        .setDisplaySize(celestialSize * 0.3, celestialSize * 0.3)
+        .setAlpha(0.24)
+        .setBlendMode(Phaser.BlendModes.ADD)
+        .setDepth(1);
+      this.backdropMoon = this.add.image(this.width * 0.16, this.height * 0.72, "gameMoon")
+        .setDisplaySize(celestialSize * 0.17, celestialSize * 0.17)
+        .setAlpha(0.18)
+        .setTint(0x9fc9ff)
+        .setDepth(1);
+      this.earthMaskShape = this.make.graphics({ add: false });
+      this.moonMaskShape = this.make.graphics({ add: false });
+      this.backdropEarth.setMask(this.earthMaskShape.createGeometryMask());
+      this.backdropMoon.setMask(this.moonMaskShape.createGeometryMask());
+      this.updateCelestialMasks();
       this.starLayers = [];
       for (let layer = 0; layer < 3; layer += 1) {
         const graphics = this.add.graphics().setDepth(layer);
@@ -4771,23 +5278,25 @@ function initSpaceGame() {
       this.distantPlanet = this.add.graphics().setDepth(1);
     }
 
+    updateCelestialMasks() {
+      const celestialSize = Math.min(this.width, this.height);
+      this.earthMaskShape?.clear().fillStyle(0xffffff, 1).fillCircle(this.width * 0.82, this.height * 0.16, celestialSize * 0.15);
+      this.moonMaskShape?.clear().fillStyle(0xffffff, 1).fillCircle(this.width * 0.16, this.height * 0.72, celestialSize * 0.085);
+    }
+
     startWave(index) {
+      hideGameOverlays();
       this.state.wave = index;
       this.state.kills = 0;
       this.state.upgradesCollected = 0;
       this.state.transitionLocked = false;
       const config = WAVE_CONFIGS[index];
-      this.state.phase = config.boss ? "boss" : "combat";
+      this.state.phase = config.boss ? "boss-intro" : "countdown";
+      this.state.shield = Math.max(this.state.shield, config.boss ? 2600 : 1200);
       this.spawnTimer.delay = config.spawn;
-      this.asteroidTimer.paused = false;
-      if (config.boss) {
-        this.spawnTimer.paused = true;
-        this.asteroidTimer.delay = 760;
-        this.time.delayedCall(900, () => this.spawnBoss());
-      } else {
-        this.spawnTimer.paused = false;
-        this.asteroidTimer.delay = index === 0 ? 1120 : 720;
-      }
+      this.spawnTimer.paused = true;
+      this.asteroidTimer.paused = true;
+      this.asteroidTimer.delay = config.boss ? 820 : (index === 0 ? 1260 : 840);
       const label = t(config.labelKey);
       const objective = t(config.objectiveKey);
       this.waveBanner.setText(`${label}\n${objective}`);
@@ -4795,28 +5304,92 @@ function initSpaceGame() {
       this.tweens.add({ targets: this.waveBanner, alpha: 1, y: this.bannerY(), duration: 420, yoyo: true, hold: 1350, ease: "Sine.easeInOut" });
       setStatus(fmt(t("gameMissionPrefix"), { wave: index + 1, objective }));
       updateHud(this.state);
+      this.time.delayedCall(config.boss ? 2180 : 900, () => {
+        const expectedPhase = config.boss ? "boss-intro" : "countdown";
+        if (this.state.gameOver || this.state.missionComplete || this.state.wave !== index || this.state.phase !== expectedPhase || this.state.transitionLocked) return;
+        if (config.boss) {
+          this.state.phase = "boss";
+          this.asteroidTimer.paused = false;
+          this.tweens.killTweensOf(this.waveBanner);
+          this.waveBanner.setAlpha(0);
+          this.spawnBoss();
+        } else {
+          this.state.phase = "combat";
+          this.spawnTimer.paused = false;
+          this.asteroidTimer.paused = false;
+          this.spawnFormation();
+        }
+      });
     }
 
-    spawnEnemy() {
-      if (this.state.gameOver || this.state.missionComplete || this.state.transitionLocked) return;
+    isCombatActive() {
+      return ["combat", "boss"].includes(this.state.phase) && !this.state.gameOver && !this.state.missionComplete;
+    }
+
+    spawnFormation() {
+      if (!this.isCombatActive() || this.state.transitionLocked || this.state.phase === "boss") return;
+      const activeHostiles = this.enemies.getChildren().filter((enemy) => enemy.active && !enemy.isBoss).length;
+      if (activeHostiles > 11) return;
+      const formations = [
+        [
+          { nx: 0.5, kind: "fighter", pattern: "dive" },
+          { nx: 0.38, kind: "scout", pattern: "sine" },
+          { nx: 0.62, kind: "scout", pattern: "sine" },
+          { nx: 0.26, kind: "fighter", pattern: "dive" },
+          { nx: 0.74, kind: "fighter", pattern: "dive" }
+        ],
+        [
+          { nx: 0.16, kind: "scout", pattern: "sweep" },
+          { nx: 0.32, kind: "fighter", pattern: "sweep" },
+          { nx: 0.48, kind: "fighter", pattern: "sweep" },
+          { nx: 0.64, kind: "fighter", pattern: "sweep" },
+          { nx: 0.8, kind: "scout", pattern: "sweep" }
+        ],
+        [
+          { nx: 0.2, kind: "fighter", pattern: "pincer" },
+          { nx: 0.3, kind: "scout", pattern: "pincer" },
+          { nx: 0.7, kind: "scout", pattern: "pincer" },
+          { nx: 0.8, kind: "fighter", pattern: "pincer" }
+        ],
+        [
+          { nx: 0.5, kind: "bomber", pattern: "sine" },
+          { nx: 0.31, kind: "fighter", pattern: "escort" },
+          { nx: 0.69, kind: "fighter", pattern: "escort" }
+        ]
+      ];
+      const available = this.state.wave === 0 ? formations.slice(0, 3) : formations;
+      const formation = available[this.formationIndex % available.length];
+      this.formationIndex += 1;
+      formation.forEach((spec, index) => {
+        this.time.delayedCall(index * 115, () => this.spawnEnemy(spec));
+      });
+    }
+
+    spawnEnemy(spec = {}) {
+      if (!this.isCombatActive() || this.state.transitionLocked || this.state.phase === "boss") return;
       const config = WAVE_CONFIGS[this.state.wave];
-      const x = Phaser.Math.Between(60, this.width - 60);
-      const elite = this.state.wave > 0 && Math.random() > 0.74;
-      const scout = !elite && Math.random() > 0.52;
+      const x = spec.nx ? Phaser.Math.Clamp(spec.nx * this.width, 54, this.width - 54) : Phaser.Math.Between(60, this.width - 60);
+      const elite = spec.kind === "bomber" || (!spec.kind && this.state.wave > 0 && Math.random() > 0.76);
+      const scout = spec.kind === "scout" || (!spec.kind && !elite && Math.random() > 0.52);
       const texture = elite ? "enemyBomber" : (scout ? "enemyScout" : "enemy");
       const enemy = this.enemies.create(x, -40, texture);
-      enemy.setCircle(elite ? 25 : 18, elite ? 36 : 24, elite ? 14 : 0);
+      if (elite) enemy.setCircle(26, 40, 18);
+      else if (scout) enemy.setCircle(17, 29, 12);
+      else enemy.setCircle(18, 36, 9);
       enemy.hp = elite ? 6 : (scout ? 1 : (this.state.wave === 0 ? 1 : 2));
       enemy.score = elite ? 420 + this.state.wave * 110 : (scout ? 150 : 120 + this.state.wave * 45);
       enemy.kind = elite ? "bomber" : (scout ? "scout" : "fighter");
-      enemy.pattern = Math.random() > 0.5 ? "sine" : "dive";
+      enemy.pattern = spec.pattern || (Math.random() > 0.5 ? "sine" : "dive");
       enemy.phase = Math.random() * Math.PI * 2;
+      enemy.originX = x;
+      enemy.side = x < this.width * 0.5 ? 1 : -1;
       enemy.age = 0;
       enemy.nextShotAt = this.time.now + Phaser.Math.Between(elite ? 950 : 1500, elite ? 1650 : 2850);
       enemy.baseSpeedY = (118 + this.state.wave * 32) * config.speed * (scout ? 1.28 : 1) * this.worldScale;
       enemy.setVelocity(Phaser.Math.Between(-50, 50) * this.worldScale, enemy.baseSpeedY);
       enemy.setDepth(8);
-      enemy.setScale(elite ? 1.08 : (scout ? 0.9 : 1));
+      const enemyVisualScale = Math.max(0.58, this.worldScale);
+      enemy.setScale((elite ? 1.08 : (scout ? 0.9 : 1)) * enemyVisualScale);
       if (elite) enemy.setTint(0xf5d287);
       this.slowTargetForRift(enemy, 0.54);
     }
@@ -4824,24 +5397,43 @@ function initSpaceGame() {
     spawnBoss() {
       if (this.boss || this.state.gameOver) return;
       this.boss = this.enemies.create(this.width / 2, -80, "boss");
-      this.boss.setSize(224, 84, true);
-      this.boss.hp = 180;
-      this.boss.score = 3600;
+      const bossVisualScale = Math.max(0.6, this.worldScale);
+      this.boss.setSize(248, 92, true);
+      this.boss.setScale(bossVisualScale);
+      this.boss.hp = 220;
+      this.boss.score = 4200;
       this.boss.isBoss = true;
       this.boss.kind = "boss";
       this.boss.combatPhase = 1;
       this.state.bossHp = this.boss.hp;
       this.state.bossMax = this.boss.hp;
+      this.state.bossModules = 2;
       this.boss.setDepth(9);
-      this.tweens.add({ targets: this.boss, y: this.height * 0.2, duration: 900, ease: "Power2" });
+      this.bossModules = [-82, 82].map((offset, index) => {
+        const scaledOffset = offset * bossVisualScale;
+        const module = this.enemies.create(this.boss.x + scaledOffset, this.boss.y, "bossTurret");
+        module.setCircle(23, 9, 9);
+        module.setScale(bossVisualScale);
+        module.hp = 34;
+        module.score = 720;
+        module.kind = "boss-module";
+        module.isBossModule = true;
+        module.moduleOffset = scaledOffset;
+        module.moduleIndex = index;
+        module.parentBoss = this.boss;
+        module.setDepth(10);
+        return module;
+      });
+      const bossStationY = this.height * (this.isShortLandscape() ? 0.46 : 0.29);
+      this.tweens.add({ targets: this.boss, y: bossStationY, duration: 900, ease: "Power2" });
       this.bossTimer = this.time.addEvent({ delay: 940, callback: () => this.fireBoss(), loop: true });
       setStatus(t("gameBossStatus"));
     }
 
     spawnAsteroid() {
-      if (this.state.gameOver || this.state.missionComplete) return;
+      if (!this.isCombatActive()) return;
       const asteroid = this.asteroids.create(Phaser.Math.Between(40, this.width - 40), -40, "asteroid");
-      const scale = Phaser.Math.FloatBetween(0.62, 1.28);
+      const scale = Phaser.Math.FloatBetween(0.62, 1.28) * Math.max(0.58, this.worldScale);
       asteroid.setScale(scale);
       asteroid.setCircle(24, 4, 4);
       asteroid.hp = Math.ceil(scale * 2);
@@ -4854,19 +5446,41 @@ function initSpaceGame() {
     }
 
     fire(manual) {
-      if (this.state.gameOver || this.state.missionComplete) return;
+      if (!this.isCombatActive()) return;
       if (!manual && !this.input.activePointer.isDown && !this.keys.SPACE.isDown && !this.touchFire) return;
-      const count = this.state.weapon >= 3 ? 3 : (this.state.weapon >= 2 ? 2 : 1);
-      const offsets = count === 3 ? [-22, 0, 22] : (count === 2 ? [-14, 14] : [0]);
+      if (this.time.now < this.nextFireAt) return;
+      const cadence = this.state.powerMode === "weapons" ? 104 : (this.state.overdrive > 0 ? 112 : 146);
+      this.nextFireAt = this.time.now + cadence;
+      const splitLevel = this.state.modules.split || 0;
+      const count = splitLevel >= 2 || this.state.weapon >= 4 ? 5 : (splitLevel >= 1 || this.state.weapon >= 3 ? 3 : (this.state.weapon >= 2 ? 2 : 1));
+      const offsets = count === 5 ? [-34, -17, 0, 17, 34] : (count === 3 ? [-22, 0, 22] : (count === 2 ? [-14, 14] : [0]));
       offsets.forEach((offset, index) => {
         const bullet = this.bullets.get(this.player.x + offset, this.player.y - 34, "laser");
         if (!bullet) return;
         bullet.setActive(true).setVisible(true).setDepth(10);
+        bullet.setScale(1);
         bullet.body.enable = true;
         bullet.setVelocity((index - (offsets.length - 1) / 2) * 42 * this.worldScale, -720 * this.worldScale);
-        bullet.damage = (this.state.overdrive > 0 ? 2 : 1) * (this.state.powerMode === "weapons" ? 1.35 : 1);
+        bullet.damage = (this.state.overdrive > 0 ? 2 : 1) * (this.state.powerMode === "weapons" ? 1.35 : 1) + (this.state.modules.pierce || 0) * 0.42;
+        bullet.piercing = this.state.modules.pierce || 0;
+        bullet.hitTargets = new Set();
         bullet.setBlendMode(Phaser.BlendModes.ADD);
       });
+      if ((this.state.modules.drone || 0) > 0) {
+        const droneCount = this.state.modules.drone > 1 ? 2 : 1;
+        const droneOffsets = droneCount === 2 ? [-48, 48] : [48];
+        droneOffsets.forEach((offset) => {
+          const droneBullet = this.bullets.get(this.player.x + offset, this.player.y - 12, "laser");
+          if (!droneBullet) return;
+          droneBullet.setActive(true).setVisible(true).setDepth(10);
+          droneBullet.body.enable = true;
+          droneBullet.setScale(0.68);
+          droneBullet.setVelocity(-offset * 0.32, -620 * this.worldScale);
+          droneBullet.damage = 0.72 + (this.state.modules.pierce || 0) * 0.2;
+          droneBullet.piercing = 0;
+          droneBullet.hitTargets = new Set();
+        });
+      }
       if (manual) playSound("laser");
     }
 
@@ -4905,13 +5519,15 @@ function initSpaceGame() {
         const mode = phase - 1;
         const count = phase === 1 ? 10 : (phase === 2 ? 16 : 9);
         const aim = Phaser.Math.RadToDeg(Phaser.Math.Angle.Between(this.boss.x, this.boss.y, this.player.x, this.player.y));
+        const activeEmitters = this.bossModules?.filter((module) => module.active) || [];
         for (let i = 0; i < count; i += 1) {
           const angle = mode === 0
             ? -160 + i * 32 + Math.sin(this.time.now / 420) * 7
             : (mode === 1
               ? 20 + i * 22 + this.time.now * 0.05
               : aim - 56 + i * 14);
-          const bullet = this.enemyBullets.get(this.boss.x, this.boss.y + 38, "enemyBullet");
+          const emitter = activeEmitters.length ? activeEmitters[i % activeEmitters.length] : this.boss;
+          const bullet = this.enemyBullets.get(emitter.x, emitter.y + 24, "enemyBullet");
           if (!bullet) continue;
           bullet.setActive(true).setVisible(true).setDepth(7);
           bullet.body.enable = true;
@@ -4924,21 +5540,40 @@ function initSpaceGame() {
     }
 
     hitEnemy(bullet, enemy) {
-      bullet.disableBody(true, true);
-      enemy.hp -= bullet.damage || 1;
+      if (bullet.hitTargets?.has(enemy)) return;
+      bullet.hitTargets?.add(enemy);
+      if ((bullet.piercing || 0) > 0) {
+        bullet.piercing -= 1;
+        bullet.y -= 12;
+      } else {
+        bullet.disableBody(true, true);
+      }
+      const coreResistance = enemy.isBoss && this.state.bossModules > 0 ? 0.22 : 1;
+      enemy.hp -= (bullet.damage || 1) * coreResistance;
       if (enemy.isBoss) this.state.bossHp = Math.max(0, enemy.hp);
       this.flashAt(enemy.x, enemy.y, enemy.isBoss ? "#f5d287" : "#75f5ff", enemy.isBoss ? 22 : 12);
       if (enemy.hp > 0) return;
       const wasBoss = enemy.isBoss;
+      const wasBossModule = enemy.isBossModule;
       const score = enemy.score || 100;
+      this.burstAt(enemy.x, enemy.y, wasBoss ? 0xf5d287 : (wasBossModule ? 0xb99cff : 0x75f5ff), wasBoss ? 28 : 12);
       enemy.disableBody(true, true);
       const multiplier = this.state.comboTimer > 0 ? Math.max(1, this.state.combo || 1) : 1;
       this.state.score += score * multiplier;
       this.state.combo = Math.min(12, multiplier + (wasBoss ? 2 : 1));
       this.state.maxCombo = Math.max(this.state.maxCombo, this.state.combo);
       this.state.comboTimer = 2500;
-      this.state.energy = Math.min(100, (this.state.energy || 0) + (wasBoss ? 40 : 8));
+      this.state.energy = Math.min(100, (this.state.energy || 0) + (wasBoss ? 40 : 8) + (this.state.modules.recycler || 0) * 4);
       this.state.kills += 1;
+      if (wasBossModule) {
+        this.state.bossModules = Math.max(0, this.state.bossModules - 1);
+        this.cameras.main.flash(150, 245, 210, 135, false);
+        setStatus(state.language === "zh"
+          ? `母舰武器节点已摧毁 · 剩余 ${this.state.bossModules}`
+          : (state.language === "fr"
+            ? `Module d’armement détruit · ${this.state.bossModules} restant(s)`
+            : `Weapon module destroyed · ${this.state.bossModules} remaining`));
+      }
       if ((!wasBoss && this.state.wave === 0 && this.state.kills === 5) || Math.random() > (wasBoss ? 0.1 : 0.72)) this.dropPowerup(enemy.x, enemy.y);
       playSound(wasBoss ? "success" : "blast");
       if (wasBoss) this.completeMission();
@@ -4962,11 +5597,12 @@ function initSpaceGame() {
       if (!hazard.active || this.state.shield > 0 || this.state.gameOver || this.state.missionComplete) return;
       hazard.disableBody(true, true);
       const damage = hazard.isBoss ? 35 : 18;
-      this.state.hull -= this.state.powerMode === "shields" ? damage * 0.62 : damage;
+      const moduleResistance = 1 - (this.state.modules.shield || 0) * 0.13;
+      this.state.hull -= (this.state.powerMode === "shields" ? damage * 0.62 : damage) * moduleResistance;
       this.state.combo = 1;
       this.state.comboTimer = 0;
       this.state.energy = Math.max(0, this.state.energy - 18);
-      this.state.shield = this.state.powerMode === "shields" ? 1250 : 850;
+      this.state.shield = (this.state.powerMode === "shields" ? 1250 : 850) + (this.state.modules.shield || 0) * 420;
       this.flashAt(player.x, player.y, "#ff8fa8", 26);
       if (!window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches) this.cameras.main.shake(170, 0.007);
       navigator.vibrate?.(35);
@@ -5022,7 +5658,7 @@ function initSpaceGame() {
     }
 
     canUseSkill(key) {
-      if (this.state.gameOver || this.state.missionComplete) return false;
+      if (!this.isCombatActive()) return false;
       if ((this.state.energy ?? 0) < SKILL_COSTS[key]) {
         setStatus(t("gameSkillNoEnergy"));
         playSound("select");
@@ -5165,21 +5801,66 @@ function initSpaceGame() {
       this.telegraphs?.clear();
     }
 
+    getUpgradeChoices() {
+      const offset = (this.state.wave * 2 + this.state.upgradesChosen.length) % UPGRADE_DEFS.length;
+      const ordered = [...UPGRADE_DEFS.slice(offset), ...UPGRADE_DEFS.slice(0, offset)];
+      const available = ordered.filter((upgrade) => (this.state.modules[upgrade.id] || 0) < 2);
+      return (available.length >= 3 ? available : ordered).slice(0, 3);
+    }
+
+    applyUpgrade(upgradeId) {
+      if (!UPGRADE_DEFS.some((upgrade) => upgrade.id === upgradeId)) return;
+      this.state.modules[upgradeId] = Math.min(2, (this.state.modules[upgradeId] || 0) + 1);
+      this.state.upgradesChosen.push(upgradeId);
+      if (upgradeId === "split") this.state.weapon = Math.min(4, this.state.weapon + 1);
+      if (upgradeId === "shield") this.state.shield = Math.max(this.state.shield, 2200);
+      if (upgradeId === "recycler") this.state.energy = Math.min(100, this.state.energy + 30);
+      const upgrade = UPGRADE_DEFS.find((item) => item.id === upgradeId);
+      setStatus(`${t(upgrade.nameKey)} · ${t(upgrade.descriptionKey)}`);
+      playSound("success");
+      updateHud(this.state);
+    }
+
     checkWaveProgress() {
       const config = WAVE_CONFIGS[this.state.wave];
       if (config.boss || this.state.transitionLocked || this.state.kills < config.target) return;
-      if (this.state.wave === 0 && this.state.upgradesCollected < 1) return;
       const nextWave = this.state.wave + 1;
       if (nextWave < WAVE_CONFIGS.length) {
         this.state.transitionLocked = true;
-        this.state.phase = "clearing";
+        this.state.phase = "upgrade";
         this.spawnTimer.paused = true;
-        this.time.delayedCall(1100, () => this.startWave(nextWave));
+        this.asteroidTimer.paused = true;
+        this.enemyBullets.clear(true, true);
+        this.enemies.getChildren().forEach((enemy) => {
+          if (enemy.active && !enemy.isBoss) enemy.disableBody(true, true);
+        });
+        this.asteroids.clear(true, true);
+        this.powerups.clear(true, true);
+        setStatus(t("gameSectorClear"));
+        this.cameras.main.flash(180, 117, 245, 255, false);
+        this.time.delayedCall(620, () => {
+          showUpgradeDraft(this.getUpgradeChoices(), (upgradeId) => {
+            this.applyUpgrade(upgradeId);
+            this.time.delayedCall(320, () => this.startWave(nextWave));
+          });
+        });
       }
     }
 
+    missionSummary(victory) {
+      const score = Math.max(0, Math.floor(this.state.score));
+      const performance = (victory ? 4200 : 0) + this.state.hull * 24 + this.state.maxCombo * 170 - this.state.elapsed * 5;
+      const rank = victory
+        ? (performance >= 7200 ? "S" : (performance >= 5700 ? "A" : (performance >= 4300 ? "B" : "C")))
+        : (score >= 3200 ? "B" : (score >= 1600 ? "C" : "D"));
+      const previousBest = Number(localStorage.getItem("literary-game-best") || 0);
+      const best = Math.max(previousBest, score);
+      localStorage.setItem("literary-game-best", String(best));
+      return { score, best, rank };
+    }
+
     completeMission() {
-      if (this.state.missionComplete) return;
+      if (this.state.missionComplete || this.state.gameOver) return;
       this.state.missionComplete = true;
       this.state.phase = "result";
       this.state.transitionLocked = true;
@@ -5195,10 +5876,11 @@ function initSpaceGame() {
       this.waveBanner.setText(t("gameMissionCompleteBanner")).setAlpha(1).setY(this.height * 0.32);
       this.tweens.add({ targets: this.waveBanner, scale: 1.06, yoyo: true, repeat: -1, duration: 820, ease: "Sine.easeInOut" });
       playSound("success");
+      this.time.delayedCall(820, () => showResult(this.missionSummary(true)));
     }
 
     endGame() {
-      if (this.state.gameOver) return;
+      if (this.state.gameOver || this.state.missionComplete) return;
       this.state.gameOver = true;
       this.state.phase = "result";
       this.state.transitionLocked = true;
@@ -5211,6 +5893,7 @@ function initSpaceGame() {
       this.waveBanner.setText(t("gameFailedBanner")).setAlpha(1).setY(this.height * 0.32);
       this.cameras.main.shake(320, 0.012);
       playSound("close");
+      this.time.delayedCall(720, () => showResult(this.missionSummary(false)));
     }
 
     flashAt(x, y, color, size) {
@@ -5218,8 +5901,30 @@ function initSpaceGame() {
       this.tweens.add({ targets: flash, scale: 3.2, alpha: 0, duration: 360, ease: "Power2", onComplete: () => flash.destroy() });
     }
 
+    burstAt(x, y, color, count = 10) {
+      for (let index = 0; index < count; index += 1) {
+        const angle = Phaser.Math.FloatBetween(0, Math.PI * 2);
+        const distance = Phaser.Math.Between(24, count > 18 ? 110 : 62);
+        const spark = this.add.rectangle(x, y, Phaser.Math.Between(2, 5), Phaser.Math.Between(7, 18), color, 0.9)
+          .setRotation(angle)
+          .setBlendMode(Phaser.BlendModes.ADD)
+          .setDepth(23);
+        this.tweens.add({
+          targets: spark,
+          x: x + Math.cos(angle) * distance,
+          y: y + Math.sin(angle) * distance,
+          alpha: 0,
+          scaleY: 0.2,
+          duration: Phaser.Math.Between(260, 620),
+          ease: "Cubic.easeOut",
+          onComplete: () => spark.destroy()
+        });
+      }
+    }
+
     update(time, delta) {
-      const dt = delta / 1000;
+      const frameDelta = Math.min(50, Math.max(0, delta));
+      const dt = frameDelta / 1000;
       if (time - this.lastBackdropUpdate >= 33) {
         const backdropDt = this.lastBackdropUpdate ? (time - this.lastBackdropUpdate) / 1000 : dt;
         this.drawBackdrop(backdropDt, time);
@@ -5237,14 +5942,14 @@ function initSpaceGame() {
       if (move.lengthSq() > 0) {
         this.inputMode = "keyboard";
         this.player.target.set(this.player.x, this.player.y);
-        const engineFactor = this.state.powerMode === "engines" ? 1.28 : 1;
+        const engineFactor = (this.state.powerMode === "engines" ? 1.28 : 1) * (1 + (this.state.modules.afterburner || 0) * 0.12);
         move.normalize().scale((focused ? 310 : 520) * engineFactor * this.worldScale);
         this.player.setAcceleration(move.x, move.y);
       } else if (this.inputMode === "pointer") {
         const dx = this.player.target.x - this.player.x;
         const dy = this.player.target.y - this.player.y;
         const distance = Math.max(1, Math.hypot(dx, dy));
-        const engineFactor = this.state.powerMode === "engines" ? 1.22 : 1;
+        const engineFactor = (this.state.powerMode === "engines" ? 1.22 : 1) * (1 + (this.state.modules.afterburner || 0) * 0.12);
         const speed = Phaser.Math.Clamp(distance * (focused ? 4.2 : 7.2), 0, (focused ? 390 : 760) * engineFactor * this.worldScale);
         const desiredX = dx / distance * speed;
         const desiredY = dy / distance * speed;
@@ -5263,42 +5968,72 @@ function initSpaceGame() {
       const roll = Phaser.Math.Clamp(this.player.body.velocity.x / 1180, -0.35, 0.35);
       this.player.setRotation(roll);
       this.playerGlow.setPosition(this.player.x, this.player.y).setRotation(roll).setAlpha(this.state.shield > 0 ? 0.9 : 0.42);
+      const craftScale = Math.max(0.56, this.worldScale);
+      const thrustPulse = 0.84 + Math.sin(time * 0.022) * 0.12 + Phaser.Math.Clamp(this.player.body.speed / 850, 0, 0.28);
+      this.playerThrusters?.forEach((thruster, index) => {
+        const slot = index - 1;
+        thruster
+          .setPosition(this.player.x + slot * 19 * craftScale, this.player.y + 53 * craftScale)
+          .setRotation(roll)
+          .setScale((slot === 0 ? 0.92 : 0.68) * craftScale, thrustPulse * craftScale)
+          .setAlpha(0.68 + Math.sin(time * 0.018 + index) * 0.14);
+      });
       this.hitCore
         .setPosition(this.player.x, this.player.y)
         .setScale(focused ? 1.32 : 1)
         .setAlpha(this.state.shield > 0 ? 1 : 0.82);
-      this.state.shield = Math.max(0, this.state.shield - delta);
+      this.droneVisuals?.forEach((drone, index) => {
+        const requiredLevel = index + 1;
+        drone.setVisible((this.state.modules.drone || 0) >= requiredLevel);
+        drone.setPosition(
+          this.player.x + (index === 0 ? -48 : 48),
+          this.player.y + 8 + Math.sin(time * 0.006 + index * Math.PI) * 5
+        ).setRotation(roll * 0.7);
+      });
+      this.state.shield = Math.max(0, this.state.shield - frameDelta);
       Object.keys(this.state.cooldowns).forEach((key) => {
-        this.state.cooldowns[key] = Math.max(0, this.state.cooldowns[key] - delta);
+        this.state.cooldowns[key] = Math.max(0, this.state.cooldowns[key] - frameDelta);
       });
       const pendingCooldowns = Object.values(this.state.cooldowns).filter((value) => value > 0);
       this.state.skillCooldown = pendingCooldowns.length ? Math.min(...pendingCooldowns) : 0;
       this.state.skillReady = Object.values(this.state.cooldowns).every((value) => value <= 0);
-      this.state.overdrive = Math.max(0, this.state.overdrive - delta);
+      this.state.overdrive = Math.max(0, this.state.overdrive - frameDelta);
       const previousRift = this.state.rift;
-      this.state.rift = Math.max(0, this.state.rift - delta);
+      this.state.rift = Math.max(0, this.state.rift - frameDelta);
       if (previousRift > 0 && this.state.rift === 0) this.releaseTimeRift();
-      this.state.comboTimer = Math.max(0, this.state.comboTimer - delta);
+      this.state.comboTimer = Math.max(0, this.state.comboTimer - frameDelta);
       if (this.state.comboTimer === 0) this.state.combo = 1;
-      const regenFactor = this.state.powerMode === "engines" ? 1.45 : (this.state.powerMode === "weapons" ? 0.82 : 1);
+      const regenFactor = (this.state.powerMode === "engines" ? 1.45 : (this.state.powerMode === "weapons" ? 0.82 : 1)) * (1 + (this.state.modules.recycler || 0) * 0.22);
       this.state.energy = Math.min(100, this.state.energy + dt * ENERGY_REGEN_PER_SECOND * regenFactor);
       this.enemies.children.each((enemy) => {
         if (!enemy?.active) return;
         if (enemy.isBoss) {
           if (enemy.y > this.height * 0.15) {
-            enemy.x = this.width * 0.5 + Math.sin(time / (enemy.combatPhase === 3 ? 520 : 780)) * this.width * 0.22;
+            const shortLandscape = this.isShortLandscape();
+            const patrolCenter = this.width * (shortLandscape ? 0.52 : 0.5);
+            const patrolRadius = this.width * (shortLandscape ? 0.09 : 0.22);
+            enemy.x = patrolCenter + Math.sin(time / (enemy.combatPhase === 3 ? 520 : 780)) * patrolRadius;
           }
           return;
         }
-        enemy.age = (enemy.age || 0) + delta;
+        if (enemy.isBossModule) return;
+        enemy.age = (enemy.age || 0) + frameDelta;
         if (!enemy.riftSnapshot) {
           if (enemy.pattern === "sine") enemy.setVelocityX(Math.sin(enemy.age * 0.0042 + enemy.phase) * 118 * this.worldScale);
+          else if (enemy.pattern === "sweep") enemy.setVelocityX((94 + Math.sin(enemy.age * 0.003) * 72) * enemy.side * this.worldScale);
+          else if (enemy.pattern === "pincer") enemy.setVelocityX(Phaser.Math.Clamp((this.width * 0.5 - enemy.x) * 0.34, -128, 128) * this.worldScale);
+          else if (enemy.pattern === "escort") enemy.setVelocityX(Math.sin(enemy.age * 0.0034 + enemy.phase) * 76 * this.worldScale);
           else if (enemy.age > 760) enemy.setVelocityX(Phaser.Math.Clamp((this.player.x - enemy.x) * 0.42, -150, 150) * this.worldScale);
         }
         if (this.state.wave > 0 && time >= (enemy.nextShotAt || Infinity) && enemy.y > 20 && enemy.y < this.height * 0.72) {
           this.fireEnemy(enemy);
           enemy.nextShotAt = time + Phaser.Math.Between(enemy.kind === "bomber" ? 900 : 1500, enemy.kind === "bomber" ? 1500 : 2850);
         }
+      });
+      this.bossModules?.forEach((module) => {
+        if (!module?.active || !this.boss?.active) return;
+        module.setPosition(this.boss.x + module.moduleOffset, this.boss.y + 4 + Math.sin(time * 0.004 + module.moduleIndex) * 6);
+        module.setRotation(Math.sin(time * 0.002 + module.moduleIndex) * 0.24);
       });
       this.enemyBullets.children.each((bullet) => {
         if (!bullet?.active || bullet.grazed) return;
@@ -5316,31 +6051,51 @@ function initSpaceGame() {
         updateHud(this.state);
         this.lastHudUpdate = time;
       }
+      if (time - this.lastRadarUpdate >= 120) {
+        this.updateRadar();
+        this.lastRadarUpdate = time;
+      }
+    }
+
+    updateRadar() {
+      if (!radarBlips) return;
+      const contacts = [
+        ...this.enemies.getChildren().filter((item) => item.active),
+        ...this.asteroids.getChildren().filter((item) => item.active).slice(0, 6)
+      ].slice(0, 22);
+      radarBlips.innerHTML = contacts.map((contact) => {
+        const x = Math.max(4, Math.min(96, contact.x / Math.max(1, this.width) * 100));
+        const y = Math.max(4, Math.min(96, contact.y / Math.max(1, this.height) * 100));
+        const kind = contact.isBoss ? "boss" : (contact.isBossModule ? "module" : (contact.kind === "asteroid" ? "asteroid" : "hostile"));
+        return `<i class="is-${kind}" style="left:${x}%;top:${y}%"></i>`;
+      }).join("");
     }
 
     drawBackdrop(dt, time) {
+      this.backdropEarth?.setRotation(Math.sin(time * 0.00008) * 0.05).setAlpha(0.17 + Math.sin(time * 0.0007) * 0.035);
+      this.backdropMoon?.setRotation(time * 0.000035).setAlpha(0.13 + Math.sin(time * 0.0005 + 1.4) * 0.03);
       this.nebula.clear();
       this.nebula.fillStyle(0x01030a, 1);
       this.nebula.fillRect(0, 0, this.width, this.height);
-      this.nebula.fillStyle(0x061120, 0.64);
-      this.nebula.fillCircle(this.width * 0.5, this.height * 0.7, Math.min(this.width, this.height) * 0.5);
-      this.nebula.fillStyle(0x2a1738, 0.22);
-      this.nebula.fillEllipse(this.width * 0.26, this.height * 0.22, this.width * 0.68, this.height * 0.36);
-      this.nebula.fillStyle(0x0d3359, 0.18);
-      this.nebula.fillEllipse(this.width * 0.74, this.height * 0.32, this.width * 0.76, this.height * 0.22);
-      for (let i = 0; i < 18; i += 1) {
-        const offset = i / 17;
+      this.nebula.fillStyle(0x06182d, 0.2);
+      this.nebula.fillCircle(this.width * 0.52, this.height * 0.72, Math.min(this.width, this.height) * 0.28);
+      this.nebula.fillStyle(0x251c42, 0.12);
+      this.nebula.fillEllipse(this.width * 0.26, this.height * 0.22, this.width * 0.42, this.height * 0.2);
+      this.nebula.fillStyle(0x0d3f68, 0.1);
+      this.nebula.fillEllipse(this.width * 0.74, this.height * 0.32, this.width * 0.48, this.height * 0.15);
+      for (let i = 0; i < 10; i += 1) {
+        const offset = i / 9;
         const x = this.width * (0.04 + offset * 0.92);
         const y = this.height * (0.2 + Math.sin(offset * Math.PI * 1.4 + time / 2600) * 0.16 + offset * 0.28);
-        const alpha = 0.035 + Math.sin(time / 900 + i) * 0.018;
+        const alpha = 0.022 + Math.sin(time / 900 + i) * 0.009;
         this.nebula.fillStyle(i % 3 === 0 ? 0x75f5ff : (i % 3 === 1 ? 0xb99cff : 0xf5d287), Math.max(0.015, alpha));
-        this.nebula.fillEllipse(x, y, this.width * (0.18 + offset * 0.12), this.height * 0.07);
+        this.nebula.fillEllipse(x, y, this.width * (0.09 + offset * 0.055), this.height * 0.032);
       }
       this.distantPlanet.clear();
-      this.distantPlanet.fillStyle(0x1c2940, 0.34);
-      this.distantPlanet.fillCircle(this.width * 0.82, this.height * 0.18, Math.min(this.width, this.height) * 0.11);
-      this.distantPlanet.fillStyle(0x75f5ff, 0.08);
-      this.distantPlanet.fillEllipse(this.width * 0.82, this.height * 0.18, Math.min(this.width, this.height) * 0.28, Math.min(this.width, this.height) * 0.045);
+      this.distantPlanet.lineStyle(1, 0x75f5ff, 0.22);
+      this.distantPlanet.strokeCircle(this.width * 0.82, this.height * 0.16, Math.min(this.width, this.height) * 0.155);
+      this.distantPlanet.lineStyle(1, 0xf5d287, 0.1);
+      this.distantPlanet.strokeEllipse(this.width * 0.82, this.height * 0.16, Math.min(this.width, this.height) * 0.42, Math.min(this.width, this.height) * 0.055);
       this.nebula.lineStyle(2, 0x75f5ff, 0.08);
       this.nebula.lineBetween(this.width * 0.08, this.height * 0.78, this.width * 0.92, this.height * 0.12);
       this.nebula.lineStyle(1, 0xb99cff, 0.08);
@@ -5392,6 +6147,7 @@ function initSpaceGame() {
 
   const open = () => {
     if (phaserGame) return;
+    hideGameOverlays();
     gameReturnTarget = document.activeElement;
     overlay.classList.add("is-open");
     overlay.setAttribute("aria-hidden", "false");
@@ -5430,6 +6186,8 @@ function initSpaceGame() {
   };
 
   const close = () => {
+    hideGameOverlays();
+    if (radarBlips) radarBlips.innerHTML = "";
     activeScene = null;
     if (phaserGame) {
       phaserGame.destroy(true);
@@ -5514,8 +6272,12 @@ function initSpaceGame() {
     }
     const scene = phaserGame.scene.getScene("LunarSquadronScene") || activeScene;
     scene?.clearTelegraphs?.();
+    hideGameOverlays();
     scene?.scene.restart();
   });
+
+  resultRestart?.addEventListener("click", () => restartButton?.click());
+  resultExit?.addEventListener("click", close);
 
   closeButton.addEventListener("click", close);
   window.addEventListener("resize", () => {
@@ -5523,13 +6285,40 @@ function initSpaceGame() {
   });
 
   const refreshCopy = () => {
-    if (!phaserGame) {
+    if (phaserGame && activeScene) {
+      activeScene.refreshLanguage?.();
+      if (activeDraft) renderDraft();
+    } else {
       setStatus(t("gameStatusBoot"));
       updateHud({ score: 0, wave: 0, hull: 100, energy: 100, combo: 1, cooldowns: { nova: 0, lance: 0, rift: 0 }, bossHp: 0, bossMax: 0 });
     }
   };
 
   spaceGameController = { open, close, refreshCopy };
+  if (["localhost", "127.0.0.1"].includes(window.location.hostname)) {
+    window.LiteraryGameQA = {
+      snapshot: () => activeScene ? JSON.parse(JSON.stringify(activeScene.state)) : null,
+      completeSector: () => {
+        if (!activeScene) return;
+        activeScene.state.hull = 100;
+        activeScene.state.shield = 120000;
+        activeScene.state.kills = WAVE_CONFIGS[activeScene.state.wave].target;
+        activeScene.checkWaveProgress();
+      },
+      startBoss: () => {
+        if (!activeScene) return;
+        activeScene.state.gameOver = false;
+        activeScene.state.missionComplete = false;
+        activeScene.state.hull = 100;
+        activeScene.state.shield = 120000;
+        activeScene.enemies?.clear(true, true);
+        activeScene.asteroids?.clear(true, true);
+        activeScene.enemyBullets?.clear(true, true);
+        activeScene.startWave(2);
+      },
+      completeMission: () => activeScene?.completeMission()
+    };
+  }
 }
 
 function bindGlobalEvents() {
@@ -5541,8 +6330,10 @@ function bindGlobalEvents() {
       if (document.body.classList.contains("game-open")) spaceGameController?.close?.();
       else closeWorld();
     }
-    if (event.key !== "Tab" || !state.worldOpen) return;
-    const panel = $(".world__panel");
+    if (event.key !== "Tab") return;
+    const gameIsOpen = document.body.classList.contains("game-open");
+    if (!state.worldOpen && !gameIsOpen) return;
+    const panel = gameIsOpen ? $("#spaceGame") : $(".world__panel");
     const focusable = $$("a[href],button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex='-1'])", panel)
       .filter((element) => !element.hidden && element.getClientRects().length);
     if (!focusable.length) return;

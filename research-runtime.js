@@ -1,7 +1,11 @@
 (() => {
-  const DATA_URL = "./data/research-atlas.json";
+  const DATA_URLS = {
+    zh: "./data/research-atlas.json?v=20260715-7",
+    en: "./data/research-atlas.en.json?v=20260715-7",
+    fr: "./data/research-atlas.fr.json?v=20260715-7"
+  };
   const CHUNK_SIZE = 56;
-  let atlasPromise = null;
+  const atlasPromises = new Map();
   let historyNavigation = false;
 
   const copy = {
@@ -14,17 +18,17 @@
     },
     en: {
       loading: "Opening the research archive…", source: "Source edition", all: "Full chapter", figures: "Figures", tables: "Table fragments", cases: "Cases",
-      search: "Search this chapter", loadMore: "Reveal more", noResults: "No matching research blocks", toc: "Chapter map", original: "Chinese primary text",
+      search: "Search this chapter", loadMore: "Reveal more", noResults: "No matching research blocks", toc: "Chapter map", original: "Research edition",
       fullCorpus: "Complete research corpus", allDocuments: "Whole document", blocks: "blocks", questions: "questions", documents: "source documents",
       classics: "Classic Theory", foundations: "Methods & Paradigms", frontiers: "Thematic Frontiers", regions: "Regional Constellations", synthesis: "Synthesis & Horizons",
-      archiveCount: "Showing {visible} of {total}", readerNotice: "The source archive remains in its original Chinese, preserving its tables and figure structure."
+      archiveCount: "Showing {visible} of {total}", readerNotice: "Complete English research edition with the original tables, figures and source references preserved."
     },
     fr: {
       loading: "Ouverture des archives…", source: "Édition source", all: "Chapitre intégral", figures: "Figures", tables: "Fragments de tableaux", cases: "Cas",
-      search: "Rechercher dans ce chapitre", loadMore: "Déployer la suite", noResults: "Aucun bloc correspondant", toc: "Carte du chapitre", original: "Texte source chinois",
+      search: "Rechercher dans ce chapitre", loadMore: "Déployer la suite", noResults: "Aucun bloc correspondant", toc: "Carte du chapitre", original: "Édition de recherche",
       fullCorpus: "Corpus de recherche complet", allDocuments: "Document entier", blocks: "blocs", questions: "questions", documents: "documents sources",
       classics: "Théories classiques", foundations: "Méthodes et paradigmes", frontiers: "Frontières thématiques", regions: "Constellations régionales", synthesis: "Synthèse et horizons",
-      archiveCount: "{visible} sur {total} volumes", readerNotice: "Les sources restent en chinois afin de préserver les tableaux et la structure des figures."
+      archiveCount: "{visible} sur {total} volumes", readerNotice: "Édition française intégrale conservant tableaux, figures et références aux sources."
     }
   };
 
@@ -36,19 +40,26 @@
   const format = (template, values) => String(template).replace(/\{(\w+)\}/g, (_, key) => values[key] ?? "");
   const blockText = (block) => block.text || (block.rows ? block.rows.flat().join(" ") : "");
 
-  function loadAtlas() {
-    if (!atlasPromise) {
-      atlasPromise = fetch(DATA_URL, { cache: "force-cache" }).then((response) => {
+  function loadAtlas(language = lang()) {
+    const requestedLanguage = DATA_URLS[language] ? language : "zh";
+    if (!atlasPromises.has(requestedLanguage)) {
+      const promise = fetch(DATA_URLS[requestedLanguage], { cache: "no-cache" }).then((response) => {
         if (!response.ok) throw new Error(`Research archive HTTP ${response.status}`);
         return response.json();
+      }).catch((error) => {
+        atlasPromises.delete(requestedLanguage);
+        throw error;
       });
+      atlasPromises.set(requestedLanguage, promise);
     }
-    return atlasPromise;
+    return atlasPromises.get(requestedLanguage);
   }
 
   function buildQuiz(movement) {
     if (!movement?.sourceChapter) return null;
-    const source = window.LITERARY_QUIZ_BANK?.[movement.id];
+    const source = lang() === "zh"
+      ? window.LITERARY_QUIZ_BANK?.[movement.id]
+      : window.LITERARY_LOCALES?.[lang()]?.quizzes?.[movement.id];
     return source?.map((question) => ({ ...question, options: [...question.options] })) || null;
   }
 
@@ -56,7 +67,7 @@
     if (mode === "all") return true;
     if (mode === "figures") return ["image", "figure"].includes(block.type);
     if (mode === "tables") return block.type === "table";
-    if (mode === "cases") return /案例|case|课题|项目|实证/i.test(blockText(block));
+    if (mode === "cases") return /案例|case|cas|课题|项目|实证|project|projet|study|étude/i.test(blockText(block));
     return true;
   }
 
@@ -102,7 +113,7 @@
       } else if (block.type === "table") {
         const rows = block.rows || [];
         output.push(`
-          <div class="source-table-wrap" tabindex="0" aria-label="研究资料表格">
+          <div class="source-table-wrap" tabindex="0" aria-label="${tx("tables")}">
             <table class="source-table">
               ${rows.map((row, rowIndex) => `<tr>${row.map((cell) => `<${rowIndex === 0 ? "th" : "td"}>${escapeHtml(cell)}</${rowIndex === 0 ? "th" : "td"}>`).join("")}</tr>`).join("")}
             </table>
@@ -221,10 +232,11 @@
     onWorldOpen(movement.id);
     const shell = content.querySelector("[data-research-reader]");
     if (!shell) return;
+    const requestedLanguage = lang();
     shell.innerHTML = `<div class="research-loading"><span></span><p>${tx("loading")}</p></div>`;
     try {
-      const atlas = await loadAtlas();
-      if (!shell.isConnected || state.currentWorldId !== movement.id) return;
+      const atlas = await loadAtlas(requestedLanguage);
+      if (!shell.isConnected || state.currentWorldId !== movement.id || lang() !== requestedLanguage) return;
       mountChapterReader(shell, movement, atlas);
     } catch (error) {
       shell.innerHTML = `<p class="research-empty">${escapeHtml(error.message)}</p>`;
@@ -296,6 +308,10 @@
     renderButtons();
     search.addEventListener("input", (event) => {
       view.query = event.target.value;
+      apply();
+    });
+    document.addEventListener("literary-language-change", () => {
+      renderButtons();
       apply();
     });
     new MutationObserver(apply).observe(grid, { childList: true });
@@ -398,27 +414,36 @@
     const ledger = document.querySelector("#researchLedger");
     const explorer = document.querySelector("#sourceExplorer");
     if (!ledger || !explorer) return;
-    ledger.innerHTML = `<div class="research-loading"><span></span><p>${tx("loading")}</p></div>`;
-    explorer.innerHTML = `<div class="research-loading"><span></span><p>${tx("loading")}</p></div>`;
-    try {
-      const atlas = await loadAtlas();
-      ledger.innerHTML = `
-        <span><strong>${atlas.stats.documents}</strong>${tx("documents")}</span>
-        <span><strong>${atlas.stats.blocks.toLocaleString()}</strong>${tx("blocks")}</span>
-        <span><strong>${atlas.stats.tableFragments ?? atlas.stats.tables}</strong>${tx("tables")}</span>
-        <span><strong>${atlas.stats.figures}</strong>${tx("figures")}</span>
-        <span><strong>${atlas.stats.questions}</strong>${tx("questions")}</span>
-        <p class="research-ledger__notice">${escapeHtml(atlas.sourceNotice || "")}</p>
-      `;
-      mountSourceExplorer(explorer, atlas);
-    } catch (error) {
-      explorer.innerHTML = `<p class="research-empty">${escapeHtml(error.message)}</p>`;
-    }
+    let renderVersion = 0;
+    const render = async () => {
+      const requestedLanguage = lang();
+      const version = ++renderVersion;
+      ledger.innerHTML = `<div class="research-loading"><span></span><p>${tx("loading")}</p></div>`;
+      explorer.innerHTML = `<div class="research-loading"><span></span><p>${tx("loading")}</p></div>`;
+      try {
+        const atlas = await loadAtlas(requestedLanguage);
+        if (version !== renderVersion || requestedLanguage !== lang()) return;
+        ledger.innerHTML = `
+          <span><strong>${atlas.stats.documents}</strong>${tx("documents")}</span>
+          <span><strong>${atlas.stats.blocks.toLocaleString()}</strong>${tx("blocks")}</span>
+          <span><strong>${atlas.stats.tableFragments ?? atlas.stats.tables}</strong>${tx("tables")}</span>
+          <span><strong>${atlas.stats.figures}</strong>${tx("figures")}</span>
+          <span><strong>${atlas.stats.questions}</strong>${tx("questions")}</span>
+          <p class="research-ledger__notice">${escapeHtml(atlas.sourceNotice || "")}</p>
+        `;
+        mountSourceExplorer(explorer, atlas);
+      } catch (error) {
+        if (version === renderVersion) explorer.innerHTML = `<p class="research-empty">${escapeHtml(error.message)}</p>`;
+      }
+    };
+    document.addEventListener("literary-language-change", render);
+    render();
   }
 
   function initNav() {
     const toggle = document.querySelector("#navToggle");
     if (!toggle) return;
+    const firstLink = document.querySelector(".nav-links a");
     const close = () => {
       document.body.classList.remove("nav-open");
       toggle.setAttribute("aria-expanded", "false");
@@ -427,8 +452,14 @@
       const open = !document.body.classList.contains("nav-open");
       document.body.classList.toggle("nav-open", open);
       toggle.setAttribute("aria-expanded", String(open));
+      if (open) window.setTimeout(() => firstLink?.focus({ preventScroll: true }), 0);
     });
     document.querySelectorAll(".nav-links a").forEach((link) => link.addEventListener("click", close));
+    document.addEventListener("keydown", (event) => {
+      if (event.key !== "Escape" || !document.body.classList.contains("nav-open")) return;
+      close();
+      toggle.focus({ preventScroll: true });
+    });
   }
 
   function onWorldOpen(id) {

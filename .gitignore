@@ -12,3 +12,6 @@ validation-*.png
 # Generated Python bytecode
 __pycache__/
 *.py[cod]
+
+# Reusable local translation cache (generated locale assets are committed)
+.cache/

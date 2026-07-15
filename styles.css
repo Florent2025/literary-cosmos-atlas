@@ -5929,6 +5929,331 @@ select:focus-visible,
   }
 }
 
+/* The celestial shelf supports horizontal mouse/touch orbiting while preserving page scroll. */
+#cosmosCanvas {
+  touch-action: pan-y;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* Lunar Squadron command layer */
+.space-game__draft,
+.space-game__result {
+  position: absolute;
+  z-index: 48;
+  left: 50%;
+  top: 50%;
+  width: min(860px, calc(100% - 40px));
+  padding: 28px;
+  border: 1px solid rgba(126, 224, 255, 0.34);
+  border-radius: 6px;
+  color: #edfaff;
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.055), transparent 34%),
+    rgba(3, 10, 22, 0.94);
+  box-shadow:
+    0 34px 90px rgba(0, 0, 0, 0.72),
+    inset 0 0 0 1px rgba(229, 195, 116, 0.11),
+    inset 0 0 70px rgba(66, 153, 214, 0.08);
+  backdrop-filter: blur(22px) saturate(1.25);
+  transform: translate(-50%, -46%) scale(0.96);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 220ms ease, transform 280ms cubic-bezier(.2, .8, .2, 1), visibility 220ms;
+}
+
+.space-game__draft::before,
+.space-game__result::before {
+  content: "";
+  position: absolute;
+  inset: 8px;
+  border: 1px solid rgba(229, 195, 116, 0.13);
+  pointer-events: none;
+}
+
+.space-game__draft.is-visible,
+.space-game__result.is-visible {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.space-game__draft > p,
+.space-game__result > p {
+  margin: 0 0 7px;
+  color: #e7c779;
+  font: 700 0.72rem/1.2 "Space Grotesk", sans-serif;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.space-game__draft h2 {
+  margin: 0;
+  font: 700 clamp(1.45rem, 3vw, 2.25rem)/1.1 "Noto Serif SC", serif;
+  letter-spacing: 0;
+}
+
+.space-game__draft > span {
+  display: block;
+  margin-top: 8px;
+  color: rgba(222, 241, 250, 0.66);
+  font-size: 0.88rem;
+}
+
+.space-game__draft-choices {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.space-game__draft-choices button {
+  position: relative;
+  display: grid;
+  grid-template-columns: 50px 1fr;
+  align-items: center;
+  min-height: 132px;
+  padding: 18px 18px 18px 16px;
+  border: 1px solid rgba(126, 224, 255, 0.24);
+  border-radius: 5px;
+  color: #eaf9ff;
+  text-align: left;
+  background:
+    radial-gradient(circle at 18% 20%, rgba(126, 224, 255, 0.12), transparent 34%),
+    linear-gradient(160deg, rgba(13, 33, 59, 0.92), rgba(4, 10, 21, 0.96));
+  cursor: pointer;
+  overflow: hidden;
+  transition: border-color 180ms ease, transform 180ms ease, box-shadow 180ms ease;
+}
+
+.space-game__draft-choices button:hover,
+.space-game__draft-choices button:focus-visible {
+  outline: 0;
+  border-color: rgba(229, 195, 116, 0.72);
+  box-shadow: 0 0 30px rgba(89, 205, 255, 0.14), inset 0 0 26px rgba(229, 195, 116, 0.06);
+  transform: translateY(-4px);
+}
+
+.space-game__draft-choices i {
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(229, 195, 116, 0.55);
+  border-radius: 50%;
+  color: #83eaff;
+  font: normal 1.2rem/1 "Cinzel", serif;
+  box-shadow: inset 0 0 18px rgba(89, 205, 255, 0.16);
+}
+
+.space-game__draft-choices span,
+.space-game__draft-choices b,
+.space-game__draft-choices em {
+  display: block;
+}
+
+.space-game__draft-choices b {
+  margin-bottom: 7px;
+  color: #fff4d5;
+  font: 700 0.96rem/1.2 "Noto Serif SC", serif;
+}
+
+.space-game__draft-choices em {
+  color: rgba(218, 240, 250, 0.7);
+  font: normal 0.75rem/1.45 "Noto Sans SC", sans-serif;
+}
+
+.space-game__draft-choices small {
+  position: absolute;
+  right: 10px;
+  top: 8px;
+  color: rgba(126, 224, 255, 0.35);
+  font: 700 0.62rem/1 "Space Grotesk", sans-serif;
+}
+
+.space-game__result {
+  width: min(430px, calc(100% - 40px));
+  text-align: center;
+}
+
+.space-game__result > strong {
+  display: block;
+  margin: 10px 0 18px;
+  color: #7feaff;
+  font: 900 clamp(4rem, 11vw, 7rem)/0.9 "Cinzel", serif;
+  text-shadow: 0 0 30px rgba(89, 205, 255, 0.45);
+}
+
+.space-game__result > div {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-top: 1px solid rgba(126, 224, 255, 0.15);
+  color: rgba(222, 241, 250, 0.7);
+}
+
+.space-game__result > div b {
+  color: #fff1c9;
+}
+
+.space-game__result footer {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.space-game__result button {
+  min-height: 44px;
+  border: 1px solid rgba(126, 224, 255, 0.36);
+  border-radius: 4px;
+  color: #edfaff;
+  background: rgba(11, 31, 54, 0.9);
+  cursor: pointer;
+}
+
+.space-game__radar {
+  overflow: hidden;
+}
+
+.space-game__radar-sweep {
+  position: absolute;
+  inset: 7%;
+  border-radius: 50%;
+  background: conic-gradient(from 0deg, rgba(126, 234, 255, 0.42), transparent 17%, transparent);
+  animation: game-radar-sweep 2.8s linear infinite;
+  transform-origin: 50% 50%;
+}
+
+.space-game__radar-blips {
+  position: absolute;
+  inset: 0;
+}
+
+.space-game__radar-blips i {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #ff879d;
+  box-shadow: 0 0 8px currentColor;
+  transform: translate(-50%, -50%);
+}
+
+.space-game__radar-blips i.is-boss {
+  width: 9px;
+  height: 9px;
+  color: #ffd37f;
+  background: transparent;
+  border: 2px solid currentColor;
+}
+
+.space-game__radar-blips i.is-module {
+  width: 6px;
+  height: 6px;
+  color: #d4a6ff;
+  background: currentColor;
+}
+
+.space-game__radar-blips i.is-asteroid {
+  color: #a5b3c2;
+  background: currentColor;
+}
+
+.space-game__touch-button--skill::before,
+.space-game__touch-button--lance::before,
+.space-game__touch-button--rift::before {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  background: conic-gradient(rgba(3, 7, 15, 0.8) var(--cooldown-angle, 0deg), rgba(126, 234, 255, 0.34) 0);
+  mask: radial-gradient(circle, transparent 58%, #000 60%);
+  pointer-events: none;
+}
+
+.space-game__touch-button[data-cost]::after {
+  content: attr(data-cost);
+  position: absolute;
+  right: -4px;
+  bottom: -4px;
+  min-width: 22px;
+  padding: 3px;
+  border: 1px solid rgba(126, 234, 255, 0.3);
+  border-radius: 50%;
+  color: #b9efff;
+  background: #030916;
+  font: 700 0.55rem/1 "Space Grotesk", sans-serif;
+}
+
+@keyframes game-radar-sweep {
+  to { transform: rotate(360deg); }
+}
+
+@media (pointer: fine) and (min-width: 721px) {
+  .space-game__touch {
+    display: none;
+  }
+}
+
+.is-loading-locale [data-lang] {
+  opacity: 0.45;
+  pointer-events: none;
+}
+
+@media (max-width: 720px) {
+  .space-game__draft {
+    width: calc(100% - 28px);
+    max-height: calc(100svh - 28px);
+    padding: 20px 16px;
+    overflow-y: auto;
+  }
+
+  .space-game__draft-choices {
+    grid-template-columns: 1fr;
+    margin-top: 16px;
+  }
+
+  .space-game__draft-choices button {
+    min-height: 86px;
+    grid-template-columns: 44px 1fr;
+    padding: 12px;
+  }
+}
+
+@media (orientation: landscape) and (max-height: 620px) {
+  .space-game__radar {
+    left: auto;
+    right: calc(146px + env(safe-area-inset-right));
+    top: auto;
+    bottom: calc(66px + env(safe-area-inset-bottom));
+    width: 82px;
+    height: 82px;
+    transform: none;
+  }
+
+  .space-game__draft {
+    width: min(760px, calc(100% - 150px));
+    max-height: calc(100svh - 20px);
+    padding: 16px 18px;
+  }
+
+  .space-game__draft-choices {
+    margin-top: 12px;
+  }
+
+  .space-game__draft-choices button {
+    min-height: 96px;
+    padding: 12px;
+  }
+
+  .space-game__draft-choices em {
+    font-size: 0.66rem;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .space-game.is-critical::after,
   .research-loading span {
@@ -6144,6 +6469,11 @@ select:focus-visible,
     top: calc(6px + env(safe-area-inset-top));
   }
 
+  .space-game__meters {
+    right: auto;
+    width: min(236px, calc(35vw - 20px));
+  }
+
   .space-game__power {
     left: calc(12px + env(safe-area-inset-left));
   }
@@ -6156,4 +6486,13 @@ select:focus-visible,
     left: calc(12px + env(safe-area-inset-left));
     right: calc(12px + env(safe-area-inset-right));
   }
+}
+
+:where(a, button, input, select, textarea, [tabindex]):focus-visible {
+  outline: 2px solid #fff0bd !important;
+  outline-offset: 3px;
+}
+
+.world__panel :where(a, button, input, select, textarea, [tabindex]):focus-visible {
+  outline-color: #1d6473 !important;
 }

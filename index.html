@@ -14,20 +14,20 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Noto+Serif+SC:wght@500;600;700;900&family=Noto+Sans+SC:wght@400;500;700;900&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="./styles.css">
+    <link rel="stylesheet" href="./styles.css?v=20260715-7">
   </head>
   <body class="entry-locked">
-    <a class="skip-link" href="#mainContent">跳到主要内容</a>
+    <a class="skip-link" href="#mainContent" data-i18n="skipMain">跳到主要内容</a>
     <section class="library-gate" id="libraryGate" aria-label="欧洲古典图书馆入口" data-i18n-aria="gateAria">
       <div class="language-switcher language-switcher--gate" aria-label="网页语言" data-i18n-aria="languageAria">
-        <button type="button" data-lang="zh" class="is-active">中</button>
+        <button type="button" data-lang="zh" class="is-active">ZH</button>
         <button type="button" data-lang="en">EN</button>
         <button type="button" data-lang="fr">FR</button>
       </div>
       <canvas id="libraryCanvas" aria-label="可滚动开启的古典图书馆大门" data-i18n-aria="gateCanvasAria"></canvas>
       <div class="gate-vignette" aria-hidden="true"></div>
       <div class="gate-copy">
-        <span class="gate-copy__crest">文</span>
+        <span class="gate-copy__crest">LC</span>
         <h1 data-i18n="gateTitle">文学理论宇宙</h1>
         <p data-i18n="gateLead">滑动鼠标，推开古典图书馆的宏伟大门。</p>
       </div>
@@ -43,21 +43,21 @@
 
     <header class="site-header" id="siteHeader">
       <a class="brand" href="#hero" aria-label="回到开场" data-i18n-aria="brandAria">
-        <span class="brand__seal">文</span>
+        <span class="brand__seal">LC</span>
         <span>
           <strong data-i18n="brandTitle">文学理论宇宙</strong>
           <em data-i18n="brandSubtitle">The Literary Cosmos</em>
         </span>
       </a>
-      <nav class="nav-links" aria-label="页面导航" data-i18n-aria="navAria">
+      <nav class="nav-links" id="siteNav" aria-label="页面导航" data-i18n-aria="navAria">
         <a href="#library" data-i18n="navLibrary">书架轨道</a>
         <a href="#atlas" data-i18n="navAtlas">星图索引</a>
         <a href="#archive" data-i18n="navArchive">思想档案</a>
-        <a href="#researchLibrary">研究原典</a>
+        <a href="#researchLibrary" data-i18n="navResearch">研究原典</a>
       </nav>
-      <button class="nav-toggle" id="navToggle" type="button" aria-label="打开导航" aria-expanded="false"><span></span><span></span><span></span></button>
+      <button class="nav-toggle" id="navToggle" type="button" aria-label="打开导航" data-i18n-aria="navToggleAria" aria-controls="siteNav" aria-expanded="false"><span></span><span></span><span></span></button>
       <div class="language-switcher" aria-label="网页语言" data-i18n-aria="languageAria">
-        <button type="button" data-lang="zh" class="is-active">中</button>
+        <button type="button" data-lang="zh" class="is-active">ZH</button>
         <button type="button" data-lang="en">EN</button>
         <button type="button" data-lang="fr">FR</button>
       </div>
@@ -135,7 +135,7 @@
             <p data-i18n="libraryOverline">SCROLLING BOOKSHELF</p>
             <h2 id="libraryTitle" data-i18n="libraryTitle">滚动书架：每本研究卷都是一个思想世界</h2>
           </div>
-          <div class="collection-nav" id="collectionNav" aria-label="理论书分卷导航"></div>
+          <div class="collection-nav" id="collectionNav" aria-label="理论书分卷导航" data-i18n-aria="collectionNavAria"></div>
           <div class="stage-status">
             <span id="activeIndex">01</span>
             <strong id="activeTitle">古典诗学</strong>
@@ -170,8 +170,8 @@
             <p data-i18n="archiveOverline">KNOWLEDGE ARCHIVE</p>
             <h2 id="archiveTitle" data-i18n="archiveTitle">思想档案：主要命题、读法与文本案例</h2>
           </div>
-          <div class="archive-toolbar" aria-label="思想档案筛选">
-            <label class="archive-search"><span>检索</span><input id="archiveSearch" type="search" placeholder="理论、人物、概念或地区" autocomplete="off"></label>
+          <div class="archive-toolbar" aria-label="思想档案筛选" data-i18n-aria="archiveToolbarAria">
+            <label class="archive-search"><span data-i18n="archiveSearchLabel">检索</span><input id="archiveSearch" type="search" placeholder="理论、人物、概念或地区" data-i18n-placeholder="archiveSearchPlaceholder" autocomplete="off"></label>
             <div class="archive-filters" id="archiveFilters"></div>
             <output id="archiveResultCount" aria-live="polite"></output>
           </div>
@@ -182,8 +182,8 @@
       <section class="research-library" id="researchLibrary" aria-labelledby="researchLibraryTitle">
         <div class="research-library__inner">
           <div class="section-title">
-            <p>PRIMARY RESEARCH CORPUS</p>
-            <h2 id="researchLibraryTitle">研究原典：完整资料、表格与图表</h2>
+            <p data-i18n="researchOverline">研究原典语料库</p>
+            <h2 id="researchLibraryTitle" data-i18n="researchTitle">研究原典：完整资料、表格与图表</h2>
           </div>
           <div class="research-ledger" id="researchLedger" aria-live="polite"></div>
           <div class="source-explorer" id="sourceExplorer"></div>
@@ -191,7 +191,7 @@
       </section>
     </main>
 
-    <aside class="space-game" id="spaceGame" aria-hidden="true" inert aria-label="月球星战模拟舱" data-i18n-aria="gameAria">
+    <aside class="space-game" id="spaceGame" aria-hidden="true" inert role="dialog" aria-modal="true" aria-label="月球星战模拟舱" data-i18n-aria="gameAria">
       <div id="spaceGameMount" class="space-game__mount" aria-label="可游玩的月球星战小游戏" data-i18n-aria="gameMountAria"></div>
       <div class="space-game__hud">
         <div class="space-game__title">
@@ -204,19 +204,19 @@
           <span data-i18n="gameHullLabel">Hull</span><strong id="gameHull">100</strong>
           <span data-i18n="gameEnergyLabel">Energy</span><strong id="gameEnergy">100</strong>
           <span data-i18n="gameComboLabel">Combo</span><strong id="gameCombo">x1</strong>
-          <span>目标</span><strong id="gameProgress">0/18</strong>
+          <span data-i18n="gameProgressLabel">目标</span><strong id="gameProgress">0/18</strong>
           <span data-i18n="gameSkillLabel">Skill</span><strong id="gameSkill">Ready</strong>
-          <button class="space-game__icon-button" id="pauseSpaceGame" type="button" aria-label="暂停游戏">Ⅱ</button>
-          <button class="space-game__icon-button" id="restartSpaceGame" type="button" aria-label="重新开始">↻</button>
+          <button class="space-game__icon-button" id="pauseSpaceGame" type="button" aria-label="暂停游戏" data-i18n-aria="gamePauseAria">Ⅱ</button>
+          <button class="space-game__icon-button" id="restartSpaceGame" type="button" aria-label="重新开始" data-i18n-aria="gameRestartAria">↻</button>
           <button class="space-game__button" id="closeSpaceGame" type="button" data-i18n="gameBack">返回星图</button>
         </div>
       </div>
-      <div class="space-game__power" id="gamePower" aria-label="战机能量分配">
-        <span>能量分配</span>
-        <button type="button" data-game-power="weapons" aria-pressed="false"><b>W</b><em>武器</em></button>
-        <button type="button" data-game-power="balanced" class="is-active" aria-pressed="true"><b>●</b><em>均衡</em></button>
-        <button type="button" data-game-power="engines" aria-pressed="false"><b>E</b><em>引擎</em></button>
-        <button type="button" data-game-power="shields" aria-pressed="false"><b>S</b><em>护盾</em></button>
+      <div class="space-game__power" id="gamePower" aria-label="战机能量分配" data-i18n-aria="gamePowerAria">
+        <span data-i18n="gamePowerTitle">能量分配</span>
+        <button type="button" data-game-power="weapons" aria-pressed="false"><b>W</b><em data-i18n="gamePowerWeapons">武器</em></button>
+        <button type="button" data-game-power="balanced" class="is-active" aria-pressed="true"><b>●</b><em data-i18n="gamePowerBalanced">均衡</em></button>
+        <button type="button" data-game-power="engines" aria-pressed="false"><b>E</b><em data-i18n="gamePowerEngines">引擎</em></button>
+        <button type="button" data-game-power="shields" aria-pressed="false"><b>S</b><em data-i18n="gamePowerShields">护盾</em></button>
       </div>
       <div class="space-game__briefing">
         <strong data-i18n="gameBriefingTitle">驾驶舱指令</strong>
@@ -232,17 +232,34 @@
         <span class="space-game__meter space-game__meter--energy"><i id="gameEnergyFill"></i></span>
         <span class="space-game__boss" id="gameBossMeter"><b data-i18n="gameBossCore">CORE</b><i id="gameBossFill"></i></span>
       </div>
-      <div class="space-game__radar" aria-hidden="true">
-        <span></span><i></i><b></b>
+      <div class="space-game__radar" aria-hidden="true" id="gameRadar">
+        <span class="space-game__radar-sweep"></span>
+        <div class="space-game__radar-blips" id="gameRadarBlips"></div>
       </div>
+      <section class="space-game__draft" id="gameDraft" aria-hidden="true" inert>
+        <p data-i18n="gameSectorClear">战区净空</p>
+        <h2 data-i18n="gameUpgradeTitle">选择一项舰载模块</h2>
+        <span data-i18n="gameUpgradeLead">升级将保留到本轮战役结束。</span>
+        <div class="space-game__draft-choices" id="gameDraftChoices"></div>
+      </section>
+      <section class="space-game__result" id="gameResult" aria-hidden="true" inert>
+        <p data-i18n="gameResultTitle">远征战报</p>
+        <strong id="gameResultRank">A</strong>
+        <div><span data-i18n="gameResultScoreLabel">得分</span><b id="gameResultScore">0000</b></div>
+        <div><span data-i18n="gameBestLabel">最高分</span><b id="gameBestScore">0000</b></div>
+        <footer>
+          <button type="button" id="gameResultRestart" data-i18n="gameResultRestart">再次出航</button>
+          <button type="button" id="gameResultExit" data-i18n="gameResultExit">返回星图</button>
+        </footer>
+      </section>
       <div class="space-game__touch" aria-label="移动端战机控制" data-i18n-aria="gameTouchAria">
         <button class="space-game__touch-button space-game__touch-button--fire" id="touchFire" type="button" aria-label="开火" data-i18n-aria="touchFireAria"><span data-i18n="touchFire">开火</span></button>
         <button class="space-game__touch-button space-game__touch-button--skill" id="touchSkill" type="button" aria-label="释放星环爆发" data-i18n-aria="touchNovaAria"><span data-i18n="touchNova">星环</span></button>
         <button class="space-game__touch-button space-game__touch-button--lance" id="touchLance" type="button" aria-label="释放离子光矛" data-i18n-aria="touchLanceAria"><span data-i18n="touchLance">光矛</span></button>
         <button class="space-game__touch-button space-game__touch-button--rift" id="touchRift" type="button" aria-label="释放时间裂隙" data-i18n-aria="touchRiftAria"><span data-i18n="touchRift">裂隙</span></button>
-        <button class="space-game__touch-button space-game__touch-button--focus" id="touchFocus" type="button" aria-label="精密闪避"><span>聚焦</span></button>
+        <button class="space-game__touch-button space-game__touch-button--focus" id="touchFocus" type="button" aria-label="精密闪避" data-i18n-aria="gameFocusAria"><span data-i18n="gameFocus">聚焦</span></button>
       </div>
-      <div class="space-game__status" id="gameStatus" data-i18n="gameStatusBoot">舰队启动：月球航道正在校准</div>
+      <div class="space-game__status" id="gameStatus" data-i18n="gameStatusBoot" aria-live="polite">舰队启动：月球航道正在校准</div>
     </aside>
 
     <aside class="world" id="world" aria-hidden="true" inert aria-label="理论世界详情" data-i18n-aria="worldAria">
@@ -259,8 +276,8 @@
     <script src="./vendor/ScrollTrigger.min.js"></script>
     <script src="./vendor/three.min.js"></script>
     <script src="./vendor/phaser.min.js"></script>
-    <script src="./frontier-catalog.js"></script>
-    <script src="./app.js"></script>
-    <script src="./research-runtime.js"></script>
+    <script src="./frontier-catalog.js?v=20260715-7"></script>
+    <script src="./app.js?v=20260715-7"></script>
+    <script src="./research-runtime.js?v=20260715-7"></script>
   </body>
 </html>
