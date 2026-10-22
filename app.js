@@ -157,7 +157,7 @@ const CLASSIC_MOVEMENTS = [
     ],
     works: [
       { title: "《高老头》", author: "巴尔扎克", why: "资本社会的人情与阶层剖面。" },
-      { title: "《安娜·卡列尼娜》", author: "托尔斯泰", why: "现实主义复调结构的典范。" },
+      { title: "《安娜·卡列尼娜》", author: "托尔斯泰", why: "现实主义多线叙事结构的典范。" },
       { title: "《萌芽》", author: "左拉", why: "自然主义与劳动政治的代表作。" }
     ],
     keywords: ["typicality", "totality", "social detail", "environment", "determinism"],
@@ -419,7 +419,7 @@ const CLASSIC_MOVEMENTS = [
     intro: "接受美学和读者反应批评把意义从作者或文本内部移向阅读事件。作品不是静止物，而是在读者期待、空白填补和历史接受中不断生成。",
     door: "打开这本书，你会进入由读者目光点亮的文本星座。",
     deepDive: [
-      "姚斯提出“期待视野”：作品进入文学史不是因为它孤立存在，而是因为它与某一时代读者的审美经验发生距离、冲击或更新。伊瑟强调文本空白，读者在阅读中不断补足、修正和重组意义。",
+      "姚斯提出“期待视野”：作品进入文学史不是因为它孤立存在，而是因为它与某一时代读者的审美经验发生距离、冲击或更新。伊瑟尔强调文本空白，读者在阅读中不断补足、修正和重组意义。",
       "读者反应批评提醒我们：同一文本在不同时代、阶层、性别、文化中的意义会变化。文学史因此也是接受史、阐释共同体史和阅读制度史。"
     ],
     coreIdeas: [
@@ -439,13 +439,13 @@ const CLASSIC_MOVEMENTS = [
     ],
     figures: [
       { name: "汉斯·罗伯特·姚斯", role: "期待视野、接受史", image: "" },
-      { name: "沃尔夫冈·伊瑟", role: "隐含读者、文本空白", image: "" },
+      { name: "沃尔夫冈·伊瑟尔", role: "隐含读者、文本空白", image: "" },
       { name: "斯坦利·费什", role: "阐释共同体", image: "" }
     ],
     works: [
       { title: "《走向接受美学》", author: "姚斯", why: "接受史理论的入口。" },
-      { title: "《阅读行为》", author: "伊瑟", why: "文本空白与隐含读者模型。" },
-      { title: "《这班里有文本吗》", author: "费什", why: "阐释共同体的重要讨论。" }
+      { title: "《阅读行为》", author: "伊瑟尔", why: "文本空白与隐含读者模型。" },
+      { title: "《这门课里有文本吗》", author: "费什", why: "阐释共同体的重要讨论。" }
     ],
     keywords: ["horizon of expectation", "implied reader", "gap", "interpretive community", "reception"],
     relations: ["structuralism", "russian-formalism", "new-historicism"]
@@ -501,7 +501,7 @@ const CLASSIC_MOVEMENTS = [
     intro: "后殖民批评研究帝国、殖民知识、语言、身份和抵抗如何进入文学。它追问谁被看见，谁被代表，谁有权讲述世界。",
     door: "打开这本书，你会进入帝国地图背后的声音、翻译和裂缝。",
     deepDive: [
-      "赛义德的《东方学》揭示西方如何通过知识、艺术和文学制造“东方”形象，使其成为可被管理、凝视和支配的对象。斯皮瓦克追问底层能否发声，警惕知识分子替被压迫者说话时再度消音。",
+      "萨义德的《东方学》揭示西方如何通过知识、艺术和文学制造“东方”形象，使其成为可被管理、凝视和支配的对象。斯皮瓦克追问底层能否发声，警惕知识分子替被压迫者说话时再度消音。",
       "霍米·巴巴提出混杂、拟态和第三空间，说明殖民关系不是单向压制，而是充满误读、重复、滑移和抵抗。后殖民文学常在语言转换、历史创伤和身份错位中写作。"
     ],
     coreIdeas: [
@@ -520,13 +520,13 @@ const CLASSIC_MOVEMENTS = [
       "《瓦解》以伊博社会内部视角回应殖民叙事的单向凝视。"
     ],
     figures: [
-      { name: "爱德华·赛义德", role: "东方主义、帝国文化", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/Edward_Said.jpg/500px-Edward_Said.jpg" },
+      { name: "爱德华·萨义德", role: "东方主义、帝国文化", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/Edward_Said.jpg/500px-Edward_Said.jpg" },
       { name: "霍米·巴巴", role: "混杂、拟态、第三空间", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/ba/Homi_K._Bhabha-cropd.jpg/500px-Homi_K._Bhabha-cropd.jpg" },
       { name: "奇努阿·阿切贝", role: "非洲小说与殖民叙事反写", image: "https://commons.wikimedia.org/wiki/Special:FilePath/Chinua_Achebe_-_Buffalo_25Sep2008_crop.jpg?width=500" }
     ],
     works: [
-      { title: "《东方学》", author: "赛义德", why: "后殖民批评的奠基文本。" },
-      { title: "《底层能说话吗？》", author: "斯皮瓦克", why: "代表与消音问题的关键文本。" },
+      { title: "《东方学》", author: "萨义德", why: "后殖民批评的奠基文本。" },
+      { title: "《底层人能说话吗？》", author: "斯皮瓦克", why: "代表与消音问题的关键文本。" },
       { title: "《瓦解》", author: "阿切贝", why: "殖民叙事反写的经典小说。" }
     ],
     keywords: ["Orientalism", "hybridity", "mimicry", "subaltern", "empire"],
@@ -1246,7 +1246,7 @@ const FIGURE_IMAGES = {
   "弗雷德里克·詹明信": "https://commons.wikimedia.org/wiki/Special:FilePath/Fredric_Jameson_2012.jpg?width=500",
   "热拉尔·热奈特": "https://commons.wikimedia.org/wiki/Special:FilePath/G%C3%A9rard_Genette.jpg?width=500",
   "汉斯·罗伯特·姚斯": "https://commons.wikimedia.org/wiki/Special:FilePath/Hans_Robert_Jauss.jpg?width=500",
-  "沃尔夫冈·伊瑟": "",
+  "沃尔夫冈·伊瑟尔": "",
   "斯坦利·费什": "https://commons.wikimedia.org/wiki/Special:FilePath/Stanley_Fish.jpg?width=500",
   "斯蒂芬·格林布拉特": "https://commons.wikimedia.org/wiki/Special:FilePath/Stephen_Greenblatt_2004.jpg?width=500",
   "雷蒙德·威廉斯": "https://commons.wikimedia.org/wiki/Special:FilePath/Raymond_Williams.jpg?width=500",
@@ -1394,12 +1394,12 @@ const PERSON_TRANSLATIONS = {
   "雅克·德里达": { en: "Jacques Derrida", fr: "Jacques Derrida" },
   "米歇尔·福柯": { en: "Michel Foucault", fr: "Michel Foucault" },
   "汉斯·罗伯特·姚斯": { en: "Hans Robert Jauss", fr: "Hans Robert Jauss" },
-  "沃尔夫冈·伊瑟": { en: "Wolfgang Iser", fr: "Wolfgang Iser" },
+  "沃尔夫冈·伊瑟尔": { en: "Wolfgang Iser", fr: "Wolfgang Iser" },
   "斯坦利·费什": { en: "Stanley Fish", fr: "Stanley Fish" },
   "西蒙娜·德·波伏瓦": { en: "Simone de Beauvoir", fr: "Simone de Beauvoir" },
   "朱迪斯·巴特勒": { en: "Judith Butler", fr: "Judith Butler" },
   "托妮·莫里森": { en: "Toni Morrison", fr: "Toni Morrison" },
-  "爱德华·赛义德": { en: "Edward Said", fr: "Edward Said" },
+  "爱德华·萨义德": { en: "Edward Said", fr: "Edward Said" },
   "霍米·巴巴": { en: "Homi K. Bhabha", fr: "Homi K. Bhabha" },
   "奇努阿·阿切贝": { en: "Chinua Achebe", fr: "Chinua Achebe" },
   "斯蒂芬·格林布拉特": { en: "Stephen Greenblatt", fr: "Stephen Greenblatt" },
@@ -1439,12 +1439,12 @@ const PERSON_TRANSLATIONS = {
   "德里达": { en: "Jacques Derrida", fr: "Jacques Derrida" },
   "福柯": { en: "Michel Foucault", fr: "Michel Foucault" },
   "姚斯": { en: "Hans Robert Jauss", fr: "Hans Robert Jauss" },
-  "伊瑟": { en: "Wolfgang Iser", fr: "Wolfgang Iser" },
+  "伊瑟尔": { en: "Wolfgang Iser", fr: "Wolfgang Iser" },
   "费什": { en: "Stanley Fish", fr: "Stanley Fish" },
   "波伏瓦": { en: "Simone de Beauvoir", fr: "Simone de Beauvoir" },
   "巴特勒": { en: "Judith Butler", fr: "Judith Butler" },
   "莫里森": { en: "Toni Morrison", fr: "Toni Morrison" },
-  "赛义德": { en: "Edward Said", fr: "Edward Said" },
+  "萨义德": { en: "Edward Said", fr: "Edward Said" },
   "阿切贝": { en: "Chinua Achebe", fr: "Chinua Achebe" },
   "格林布拉特": { en: "Stephen Greenblatt", fr: "Stephen Greenblatt" },
   "威廉斯": { en: "Raymond Williams", fr: "Raymond Williams" },
@@ -1486,12 +1486,12 @@ const WORK_TRANSLATIONS = {
   "《作者之死》": { en: "The Death of the Author", fr: "La mort de l’auteur" },
   "《走向接受美学》": { en: "Toward an Aesthetic of Reception", fr: "Pour une esthétique de la réception" },
   "《阅读行为》": { en: "The Act of Reading", fr: "L’acte de lecture" },
-  "《这班里有文本吗》": { en: "Is There a Text in This Class?", fr: "Y a-t-il un texte dans cette classe?" },
+  "《这门课里有文本吗》": { en: "Is There a Text in This Class?", fr: "Y a-t-il un texte dans cette classe?" },
   "《第二性》": { en: "The Second Sex", fr: "Le Deuxième Sexe" },
   "《性别麻烦》": { en: "Gender Trouble", fr: "Trouble dans le genre" },
   "《宠儿》": { en: "Beloved", fr: "Beloved" },
   "《东方学》": { en: "Orientalism", fr: "L’Orientalisme" },
-  "《底层能说话吗？》": { en: "Can the Subaltern Speak?", fr: "Les subalternes peuvent-elles parler?" },
+  "《底层人能说话吗？》": { en: "Can the Subaltern Speak?", fr: "Les subalternes peuvent-elles parler?" },
   "《瓦解》": { en: "Things Fall Apart", fr: "Le Monde s’effondre" },
   "《文艺复兴自我塑造》": { en: "Renaissance Self-Fashioning", fr: "Renaissance Self-Fashioning" },
   "《莎士比亚的协商》": { en: "Shakespearean Negotiations", fr: "Shakespearean Negotiations" },
@@ -1788,7 +1788,7 @@ let languageRequestVersion = 0;
 async function ensureFrontierLocalePack(language) {
   if (language === "zh" || frontierLocalePack) return frontierLocalePack;
   if (!frontierLocalePromise) {
-    frontierLocalePromise = fetch("./data/frontier-locales.json?v=20260715-7", { cache: "no-cache" })
+    frontierLocalePromise = fetch("./data/frontier-locales.json?v=20261022", { cache: "no-cache" })
       .then((response) => {
         if (!response.ok) throw new Error(`Locale pack HTTP ${response.status}`);
         return response.json();
@@ -1920,6 +1920,34 @@ function localizedMovement(movement) {
       collection: movement.collection,
       sourceChapter: movement.sourceChapter,
       sourceRanges: movement.sourceRanges
+    };
+  }
+  const classicEdition = window.LC_CLASSICS_I18N?.[movement.id]?.[language];
+  if (classicEdition) {
+    return {
+      ...movement,
+      title: baseMovementText(movement, "title", language),
+      era: baseMovementText(movement, "era", language),
+      region: baseMovementText(movement, "region", language),
+      lens: baseMovementText(movement, "lens", language),
+      keywords: translateKeywords(movement),
+      intro: classicEdition.intro,
+      door: classicEdition.door,
+      deepDive: classicEdition.deepDive,
+      coreIdeas: classicEdition.coreIdeas,
+      method: classicEdition.method,
+      cases: classicEdition.cases,
+      figures: movement.figures.map((figure) => ({
+        ...figure,
+        name: translatePerson(figure.name),
+        role: classicEdition.roles?.[figure.name] || figure.role
+      })),
+      works: movement.works.map((work, index) => ({
+        ...work,
+        title: translateWorkTitle(work.title),
+        author: translatePerson(work.author),
+        why: classicEdition.why?.[index] || work.why
+      }))
     };
   }
   const authoredTranslation = movement.i18n?.[language];
@@ -2060,6 +2088,7 @@ function renderBooks() {
     const local = localizedMovement(movement);
     return `
     <button class="book tilt-target${index === 0 ? " is-active" : ""}" type="button" data-open="${movement.id}" data-collection="${movement.collection}" tabindex="${index === 0 ? "0" : "-1"}" aria-current="${index === 0 ? "true" : "false"}" style="${cssVarsFor(movement)}">
+      <img class="book__art" src="${coverArtUrl(movement)}" alt="" loading="lazy" decoding="async" width="480" height="720">
       <span class="book__collection">${collectionLabel(movement)}</span>
       <p class="book__kicker">${String(index + 1).padStart(2, "0")} · ${local.era}</p>
       <h3>${local.title}</h3>
@@ -2071,11 +2100,16 @@ function renderBooks() {
   }).join("");
 }
 
+function coverArtUrl(movement) {
+  return `./assets/covers/${movement.id}.webp`;
+}
+
 function renderArchive() {
   $("#archiveGrid").innerHTML = MOVEMENTS.map((movement) => {
     const local = localizedMovement(movement);
     return `
     <button class="archive-card magnetic" type="button" data-open="${movement.id}" data-collection="${movement.collection}" data-search="${escapeAttribute(`${local.title} ${local.era} ${local.region} ${local.keywords.join(" ")}`)}" style="${cssVarsFor(movement)}">
+      <img class="archive-card__art" src="${coverArtUrl(movement)}" alt="" loading="lazy" decoding="async" width="480" height="720">
       <span class="archive-card__collection">${collectionLabel(movement)}</span>
       <span class="archive-card__meta">${local.era} · ${local.region}</span>
       <h3>${local.title}</h3>
@@ -2130,6 +2164,7 @@ function buildGraphNodes() {
 }
 
 function renderOrbitMap() {
+  if (window.LiteraryConstellation?.render()) return;
   const map = $("#orbitMap");
   const nodes = buildGraphNodes();
   const nodeById = Object.fromEntries(nodes.map((node) => [node.movement.id, node]));
@@ -2711,6 +2746,7 @@ function setupQuiz(root) {
       total: questions.length,
       message: correct === questions.length ? t("quizPerfect") : t("quizRetry")
     });
+    document.dispatchEvent(new CustomEvent("literary-quiz-complete", { detail: { id: state.currentWorldId, correct, total: questions.length } }));
     playSound(correct === questions.length ? "success" : "book");
   };
 
@@ -2736,6 +2772,7 @@ function openWorld(id) {
   content.innerHTML = `
     <div class="world-hero">
       <div class="world-book-cover tilt-target" style="${cssVarsFor(movement)}">
+        <img class="world-book-cover__art" src="${coverArtUrl(movement)}" alt="" decoding="async" width="480" height="720">
         <p class="world-kicker">${local.era} · ${local.region}</p>
         <h2 id="worldTitle">${local.title}</h2>
         <p>${local.door}</p>
@@ -2817,6 +2854,7 @@ function openWorld(id) {
   setupOpenButtons(content);
   setupQuiz(content);
   window.ResearchAtlas?.enhanceWorld?.(content, movement);
+  document.dispatchEvent(new CustomEvent("literary-world-open", { detail: { id: movement.id, content } }));
   const panel = $(".world__panel", world);
   panel?.scrollTo({ top: 0, left: 0 });
   window.requestAnimationFrame(() => $(".world__close", world)?.focus({ preventScroll: true }));
@@ -2832,6 +2870,7 @@ function closeWorld() {
   $("#siteHeader")?.removeAttribute("inert");
   $("main")?.removeAttribute("inert");
   window.ResearchAtlas?.onWorldClosed?.();
+  document.dispatchEvent(new CustomEvent("literary-world-close"));
   const finishClose = () => {
     world.classList.remove("is-open");
     world.setAttribute("aria-hidden", "true");
@@ -2994,8 +3033,10 @@ function initLibraryGate() {
     document.body.classList.remove("entry-locked");
     gate.style.pointerEvents = "none";
     window.scrollTo(0, 0);
+    // Runs from both a timer and the intro timeline; only the first call may reset the scroll position.
     const removeGate = () => {
-      if (gate.isConnected) gate.remove();
+      if (!gate.isConnected) return;
+      gate.remove();
       document.body.classList.remove("entry-locked");
       const timepiece = $(".timepiece");
       if (timepiece) {
@@ -3014,10 +3055,13 @@ function initLibraryGate() {
     window.setTimeout(removeGate, 1700);
 
     if (window.gsap) {
-      gsap.timeline({
+      const intro = gsap.timeline({
         defaults: { ease: "power3.inOut" },
         onComplete: removeGate
-      })
+      });
+      // GSAP's lag smoothing stretches time on slow frames; never leave the hero copy half-revealed.
+      window.setTimeout(() => intro.progress(1), 3600);
+      intro
         .to(gate, { autoAlpha: 0, scale: 1.045, duration: 0.92, delay: 0.46 })
         .fromTo(".hero__copy > *", { y: 38, autoAlpha: 0 }, { y: 0, autoAlpha: 1, stagger: 0.08, duration: 0.72, ease: "power3.out" }, "-=0.55")
         .fromTo(".timepiece", { y: 24, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.46 }, "-=0.38");
@@ -3590,9 +3634,39 @@ function makeBookMaterials(movement, index) {
   return {
     coverTexture,
     glowTexture: makeBookGlowTexture(movement),
-    materials: [pageMaterial, spineMaterial, pageMaterial.clone(), pageMaterial.clone(), coverMaterial, backMaterial],
+    materials: [pageMaterial, spineMaterial, pageMaterial.clone(), pageMaterial.clone(), coverMaterial, backMaterial, edgeMaterial],
     edgeMaterial
   };
+}
+
+const modelRequests = new Map();
+
+function loadModelJson(url) {
+  if (!modelRequests.has(url)) {
+    modelRequests.set(url, fetch(url).then((response) => {
+      if (!response.ok) throw new Error(`Model HTTP ${response.status}`);
+      return response.json();
+    }).catch((error) => {
+      modelRequests.delete(url);
+      console.warn("3D model unavailable; using fallback geometry.", error);
+      return null;
+    }));
+  }
+  return modelRequests.get(url);
+}
+
+// Builds a BufferGeometry from the JSON written by tools/blender/build_models.py.
+function geometryFromModel(data) {
+  if (!data?.position || !window.THREE) return null;
+  const geometry = new THREE.BufferGeometry();
+  geometry.setAttribute("position", new THREE.Float32BufferAttribute(data.position, 3));
+  if (data.normal) geometry.setAttribute("normal", new THREE.Float32BufferAttribute(data.normal, 3));
+  if (data.uv) geometry.setAttribute("uv", new THREE.Float32BufferAttribute(data.uv, 2));
+  if (data.index) geometry.setIndex(data.index);
+  (data.groups || []).forEach((group) => geometry.addGroup(group.start, group.count, group.materialIndex));
+  if (!data.normal) geometry.computeVertexNormals();
+  geometry.computeBoundingSphere();
+  return geometry;
 }
 
 function latLonToVector3(lat, lon, radius) {
@@ -3892,6 +3966,36 @@ function initThreeCosmos() {
   MOVEMENTS.forEach((_, index) => addOrbitBook(index));
   canvas.dataset.orbitCount = String(satellites.children.length);
   group.add(satellites);
+  // Swap the placeholder boxes for the Blender-modelled hardcover once it arrives.
+  loadModelJson("./assets/models/book.json").then((data) => {
+    const modelled = geometryFromModel(data);
+    if (!modelled || !canvas.isConnected) return;
+    satellites.children.forEach((book) => {
+      book.geometry = modelled;
+    });
+    bookGeometry.dispose();
+    canvas.dataset.bookModel = "blender";
+    requestCosmosRender();
+  });
+
+  // Books orbiting behind the hero headline fade so the copy stays legible.
+  const copyZone = { x0: 2, x1: 2, y0: 2, y1: 2 };
+  const projectedBook = new THREE.Vector3();
+  let copyZoneMeasuredAt = 0;
+  const measureCopyZone = () => {
+    const copy = $(".hero__copy");
+    const rect = canvas.getBoundingClientRect();
+    copyZoneMeasuredAt = performance.now();
+    if (!copy || rect.width < 10 || rect.height < 10) return;
+    const box = copy.getBoundingClientRect();
+    const pad = 22;
+    copyZone.x0 = ((box.left - pad - rect.left) / rect.width) * 2 - 1;
+    copyZone.x1 = ((box.right + pad - rect.left) / rect.width) * 2 - 1;
+    copyZone.y1 = 1 - ((box.top - pad - rect.top) / rect.height) * 2;
+    copyZone.y0 = 1 - ((box.bottom + pad - rect.top) / rect.height) * 2;
+  };
+  document.addEventListener("literary-language-ready", measureCopyZone);
+  document.fonts?.ready?.then(measureCopyZone);
 
   const starGeometry = new THREE.BufferGeometry();
   const starPositions = [];
@@ -4206,6 +4310,7 @@ function initThreeCosmos() {
   };
 
   const reducedCosmosMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)");
+  const prefersStill = () => Boolean(reducedCosmosMotion?.matches || window.LC?.reducedMotion?.());
   let renderedReducedFrame = false;
   let cosmosAnimationFrame = 0;
   const animate = () => {
@@ -4213,13 +4318,14 @@ function initThreeCosmos() {
       cosmosAnimationFrame = 0;
       return;
     }
-    if (reducedCosmosMotion?.matches && renderedReducedFrame) {
+    if (prefersStill() && renderedReducedFrame) {
       cosmosAnimationFrame = 0;
       return;
     }
-    cosmosAnimationFrame = reducedCosmosMotion?.matches ? 0 : requestAnimationFrame(animate);
-    if (document.hidden || document.body.classList.contains("game-open")) return;
+    cosmosAnimationFrame = prefersStill() ? 0 : requestAnimationFrame(animate);
+    if (document.hidden || document.body.classList.contains("game-open") || document.body.classList.contains("lc-hero-offscreen")) return;
     const now = performance.now();
+    if (now - copyZoneMeasuredAt > 600) measureCopyZone();
     const delta = Math.min(0.05, Math.max(0.001, (now - lastAnimationTime) / 1000));
     lastAnimationTime = now;
     const time = now / 1000;
@@ -4282,7 +4388,11 @@ function initThreeCosmos() {
       book.rotateY(data.depthTwist + (data.hovered ? data.depthTwist * 0.32 : 0));
       book.rotateZ(data.tilt + (data.hovered ? Math.sin(time * 5 + data.angle) * 0.07 : 0));
       book.renderOrder = Math.round((book.position.z + 6) * 100);
-      const targetOpacity = data.portalHidden ? 0.07 : (0.42 + normalizedNear * 0.58);
+      book.getWorldPosition(projectedBook).project(camera);
+      const behindCopy = !data.hovered
+        && projectedBook.x > copyZone.x0 && projectedBook.x < copyZone.x1
+        && projectedBook.y > copyZone.y0 && projectedBook.y < copyZone.y1;
+      const targetOpacity = data.portalHidden ? 0.07 : (behindCopy ? 0.08 : (0.42 + normalizedNear * 0.58));
       data.materials.forEach((material) => {
         material.opacity += (targetOpacity - material.opacity) * 0.12;
         material.depthWrite = material.opacity > 0.35;
@@ -4309,7 +4419,7 @@ function initThreeCosmos() {
   };
 
   const requestCosmosRender = () => {
-    if (reducedCosmosMotion?.matches) renderedReducedFrame = false;
+    if (prefersStill()) renderedReducedFrame = false;
     if (!cosmosAnimationFrame) cosmosAnimationFrame = requestAnimationFrame(animate);
   };
 
@@ -4473,6 +4583,7 @@ function initThreeCosmos() {
 
   resize();
   requestCosmosRender();
+  document.addEventListener("lc-motion", requestCosmosRender);
   window.addEventListener("resize", () => {
     resize();
     requestCosmosRender();
@@ -4532,16 +4643,18 @@ function initScrollAnimations() {
       once: true
     });
 
-    ScrollTrigger.create({
-      trigger: ".atlas",
-      start: "top 65%",
-      onEnter: () => {
-        gsap.from(".orbit-node", { scale: 0.45, autoAlpha: 0, stagger: { each: 0.012, from: "center" }, duration: 0.58, ease: "back.out(1.4)" });
-        gsap.from(".graph-edge", { autoAlpha: 0, stagger: 0.006, duration: 0.52, ease: "power2.out" });
-        gsap.from(".graph-cluster, .graph-legend", { y: 12, autoAlpha: 0, stagger: 0.05, duration: 0.5 }, "-=0.42");
-      },
-      once: true
-    });
+    if (document.querySelector(".orbit-node")) {
+      ScrollTrigger.create({
+        trigger: ".atlas",
+        start: "top 65%",
+        onEnter: () => {
+          gsap.from(".orbit-node", { scale: 0.45, autoAlpha: 0, stagger: { each: 0.012, from: "center" }, duration: 0.58, ease: "back.out(1.4)" });
+          gsap.from(".graph-edge", { autoAlpha: 0, stagger: 0.006, duration: 0.52, ease: "power2.out" });
+          gsap.from(".graph-cluster, .graph-legend", { y: 12, autoAlpha: 0, stagger: 0.05, duration: 0.5 }, "-=0.42");
+        },
+        once: true
+      });
+    }
 
     return () => {
       scrollTween.kill();
@@ -4847,7 +4960,9 @@ function initSpaceGame() {
     overlay.classList.toggle("is-critical", (state.hull ?? 100) <= 28 && !state.gameOver);
   };
 
-  class LunarSquadronScene extends Phaser.Scene {
+  // Phaser is ~1.2 MB, so it is only fetched when the lunar game opens.
+  let LunarSquadronScene = null;
+  const defineLunarScene = () => class extends Phaser.Scene {
     constructor() {
       super("LunarSquadronScene");
       this.state = this.makeInitialState();
@@ -6143,10 +6258,30 @@ function initSpaceGame() {
       this.asteroids.children.each(kill);
       this.powerups.children.each(kill);
     }
-  }
+  };
 
-  const open = () => {
-    if (phaserGame) return;
+  let phaserLoading = null;
+  const loadPhaser = () => {
+    if (window.Phaser) return Promise.resolve();
+    if (!phaserLoading) {
+      phaserLoading = new Promise((resolve, reject) => {
+        const script = document.createElement("script");
+        script.src = "./vendor/phaser.min.js";
+        script.async = true;
+        script.onload = () => resolve();
+        script.onerror = () => {
+          phaserLoading = null;
+          script.remove();
+          reject(new Error("Phaser failed to load"));
+        };
+        document.head.appendChild(script);
+      });
+    }
+    return phaserLoading;
+  };
+
+  const open = async () => {
+    if (phaserGame || overlay.classList.contains("is-open")) return;
     hideGameOverlays();
     gameReturnTarget = document.activeElement;
     overlay.classList.add("is-open");
@@ -6160,6 +6295,17 @@ function initSpaceGame() {
     mount.innerHTML = "";
     setStatus(t("gameStatusBoot"));
     updateHud({ score: 0, wave: 0, hull: 100, energy: 100, combo: 1, cooldowns: { nova: 0, lance: 0, rift: 0 }, skillReady: true, skillCooldown: 0, bossHp: 0, bossMax: 0 });
+    overlay.classList.add("is-loading");
+    try {
+      await loadPhaser();
+    } catch (error) {
+      overlay.classList.remove("is-loading");
+      setStatus(t("gameLoadFailed"));
+      return;
+    }
+    overlay.classList.remove("is-loading");
+    if (!overlay.classList.contains("is-open") || phaserGame) return;
+    LunarSquadronScene = LunarSquadronScene || defineLunarScene();
     phaserGame = new Phaser.Game({
       type: Phaser.AUTO,
       parent: mount,

@@ -108,7 +108,7 @@ body::before {
     radial-gradient(circle at 50% 82%, rgba(244, 206, 122, 0.2), transparent 28%),
     radial-gradient(circle at 20% 18%, rgba(117, 245, 255, 0.18), transparent 34%),
     radial-gradient(circle at 78% 22%, rgba(159, 140, 255, 0.18), transparent 32%),
-    url("./assets/library-gate-bg.png"),
+    url("./assets/library-gate-bg.webp"),
     linear-gradient(180deg, #02060d 0%, #07111e 52%, #02050b 100%);
   background-position: center;
   background-size: cover;

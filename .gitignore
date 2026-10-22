@@ -15,3 +15,12 @@ __pycache__/
 
 # Reusable local translation cache (generated locale assets are committed)
 .cache/
+
+# Build-time media toolchains (sources are committed; dependencies and caches are not)
+tools/remotion/node_modules/
+tools/remotion/public/
+tools/remotion/out-*.mp4
+tools/**/media/
+
+# Local QA harnesses and screenshots
+.qa/

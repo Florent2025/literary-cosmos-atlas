@@ -1,8 +1,8 @@
 (() => {
   const DATA_URLS = {
-    zh: "./data/research-atlas.json?v=20260715-7",
-    en: "./data/research-atlas.en.json?v=20260715-7",
-    fr: "./data/research-atlas.fr.json?v=20260715-7"
+    zh: "./data/research-atlas.json?v=20261022",
+    en: "./data/research-atlas.en.json?v=20261022",
+    fr: "./data/research-atlas.fr.json?v=20261022"
   };
   const CHUNK_SIZE = 56;
   const atlasPromises = new Map();

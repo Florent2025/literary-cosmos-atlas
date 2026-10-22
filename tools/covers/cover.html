@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Literary Cosmos cover painter</title>
+<style>html,body{margin:0;background:#0a1220}canvas{display:block}</style>
+<script src="./vendor/p5.min.js"></script>
+<script src="./vendor/p5.brush.js"></script>
+</head>
+<body>
+<script>
+// Generative cover painter (p5.js 2 + p5.brush 2). Query: ?data=<base64 JSON volume>
+// Each volume gets a deterministic ink-and-watercolour composition seeded by its id.
+const params = new URLSearchParams(location.search);
+const volume = JSON.parse(atob(params.get("data")));
+const W = 480;
+const H = 720;
+const GOLD = "#d6b76a";
+const INK = "#0a1220";
+
+function hashString(value) {
+  let h = 2166136261;
+  for (let i = 0; i < value.length; i += 1) {
+    h ^= value.charCodeAt(i);
+    h = Math.imul(h, 16777619);
+  }
+  return h >>> 0;
+}
+
+function mixHex(a, b, t) {
+  const pa = a.match(/\w\w/g).map((x) => parseInt(x, 16));
+  const pb = b.match(/\w\w/g).map((x) => parseInt(x, 16));
+  return `#${pa.map((v, i) => Math.round(v + (pb[i] - v) * t).toString(16).padStart(2, "0")).join("")}`;
+}
+
+function grain() {
+  noStroke();
+  for (let i = 0; i < 2600; i += 1) {
+    fill(255, 255, 255, random(3, 10));
+    circle(random(-W / 2, W / 2), random(-H / 2, H / 2), random(0.6, 1.6));
+  }
+}
+
+function glowAt(x, y, radius, colour, strength = 1) {
+  // Soft luminous underlay drawn with native p5 before the brush layers.
+  noStroke();
+  const c = color(colour);
+  for (let r = radius; r > 4; r *= 0.86) {
+    c.setAlpha(9 * strength);
+    fill(c);
+    circle(x, y, r * 2);
+  }
+}
+
+function stars(count, colour) {
+  brush.noField();
+  for (let i = 0; i < count; i += 1) {
+    brush.set("pen", colour, random(0.3, 0.7));
+    const x = random(30, W - 30);
+    const y = random(30, H - 30);
+    brush.line(x, y, x + random(-1.5, 1.5), y + random(-1.5, 1.5));
+  }
+}
+
+function frame() {
+  brush.noField();
+  brush.set("HB", GOLD, 1.2);
+  brush.noFill();
+  brush.rect(22, 22, W - 44, H - 44);
+  brush.set("2H", mixHex(GOLD, INK, 0.2), 0.8);
+  brush.rect(34, 34, W - 68, H - 68);
+}
+
+function classics([light, mid, glow]) {
+  const cx = W / 2 + random(-30, 30);
+  const cy = H * 0.44 + random(-25, 25);
+  glowAt(cx, cy, 230, glow, 1.2);
+  brush.noStroke();
+  brush.fillBleed(0.28, "out");
+  brush.fillTexture(0.55, 0.45);
+  brush.fill(mid, 150);
+  brush.circle(cx, cy, random(118, 150), 0.25);
+  brush.fill(glow, 120);
+  brush.circle(cx + random(-26, 26), cy + random(-26, 26), random(56, 80), 0.4);
+  brush.noFill();
+  brush.wiggle(1.2);
+  for (let r = 70; r < 230; r += random(22, 34)) {
+    brush.set(random() > 0.5 ? "HB" : "cpencil", random() > 0.5 ? GOLD : glow, random(1.1, 1.8));
+    brush.arc(cx, cy, r, random(0, PI), random(PI, TWO_PI + 0.6));
+  }
+  brush.field("waves");
+  for (let i = 0; i < 26; i += 1) {
+    brush.set("cpencil", random() > 0.4 ? glow : light, random(0.8, 1.5));
+    brush.flowLine(random(40, W * 0.4), random(H * 0.66, H - 80), random(120, 260), 0);
+  }
+  stars(36, "#f6eac8");
+}
+
+function foundations([light, mid, glow]) {
+  brush.noField();
+  glowAt(W / 2, H * 0.46, 260, glow, 1);
+  brush.noStroke();
+  brush.fillTexture(0.4, 0.3);
+  brush.fill(mid, 120);
+  brush.rect(W * 0.18, H * 0.2, W * 0.64, H * 0.52);
+  brush.noFill();
+  brush.set("rotring", light, 0.9);
+  brush.hatch(9, random(0.3, 0.9), { rand: 0.08, continuous: true });
+  brush.rect(W * 0.24, H * 0.27, W * 0.52, H * 0.38);
+  brush.noHatch();
+  const cx = W / 2;
+  const cy = H * 0.46;
+  for (let i = 0; i < 16; i += 1) {
+    const a = (TWO_PI * i) / 16;
+    const len = i % 4 === 0 ? 200 : 120;
+    brush.set(i % 4 === 0 ? "HB" : "cpencil", i % 4 === 0 ? GOLD : glow, i % 4 === 0 ? 1.8 : 1);
+    brush.line(cx, cy, cx + cos(a) * len, cy + sin(a) * len);
+  }
+  brush.set("HB", GOLD, 1.6);
+  brush.circle(cx, cy, 64, 0.1);
+  brush.circle(cx, cy, 128, 0.2);
+  stars(24, "#f6eac8");
+}
+
+function frontiers([light, mid, glow]) {
+  glowAt(W * random(0.35, 0.65), H * random(0.35, 0.6), 260, glow, 1.1);
+  brush.clip([40, 40, W - 40, H - 40]);
+  brush.field(random() > 0.5 ? "curved" : "spiral");
+  for (let i = 0; i < 70; i += 1) {
+    brush.set(random() > 0.3 ? "cpencil" : "HB", random() > 0.5 ? glow : light, random(0.6, 1.3));
+    brush.flowLine(random(60, W - 120), random(90, H - 110), random(50, 170), random(-0.4, 0.4));
+  }
+  brush.noField();
+  const nodes = Array.from({ length: floor(random(6, 10)) }, () => [random(80, W - 80), random(120, H - 160)]);
+  brush.set("HB", light, 1.1);
+  nodes.forEach((a, i) => {
+    const b = nodes[(i + 1 + floor(random(nodes.length - 1))) % nodes.length];
+    brush.line(a[0], a[1], b[0], b[1]);
+  });
+  brush.noStroke();
+  brush.fillTexture(0.5, 0.5);
+  nodes.forEach(([x, y], i) => {
+    brush.fill(i % 2 ? glow : mid, 190);
+    brush.circle(x, y, random(12, 28), 0.3);
+  });
+  brush.set("HB", GOLD, 1.5);
+  brush.noFill();
+  nodes.slice(0, 3).forEach(([x, y]) => brush.circle(x, y, 34, 0.2));
+  brush.noClip();
+  stars(30, "#f6eac8");
+}
+
+function regions([light, mid, glow], location) {
+  const x = location ? 70 + ((location.lon + 180) / 360) * (W - 140) : W / 2;
+  const y = location ? 130 + ((90 - location.lat) / 180) * (H - 300) : H / 2;
+  glowAt(x, y, 240, glow, 1.2);
+  brush.clip([40, 40, W - 40, H - 40]);
+  brush.field("seabed");
+  for (let row = 70; row < H - 60; row += random(13, 21)) {
+    const near = 1 - Math.min(1, Math.abs(row - y) / 260);
+    brush.set(near > 0.5 ? "cpencil" : "2H", near > 0.4 ? glow : mid, 0.5 + near * 0.9);
+    brush.flowLine(40, row, W - 80, 0);
+  }
+  brush.noField();
+  brush.noStroke();
+  brush.fillBleed(0.4, "out");
+  brush.fillTexture(0.6, 0.5);
+  brush.fill(glow, 190);
+  brush.circle(x, y, 42, 0.3);
+  brush.noFill();
+  [70, 110, 160].forEach((r, i) => {
+    brush.set(i ? "cpencil" : "HB", i ? light : GOLD, i ? 0.9 : 1.8);
+    brush.circle(x, y, r, 0.15);
+  });
+  brush.set("HB", GOLD, 1.2);
+  brush.line(x, 40, x, H - 40);
+  brush.line(40, y, W - 40, y);
+  brush.noClip();
+  stars(20, "#f6eac8");
+}
+
+function synthesis([light, mid, glow]) {
+  const horizon = H * 0.62;
+  glowAt(W / 2, horizon, 280, glow, 1.3);
+  brush.clip([40, 40, W - 40, H - 40]);
+  brush.noStroke();
+  brush.fillBleed(0.3, "out");
+  brush.fillTexture(0.55, 0.45);
+  brush.fill(glow, 170);
+  brush.circle(W / 2, horizon, 120, 0.2);
+  brush.fill(mid, 110);
+  brush.circle(W / 2, horizon, 190, 0.3);
+  brush.noFill();
+  for (let i = 0; i < 22; i += 1) {
+    const a = PI + (PI * (i + 0.5)) / 22;
+    brush.set(i % 3 ? "cpencil" : "HB", i % 3 ? glow : GOLD, i % 3 ? 0.9 : 1.6);
+    brush.line(W / 2 + cos(a) * 140, horizon + sin(a) * 140, W / 2 + cos(a) * 260, horizon + sin(a) * 260);
+  }
+  for (let k = 0; k < 4; k += 1) {
+    const pts = [];
+    for (let x = 30; x <= W - 30; x += 60) pts.push([x, horizon + 20 + k * 36 + random(-18, 18)]);
+    brush.set(k % 2 ? "HB" : "cpencil", k % 2 ? GOLD : light, 1.4);
+    brush.spline(pts, 0.6);
+  }
+  brush.noClip();
+  stars(30, "#f6eac8");
+}
+
+function setup() {
+  pixelDensity(1);
+  createCanvas(W, H, WEBGL);
+  const seed = hashString(volume.id);
+  randomSeed(seed);
+  noiseSeed(seed);
+  background(INK);
+  push();
+  grain();
+  pop();
+  brush.scaleBrushes(2.2);
+  // WEBGL canvases are centre-origin; paint in top-left page coordinates.
+  translate(-W / 2, -H / 2);
+  const painters = { classics, foundations, frontiers, regions, synthesis };
+  (painters[volume.collection] || frontiers)(volume.palette, volume.location);
+  frame();
+  noLoop();
+}
+
+function draw() {
+  // p5.brush flushes its buffers at the end of the frame.
+  if (frameCount === 1) {
+    window.setTimeout(() => {
+      window.__cover = document.querySelector("canvas").toDataURL("image/webp", 0.82);
+      window.__done = true;
+    }, 60);
+  }
+}
+</script>
+</body>
+</html>
