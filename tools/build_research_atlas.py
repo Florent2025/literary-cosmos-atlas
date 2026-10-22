@@ -361,9 +361,22 @@ def copy_docx_image(document: DocumentObject, rel_id: str, index: int, copied: d
         return copied[key]
     suffix = Path(key).suffix.lower() or ".png"
     digest = hashlib.sha1(part.blob).hexdigest()[:10]
+    blob = part.blob
+    if suffix in {".png", ".jpg", ".jpeg"}:
+        # Raster figures ship as WebP (typically 5-10x smaller than the embedded PNGs).
+        from io import BytesIO
+
+        from PIL import Image
+
+        with Image.open(BytesIO(blob)) as image:
+            image.thumbnail((1800, 1800))
+            buffer = BytesIO()
+            image.save(buffer, "WEBP", quality=84, method=6)
+        blob = buffer.getvalue()
+        suffix = ".webp"
     filename = f"source-figure-{index:02d}-{digest}{suffix}"
     target = RESEARCH_DIR / filename
-    target.write_bytes(part.blob)
+    target.write_bytes(blob)
     rel_path = f"assets/research/{filename}"
     copied[key] = rel_path
     return rel_path

@@ -1,0 +1,106 @@
+{
+  "scenes": {
+    "PlotArc": {
+      "volumes": [
+        "classical-poetics"
+      ],
+      "durations": {
+        "zh": 15.2,
+        "en": 15.2,
+        "fr": 15.2
+      }
+    },
+    "FabulaSyuzhet": {
+      "volumes": [
+        "russian-formalism"
+      ],
+      "durations": {
+        "zh": 13.8,
+        "en": 13.8,
+        "fr": 13.8
+      }
+    },
+    "JakobsonAxes": {
+      "volumes": [
+        "structuralism",
+        "russian-formalism"
+      ],
+      "durations": {
+        "zh": 13.4,
+        "en": 13.4,
+        "fr": 13.4
+      }
+    },
+    "SemioticSquare": {
+      "volumes": [
+        "structuralism"
+      ],
+      "durations": {
+        "zh": 14.7,
+        "en": 14.7,
+        "fr": 14.7
+      }
+    },
+    "SignifierChain": {
+      "volumes": [
+        "poststructuralism"
+      ],
+      "durations": {
+        "zh": 13.7,
+        "en": 13.7,
+        "fr": 13.7
+      }
+    },
+    "HermeneuticCircle": {
+      "volumes": [
+        "reader-response"
+      ],
+      "durations": {
+        "zh": 14.4,
+        "en": 14.4,
+        "fr": 14.4
+      }
+    },
+    "ThreeHorizons": {
+      "volumes": [
+        "marxism"
+      ],
+      "durations": {
+        "zh": 11.6,
+        "en": 11.6,
+        "fr": 11.6
+      }
+    },
+    "DistantReading": {
+      "volumes": [
+        "digital-humanities"
+      ],
+      "durations": {
+        "zh": 15.6,
+        "en": 15.6,
+        "fr": 15.6
+      }
+    },
+    "SlowViolence": {
+      "volumes": [
+        "environmental-humanities",
+        "ecocriticism-world"
+      ],
+      "durations": {
+        "zh": 14.0,
+        "en": 14.0,
+        "fr": 14.0
+      }
+    },
+    "DreamWork": {
+      "volumes": [
+        "psychoanalysis"
+      ],
+      "durations": {
+        "zh": 12.0,
+        "en": 12.0,
+        "fr": 12.0
+      }
+    }
+  }
+}

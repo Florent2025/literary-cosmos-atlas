@@ -1,23 +1,41 @@
 <!doctype html>
-<html lang="zh-CN">
+<html lang="zh-CN" class="lc-theme">
   <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <title>文学理论宇宙 | The Literary Cosmos</title>
-    <meta name="description" content="以书本、星图和滚动叙事构成的全球文学理论交互档案。">
-    <meta name="theme-color" content="#050b15">
+    <meta name="description" content="以书本、星图、720° 全景星穹与滚动叙事构成的全球文学理论交互档案：42 卷理论之书、理论长河、2026 前沿雷达与透镜实验室。">
+    <meta name="theme-color" content="#1b2470">
+    <meta name="color-scheme" content="dark light">
+    <link rel="canonical" href="https://literarycosmo.qzz.io/">
     <meta property="og:title" content="文学理论宇宙 | The Literary Cosmos">
-    <meta property="og:description" content="42卷理论与研究之书、全球前沿原典档案及可交互文学星图。">
+    <meta property="og:description" content="42 卷理论与研究之书、720° 全景星穹、理论长河、2026 前沿雷达与透镜实验室。">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://literarycosmo.qzz.io/">
-    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='32' fill='%2307111f'/%3E%3Cpath d='M32 10l5 16 17 6-17 6-5 16-5-16-17-6 17-6z' fill='%2375f5ff'/%3E%3C/svg%3E">
+    <meta property="og:image" content="https://literarycosmo.qzz.io/assets/og-image.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:locale" content="zh_CN">
+    <meta property="og:locale:alternate" content="en_US">
+    <meta property="og:locale:alternate" content="fr_FR">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="https://literarycosmo.qzz.io/assets/og-image.jpg">
+    <link rel="manifest" href="./manifest.webmanifest">
+    <link rel="icon" href="./assets/icons/icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="./assets/icons/icon-192.png">
+    <link rel="preload" href="./assets/library-gate-bg.webp" as="image" type="image/webp">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Noto+Serif+SC:wght@500;600;700;900&family=Noto+Sans+SC:wght@400;500;700;900&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="./styles.css?v=20260715-7">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Noto+Serif+SC:wght@500;600;700;900&family=Noto+Sans+SC:wght@400;500;700;900&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./styles.css?v=20261022">
+    <link rel="stylesheet" href="./css/aurora.css?v=20261022">
+    <script type="application/ld+json">
+      {"@context":"https://schema.org","@type":"WebSite","name":"文学理论宇宙 · The Literary Cosmos","alternateName":["The Literary Cosmos","Le Cosmos littéraire"],"url":"https://literarycosmo.qzz.io/","inLanguage":["zh-CN","en","fr"],"description":"An interactive atlas of global literary theory: 42 volumes, a 720° panorama, a timeline of theory, a 2026 frontier radar and a lens lab.","image":"https://literarycosmo.qzz.io/assets/og-image.jpg"}
+    </script>
   </head>
   <body class="entry-locked">
     <a class="skip-link" href="#mainContent" data-i18n="skipMain">跳到主要内容</a>
+    <canvas class="lc-dome" id="domeCanvas" aria-hidden="true"></canvas>
     <section class="library-gate" id="libraryGate" aria-label="欧洲古典图书馆入口" data-i18n-aria="gateAria">
       <div class="language-switcher language-switcher--gate" aria-label="网页语言" data-i18n-aria="languageAria">
         <button type="button" data-lang="zh" class="is-active">ZH</button>
@@ -52,9 +70,17 @@
       <nav class="nav-links" id="siteNav" aria-label="页面导航" data-i18n-aria="navAria">
         <a href="#library" data-i18n="navLibrary">书架轨道</a>
         <a href="#atlas" data-i18n="navAtlas">星图索引</a>
+        <a href="#timeline" data-i18n="navTimeline">理论长河</a>
+        <a href="#radar" data-i18n="navRadar">前沿雷达</a>
+        <a href="#lenslab" data-i18n="navLab">透镜实验室</a>
         <a href="#archive" data-i18n="navArchive">思想档案</a>
         <a href="#researchLibrary" data-i18n="navResearch">研究原典</a>
+        <a href="#passport" data-i18n="navPassport">阅读护照</a>
       </nav>
+      <button class="icon-button lc-search-button" type="button" data-palette-open aria-label="搜索全站（快捷键 Ctrl/⌘ + K）" data-i18n-aria="searchAria">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 21 21"/></svg>
+        <kbd>⌘K</kbd>
+      </button>
       <button class="nav-toggle" id="navToggle" type="button" aria-label="打开导航" data-i18n-aria="navToggleAria" aria-controls="siteNav" aria-expanded="false"><span></span><span></span><span></span></button>
       <div class="language-switcher" aria-label="网页语言" data-i18n-aria="languageAria">
         <button type="button" data-lang="zh" class="is-active">ZH</button>
@@ -78,6 +104,16 @@
           <div class="hero__actions">
             <a class="primary-link magnetic" href="#library" data-i18n="heroPrimary">进入书架轨道</a>
             <button class="secondary-link magnetic" id="openFeatured" type="button" data-i18n="heroSecondary">打开今日之书</button>
+          </div>
+          <div class="lc-hero-extra">
+            <button class="lc-orb-button magnetic" type="button" data-pano-open>
+              <span class="lc-orb-button__orb" aria-hidden="true">720°</span>
+              <span><strong data-i18n="panoEnter">进入 720° 全景星穹</strong><em data-i18n="panoEnterHint">拖拽环视一座由书构成的星球</em></span>
+            </button>
+            <button class="lc-play-button magnetic" type="button" data-prologue>
+              <span class="lc-play-button__icon" aria-hidden="true"></span>
+              <span data-i18n="heroPrologue">观看序章</span>
+            </button>
           </div>
         </div>
 
@@ -164,6 +200,78 @@
         </div>
       </section>
 
+      <section class="lc-section lc-timeline" id="timeline" aria-labelledby="timelineTitle">
+        <div class="lc-section__inner">
+          <header class="lc-section__head">
+            <p class="lc-overline" data-i18n="timelineOverline">RIVER OF THEORY · 理论长河</p>
+            <h2 id="timelineTitle" data-i18n="timelineTitle">理论长河：两千四百年的思想流向</h2>
+            <p class="lc-lead" data-i18n="timelineLead"></p>
+          </header>
+          <div class="lc-timeline__panel lc-glass">
+            <div class="lc-timeline__controls" data-timeline-controls></div>
+            <div class="lc-timeline__stage" data-timeline-stage tabindex="-1">
+              <canvas class="lc-timeline__river" aria-hidden="true"></canvas>
+              <div class="lc-timeline__track" data-timeline-track role="list"></div>
+            </div>
+            <article class="lc-timeline__card" data-timeline-card aria-live="polite"></article>
+          </div>
+        </div>
+      </section>
+
+      <section class="lc-section lc-radar" id="radar" aria-labelledby="radarTitle">
+        <div class="lc-section__inner">
+          <header class="lc-section__head">
+            <p class="lc-overline" data-i18n="radarOverline">FRONTIER RADAR · 2026</p>
+            <h2 id="radarTitle" data-i18n="radarTitle">前沿雷达：文学理论正在去往哪里</h2>
+            <p class="lc-lead" data-i18n="radarLead"></p>
+          </header>
+          <div class="lc-radar__layout">
+            <div class="lc-radar__instrument">
+              <div class="lc-chips lc-radar__filters" data-radar-filters role="group"></div>
+              <div class="lc-radar__chart" role="group">
+                <canvas class="lc-radar__canvas" aria-hidden="true"></canvas>
+                <span class="lc-radar__sweep" aria-hidden="true"></span>
+                <div class="lc-radar__sectors" data-radar-sectors aria-hidden="true"></div>
+                <div class="lc-radar__rings" data-radar-rings aria-hidden="true"></div>
+                <div class="lc-radar__blips" data-radar-blips></div>
+              </div>
+              <p class="lc-radar__meta"><span data-i18n="radarHint"></span> · <span data-radar-updated data-i18n="radarUpdated"></span></p>
+            </div>
+            <div class="lc-radar__side">
+              <article class="lc-radar__card lc-glass" data-radar-card aria-live="polite"></article>
+              <div class="lc-radar__index" data-radar-index></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="lc-section lc-lab" id="lenslab" aria-labelledby="labTitle">
+        <div class="lc-section__inner">
+          <header class="lc-section__head">
+            <p class="lc-overline" data-i18n="labOverline">LENS LAB · 透镜实验室</p>
+            <h2 id="labTitle" data-i18n="labTitle">透镜实验室：同一段文字，不同的理论</h2>
+            <p class="lc-lead" data-i18n="labLead"></p>
+          </header>
+          <div class="lc-lab__desk">
+            <div class="lc-lab__passages" data-lab-passages role="group"></div>
+            <div class="lc-lab__paper">
+              <div class="lc-lab__lenses lc-chips" data-lab-lenses role="group"></div>
+              <div class="lc-lab__body">
+                <div class="lc-lab__reading">
+                  <div class="lc-lab__stage" data-lab-stage>
+                    <svg class="lc-lab__ink" aria-hidden="true"></svg>
+                    <p class="lc-lab__text" data-lab-text></p>
+                  </div>
+                  <p class="lc-lab__source" data-lab-source></p>
+                  <div class="lc-lab__translation" data-lab-translation></div>
+                </div>
+                <aside class="lc-lab__note" data-lab-note aria-live="polite"></aside>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <section class="archive" id="archive" aria-labelledby="archiveTitle">
         <div class="archive__inner">
           <div class="section-title">
@@ -189,7 +297,98 @@
           <div class="source-explorer" id="sourceExplorer"></div>
         </div>
       </section>
+
+      <section class="lc-section lc-passport" id="passport" aria-labelledby="passportTitle">
+        <div class="lc-section__inner">
+          <header class="lc-section__head">
+            <p class="lc-overline" data-i18n="passportOverline">READING PASSPORT · 阅读护照</p>
+            <h2 id="passportTitle" data-i18n="passportTitle">阅读护照：你的理论星图</h2>
+            <p class="lc-lead" data-i18n="passportLead"></p>
+          </header>
+          <div class="lc-passport__grid">
+            <div class="lc-passport__armillary lc-glass" data-armillary>
+              <img class="lc-passport__fallback" src="./assets/models/armillary-render.webp" alt="" width="720" height="720" loading="lazy">
+              <p class="lc-passport__caption" data-i18n="passportArmillary"></p>
+            </div>
+            <div class="lc-passport__ledger">
+              <div class="lc-passport__stats" data-passport-stats></div>
+              <div class="lc-passport__stamps" data-passport-stamps></div>
+              <button type="button" class="lc-button lc-button--ghost" data-passport-reset data-i18n="passportReset">清除进度</button>
+            </div>
+            <div class="lc-passport__portrait lc-glass">
+              <div class="lc-portrait" data-portrait></div>
+              <p class="lc-portrait__status" data-portrait-status data-i18n="passportPortraitLead" aria-live="polite"></p>
+              <div class="lc-portrait__actions">
+                <button type="button" class="lc-button lc-button--primary" data-portrait-paint data-i18n="passportPortrait">生成我的星图画作</button>
+                <button type="button" class="lc-button" data-portrait-download disabled data-i18n="passportDownload">下载 PNG</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
     </main>
+
+    <footer class="lc-footer" id="siteFooter">
+      <div class="lc-footer__inner">
+        <div class="lc-footer__brand">
+          <span class="brand__seal">LC</span>
+          <div>
+            <strong data-i18n="brandTitle">文学理论宇宙</strong>
+            <p data-i18n="footerAbout"></p>
+          </div>
+        </div>
+        <div class="lc-footer__col">
+          <p data-i18n="footerTools"></p>
+          <p data-i18n="footerData"></p>
+        </div>
+        <div class="lc-footer__col lc-footer__controls">
+          <p data-i18n="footerShortcuts"></p>
+          <button type="button" class="lc-switch" id="motionToggle" aria-pressed="false"><i aria-hidden="true"></i><span data-i18n="footerMotion">减少动态效果</span></button>
+          <p class="lc-footer__meta"><span data-i18n="footerUpdated"></span> · © <span id="footerYear">2026</span> The Literary Cosmos</p>
+        </div>
+      </div>
+    </footer>
+
+    <div class="lc-palette" id="palette" role="dialog" aria-modal="true" aria-labelledby="paletteTitle" hidden inert>
+      <div class="lc-palette__panel">
+        <h2 class="lc-sr" id="paletteTitle" data-i18n="paletteTitle">全站检索</h2>
+        <div class="lc-palette__field">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 21 21"/></svg>
+          <input type="text" data-palette-input role="combobox" aria-expanded="true" aria-controls="paletteList" aria-autocomplete="list" autocomplete="off" spellcheck="false" aria-labelledby="paletteTitle">
+          <button type="button" class="lc-palette__close" data-palette-close aria-label="Esc">Esc</button>
+        </div>
+        <ul class="lc-palette__list" id="paletteList" data-palette-list role="listbox"></ul>
+        <p class="lc-palette__hint" data-i18n="paletteHint"></p>
+      </div>
+    </div>
+
+    <div class="lc-prologue" id="prologue" role="dialog" aria-modal="true" aria-labelledby="prologueTitle" hidden inert>
+      <div class="lc-prologue__frame">
+        <header>
+          <h2 id="prologueTitle" data-i18n="prologueTitle">序章：文学理论宇宙</h2>
+          <button type="button" class="lc-button lc-button--ghost" data-prologue-close data-i18n="prologueClose">关闭序章</button>
+        </header>
+        <video controls playsinline preload="none" poster="./assets/video/prologue.webp" width="1280" height="720"></video>
+        <p data-i18n="prologueCaption"></p>
+      </div>
+    </div>
+
+    <div class="lc-pano" id="panorama" role="dialog" aria-modal="true" aria-labelledby="panoTitle" hidden inert>
+      <div class="lc-pano__surface" data-pano-surface></div>
+      <div class="lc-pano__hotspots" data-pano-hotspots></div>
+      <header class="lc-pano__bar">
+        <div>
+          <h2 id="panoTitle" data-i18n="panoTitle">720° 全景星穹</h2>
+          <p data-i18n="panoHint">拖拽环视 · 滚轮或双指缩放 · 点击书卷飞入</p>
+        </div>
+        <div class="lc-pano__actions">
+          <button type="button" class="lc-button lc-button--ghost" data-pano-planet data-i18n="panoPlanet">小行星视角</button>
+          <button type="button" class="lc-button lc-button--ghost" data-pano-gyro aria-pressed="false" hidden data-i18n="panoGyro">陀螺仪</button>
+          <button type="button" class="lc-button lc-button--primary" data-pano-close data-i18n="panoClose">退出全景</button>
+        </div>
+      </header>
+      <div class="lc-pano__label" data-pano-label aria-live="polite"></div>
+    </div>
 
     <aside class="space-game" id="spaceGame" aria-hidden="true" inert role="dialog" aria-modal="true" aria-label="月球星战模拟舱" data-i18n-aria="gameAria">
       <div id="spaceGameMount" class="space-game__mount" aria-label="可游玩的月球星战小游戏" data-i18n-aria="gameMountAria"></div>
@@ -274,10 +473,29 @@
 
     <script src="./vendor/gsap.min.js"></script>
     <script src="./vendor/ScrollTrigger.min.js"></script>
+    <script src="./vendor/anime.min.js"></script>
     <script src="./vendor/three.min.js"></script>
-    <script src="./vendor/phaser.min.js"></script>
-    <script src="./frontier-catalog.js?v=20260715-7"></script>
-    <script src="./app.js?v=20260715-7"></script>
-    <script src="./research-runtime.js?v=20260715-7"></script>
+    <script src="./vendor/rough.min.js"></script>
+    <script src="./frontier-catalog.js?v=20261022"></script>
+    <script src="./js/content-classics-i18n.js?v=20261022"></script>
+    <script src="./js/content-timeline.js?v=20261022"></script>
+    <script src="./js/content-radar.js?v=20261022"></script>
+    <script src="./js/content-bridges.js?v=20261022"></script>
+    <script src="./js/content-lexicon.js?v=20261022"></script>
+    <script src="./js/content-lenslab.js?v=20261022"></script>
+    <script src="./app.js?v=20261022"></script>
+    <script src="./js/i18n-extra.js?v=20261022"></script>
+    <script src="./js/lc-core.js?v=20261022"></script>
+    <script src="./research-runtime.js?v=20261022"></script>
+    <script src="./js/feature-constellation.js?v=20261022"></script>
+    <script src="./js/feature-timeline.js?v=20261022"></script>
+    <script src="./js/feature-radar.js?v=20261022"></script>
+    <script src="./js/feature-lenslab.js?v=20261022"></script>
+    <script src="./js/feature-world-extras.js?v=20261022"></script>
+    <script src="./js/feature-palette.js?v=20261022"></script>
+    <script src="./js/feature-prologue.js?v=20261022"></script>
+    <script src="./js/feature-passport.js?v=20261022"></script>
+    <script src="./js/feature-panorama.js?v=20261022"></script>
+    <script src="./js/site-shell.js?v=20261022"></script>
   </body>
 </html>
